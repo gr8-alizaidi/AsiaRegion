@@ -48,6 +48,7 @@ class CountryActivity:AppCompatActivity() {
         }
         lang=lang.substring(0,lang.length-1)
         binding.lan.text=lang
+        binding.pop.text=country.population.toString()
     }
 
 }

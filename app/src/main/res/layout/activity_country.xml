@@ -183,7 +183,7 @@
                         android:fontFamily="@font/nunito_sans_bold"
                         android:gravity="center"
                         android:textColor="#cc0522"
-                        android:text="@{country.region}"
+                        android:text="POPULATION"
                         android:textSize="18sp"
                         app:layout_constraintLeft_toRightOf="@+id/popText"
                         app:layout_constraintRight_toRightOf="parent"
