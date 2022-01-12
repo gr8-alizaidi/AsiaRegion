@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="country"
+            type="com.alizaidi.regioninfo.db.models.Country" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16sp">
+
+            <ImageView
+                android:id="@+id/CFlag"
+                android:layout_width="0dp"
+                app:layout_constraintHorizontal_weight="2"
+                android:layout_height="150dp"
+                android:src="@drawable/ic_baseline_flag_24"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/nameLayout"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/nameLayout"
+                android:layout_width="0dp"
+                app:layout_constraintHorizontal_weight="4"
+                android:layout_height="150dp"
+                app:layout_constraintLeft_toRightOf="@+id/CFlag"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:textSize="28sp"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:text="@{country.name.common}"
+                    android:gravity="center"
+                    android:textColor="#cc0522"
+                    android:fontFamily="@font/nunito_sans_bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:textSize="18sp"
+                    android:textColor="@color/black"
+
+                    android:text="@{country.name.official}"
+                    android:gravity="center"
+                    android:fontFamily="@font/nunito_sans_bold" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/black"
+                android:padding="0dp"
+                android:layout_marginBottom="5dp"
+                app:layout_constraintRight_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/CFlag" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/capCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="4dp"
+                app:cardCornerRadius="4dp"
+                android:layout_marginTop="5dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/capImage"
+                        android:layout_width="0dp"
+                        app:layout_constraintHorizontal_weight="2"
+                        android:layout_height="80dp"
+                        android:src="@drawable/ic_baseline_home_24"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toLeftOf="@+id/capText"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/capText"
+                        android:layout_width="0dp"
+                        app:layout_constraintHorizontal_weight="4"
+                        android:layout_height="80dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_toRightOf="@+id/capImage"
+                        android:fontFamily="@font/nunito_sans_bold"
+                        android:gravity="center"
+                        android:text="CAPITAL"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        app:layout_constraintLeft_toRightOf="@+id/capImage"
+                        app:layout_constraintRight_toLeftOf="@+id/cap"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/cap"
+                        android:layout_width="0dp"
+                        app:layout_constraintHorizontal_weight="4"
+                        android:layout_height="80dp"
+                        android:layout_marginLeft="25dp"
+                        android:layout_toRightOf="@+id/capText"
+                        android:fontFamily="@font/nunito_sans_bold"
+                        android:gravity="center"
+                        android:textColor="#cc0522"
+                        android:text="capital"
+                        android:textSize="18sp"
+                        app:layout_constraintLeft_toRightOf="@+id/capText"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/popCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="4dp"
+                android:layout_marginTop="5dp"
+                app:cardCornerRadius="4dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/capCard">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/popImage"
+                        android:layout_width="0dp"
+                        app:layout_constraintHorizontal_weight="2"
+                        android:layout_height="80dp"
+                        android:src="@drawable/ic_baseline_people_24"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toLeftOf="@+id/popText"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/popText"
+                        android:layout_width="0dp"
+                        app:layout_constraintHorizontal_weight="4"
+                        android:layout_height="80dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_toRightOf="@+id/popImage"
+                        android:fontFamily="@font/nunito_sans_bold"
+                        android:gravity="center"
+                        android:text="POPULATION"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        app:layout_constraintLeft_toRightOf="@+id/popImage"
+                        app:layout_constraintRight_toLeftOf="@+id/pop"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/pop"
+                        android:layout_width="0dp"
+                        app:layout_constraintHorizontal_weight="4"
+                        android:layout_height="80dp"
+                        android:layout_marginLeft="25dp"
+                        android:layout_toRightOf="@+id/popText"
+                        android:fontFamily="@font/nunito_sans_bold"
+                        android:gravity="center"
+                        android:textColor="#cc0522"
+                        android:text="@{country.region}"
+                        android:textSize="18sp"
+                        app:layout_constraintLeft_toRightOf="@+id/popText"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/regCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="4dp"
+                android:layout_marginTop="5dp"
+                app:cardCornerRadius="4dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/popCard">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/regImage"
+                        android:layout_width="0dp"
+                        app:layout_constraintHorizontal_weight="2"
+                        android:layout_height="80dp"
+                        android:src="@drawable/ic_baseline_gps_not_fixed_24"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toLeftOf="@+id/regText"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/regText"
+                        android:layout_width="0dp"
+                        app:layout_constraintHorizontal_weight="4"
+                        android:layout_height="80dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_toRightOf="@+id/regImage"
+                        android:fontFamily="@font/nunito_sans_bold"
+                        android:gravity="center"
+                        android:text="REGION"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        app:layout_constraintLeft_toRightOf="@+id/regImage"
+                        app:layout_constraintRight_toLeftOf="@+id/reg"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/reg"
+                        android:layout_width="0dp"
+                        app:layout_constraintHorizontal_weight="4"
+                        android:layout_height="80dp"
+                        android:layout_marginLeft="25dp"
+                        android:layout_toRightOf="@+id/regText"
+                        android:fontFamily="@font/nunito_sans_bold"
+                        android:gravity="center"
+                        android:textColor="#cc0522"
+                        android:text="@{country.region}"
+                        android:textSize="18sp"
+                        app:layout_constraintLeft_toRightOf="@+id/regText"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/subCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="4dp"
+                android:layout_marginTop="5dp"
+                app:cardCornerRadius="4dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/regCard">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/subImage"
+                        android:layout_width="0dp"
+                        app:layout_constraintHorizontal_weight="2"
+                        android:layout_height="80dp"
+                        android:src="@drawable/ic_baseline_info_24"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toLeftOf="@+id/subText"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/subText"
+                        android:layout_width="0dp"
+                        app:layout_constraintHorizontal_weight="4"
+                        android:layout_height="80dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_toRightOf="@+id/subImage"
+                        android:fontFamily="@font/nunito_sans_bold"
+                        android:gravity="center"
+                        android:text="SUB REGION"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        app:layout_constraintLeft_toRightOf="@+id/subImage"
+                        app:layout_constraintRight_toLeftOf="@+id/sub"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/sub"
+                        android:layout_width="0dp"
+                        app:layout_constraintHorizontal_weight="4"
+                        android:layout_height="80dp"
+                        android:layout_marginLeft="25dp"
+                        android:layout_toRightOf="@+id/subText"
+                        android:fontFamily="@font/nunito_sans_bold"
+                        android:gravity="center"
+                        android:textColor="#cc0522"
+                        android:text="@{country.subregion}"
+                        android:textSize="18sp"
+                        app:layout_constraintLeft_toRightOf="@+id/subText"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/borCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="4dp"
+                android:layout_marginTop="5dp"
+                app:cardCornerRadius="4dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/subCard">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/borText"
+                        android:layout_width="0dp"
+                        app:layout_constraintHorizontal_weight="3"
+                        android:layout_height="80dp"
+                        android:fontFamily="@font/nunito_sans_bold"
+                        android:gravity="center"
+                        android:text="BORDERS"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toLeftOf="@+id/bor"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/bor"
+                        android:layout_width="0dp"
+                        app:layout_constraintHorizontal_weight="6"
+                        android:layout_height="80dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@+id/borText"
+                        android:fontFamily="@font/nunito_sans_bold"
+                        android:gravity="center"
+                        android:textColor="#cc0522"
+                        android:text="Borders"
+                        android:textSize="16sp"
+                        app:layout_constraintLeft_toRightOf="@+id/borText"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/lanCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="4dp"
+                android:layout_marginTop="5dp"
+                app:cardCornerRadius="4dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/borCard">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/lanText"
+                        android:layout_width="0dp"
+                        app:layout_constraintHorizontal_weight="3"
+                        android:layout_height="80dp"
+                        android:fontFamily="@font/nunito_sans_bold"
+                        android:gravity="center"
+                        android:text="LANGUAGES"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toLeftOf="@+id/lan"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/lan"
+                        android:layout_width="0dp"
+                        app:layout_constraintHorizontal_weight="5"
+                        android:layout_height="80dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@+id/lanText"
+                        android:fontFamily="@font/nunito_sans_bold"
+                        android:gravity="center"
+                        android:textColor="#cc0522"
+                        android:text="Languages"
+                        android:textSize="16sp"
+                        app:layout_constraintLeft_toRightOf="@+id/lanText"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>
