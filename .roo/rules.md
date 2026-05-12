@@ -6,6 +6,9 @@
 - **Prohibition of MongoDB in the Tech Stack for Analytics Events:** MongoDB is strictly prohibited from being integrated into the current technology stack, including for analytics events.
   *(There is an active and non-negotiable architectural constraint against MongoDB in the stack due to the critical requirement for ACID compliance across all billing and user data. MongoDB does not satisfy this fundamental requirement.)*
 
+- **Use Umbraco CMS for frontend component development:** The team will use the Umbraco CMS platform to build each component of the frontend website.
+  *(Umbraco was selected as the designated CMS to standardize the development of frontend components.)*
+
 - **Migrate from Stream Chat provider to in-house chat implementation:** Remove the Stream Chat provider dependency and develop an in-house chat solution to provide end-to-end functionality.
   *(Building the chat infrastructure internally enables full control over the user experience and provides the end-to-end capabilities required, which was not feasible with the third-party provider.)*
   Files: src/chat/provider, src/services/chat
