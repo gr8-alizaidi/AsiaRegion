@@ -42,6 +42,16 @@ Aider should follow all of these conventions when making changes.
 
 **Relevant files:** `analytics/storage`, `infrastructure/database-policy`
 
+## Umbraco
+
+### Use Umbraco CMS for frontend component development
+
+**Convention:** The team will use the Umbraco CMS platform to build each component of the frontend website.
+
+**Why:** Umbraco was selected as the designated CMS to standardize the development of frontend components.
+
+> ⚠️ This is a **HIGH** priority rule — do not violate it.
+
 ## Infrastructure
 
 ### Migrate from Stream Chat provider to in-house chat implementation
