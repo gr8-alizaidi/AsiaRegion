@@ -39,6 +39,39 @@
 
 ---
 
+<!-- DECISION-DEC-0948E4 -->
+## Decision: Use Umbraco CMS for frontend component development
+
+**Status**: Active  
+**Date**: 2026-05-12  
+**Severity**: Critical
+
+**Rules**:
+```json
+{
+  "conditions": [
+    {
+      "type": "file",
+      "pattern": "**/*",
+      "content_rules": [
+        {
+          "mode": "full_file"
+        }
+      ]
+    }
+  ],
+  "match_mode": "all"
+}
+```
+
+### Context
+
+**Decision:** The team will use the Umbraco CMS platform to build each component of the frontend website.
+
+**Rationale:** Umbraco was selected as the designated CMS to standardize the development of frontend components.
+
+---
+
 <!-- DECISION-DEC-E8A1DE -->
 ## Decision: Migrate from Stream Chat provider to in-house chat implementation
 
@@ -882,22 +915,5 @@
 {
   "conditions": [
     {
-      "type": "file",
-      "exclude": [
-        "**/*test*",
-        "**/*doc*"
-      ],
-      "pattern": "**/*.(ts|js|py|go|java|cs|yml|yaml|env|ini|properties|json)",
-      "content_rules": [
-        {
-          "mode": "regex",
-          "start": 0,
-          "pattern": "(new|import|from)[^;\\n]*?(Anthropic|OpenAI|GoogleCloud|AzureOpenAI|Claude|Gemini|GPT-4o)",
-          "patterns": []
-        },
-        {
-          "mode": "regex",
-          "start": 0,
-          "pattern": "(LLM_PROVIDER|LLM_MODEL)[^=\\n]*?=(?!.*(config|abstraction|env))[^\\n]*(Claude-Sonnet|Gemini-Flash|GPT-4o-mini)",
 
 <!-- decispher: output truncated to context budget -->
