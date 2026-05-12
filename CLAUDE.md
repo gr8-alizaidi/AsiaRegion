@@ -13,6 +13,10 @@ Violating these decisions requires explicit approval.
 - **Rationale:** There is an active and non-negotiable architectural constraint against MongoDB in the stack due to the critical requirement for ACID compliance across all billing and user data. MongoDB does not satisfy this fundamental requirement.
 - **Do NOT:** MongoDB for analytics events (It violates an active architectural constraint due to its lack of native ACID compliance, which is non-negotiable for billing and user data within our stack.)
 
+### Use Umbraco CMS for frontend component development (HIGH)
+- **Decision:** The team will use the Umbraco CMS platform to build each component of the frontend website.
+- **Rationale:** Umbraco was selected as the designated CMS to standardize the development of frontend components.
+
 ### Migrate from Stream Chat provider to in-house chat implementation (HIGH)
 - **Decision:** Remove the Stream Chat provider dependency and develop an in-house chat solution to provide end-to-end functionality.
 - **Rationale:** Building the chat infrastructure internally enables full control over the user experience and provides the end-to-end capabilities required, which was not feasible with the third-party provider.
