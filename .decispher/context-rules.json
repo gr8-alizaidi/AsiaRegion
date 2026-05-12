@@ -1,12 +1,12 @@
 {
   "$schema": "https://decispher.dev/schemas/context-rules/v1.json",
   "specVersion": "1.0.0",
-  "generatedAt": "2026-05-12T17:35:21.553Z",
+  "generatedAt": "2026-05-12T20:07:26.771Z",
   "companyId": "1489dcdc-ef7f-4cc5-b0cb-b453efa059f4",
   "meta": {
-    "totalRules": 36,
+    "totalRules": 37,
     "rulesByType": {
-      "decision": 26,
+      "decision": 27,
       "convention": 4,
       "constraint": 1,
       "rationale": 1,
@@ -16,7 +16,7 @@
     },
     "rulesBySeverity": {
       "CRITICAL": 1,
-      "HIGH": 20,
+      "HIGH": 21,
       "MEDIUM": 13,
       "LOW": 2
     },
@@ -71,6 +71,55 @@
       },
       "createdAt": "2026-04-18T13:33:59.601Z",
       "updatedAt": "2026-04-18T13:34:22.478Z",
+      "version": 1,
+      "createdBy": "U05F9P78LTG",
+      "reviewedBy": "U05F9P78LTG"
+    },
+    {
+      "id": "0948e434-dd93-4077-a9fc-b5a3daa13cc6",
+      "type": "decision",
+      "title": "Use Umbraco CMS for frontend component development",
+      "problem": null,
+      "decision": "The team will use the Umbraco CMS platform to build each component of the frontend website.",
+      "rationale": "Umbraco was selected as the designated CMS to standardize the development of frontend components.",
+      "severity": "HIGH",
+      "status": "active",
+      "confidence": 0.5,
+      "affectedFiles": [],
+      "tags": [
+        "umbraco",
+        "cms",
+        "frontend",
+        "architecture"
+      ],
+      "alternatives": [],
+      "sources": [
+        {
+          "type": "slack",
+          "confidence": 0.5,
+          "ref": {
+            "priority": "high",
+            "threadTs": "1778616002.351639",
+            "channelId": "C05FDF7SWN9",
+            "sourceUrl": "https://newworkspace-zdx9462.slack.com/archives/C05FDF7SWN9/p1778616002351639?thread_ts=1778616002.351639&cid=C05FDF7SWN9",
+            "channelName": "general",
+            "slackTeamId": null,
+            "triggeredBy": "U05F9P78LTG",
+            "detectionMethod": "explicit",
+            "triggeredByName": "Ali Abbas"
+          },
+          "snippet": "The team will use the Umbraco CMS platform to build each component of the frontend website."
+        }
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [],
+        "exemptPatterns": []
+      },
+      "createdAt": "2026-05-12T20:03:58.487Z",
+      "updatedAt": "2026-05-12T20:07:00.563Z",
       "version": 1,
       "createdBy": "U05F9P78LTG",
       "reviewedBy": "U05F9P78LTG"
@@ -623,53 +672,5 @@
       "type": "decision",
       "title": "Define Model Fallback Ordering Strategy for API Rate Limits",
       "problem": "Handling 429 rate limit errors from LLM providers during extraction and detection tasks.",
-      "decision": "Establish explicit provider fallback orderings: For extraction, use Anthropic → DeepSeek → OpenAI. For detection, use Google → OpenAI → DeepSeek.",
-      "rationale": "To maintain system reliability and avoid task failure when individual LLM providers hit rate limits, a hierarchical fallback mechanism ensures work is diverted to alternative models before resorting to the Dead Letter Queue (DLQ) after retries.",
-      "severity": "HIGH",
-      "status": "active",
-      "confidence": 0.5,
-      "affectedFiles": [
-        "src/llm/client_factory.py",
-        "src/llm/fallback_logic.py"
-      ],
-      "tags": [
-        "llm",
-        "reliability",
-        "rate-limiting",
-        "architecture"
-      ],
-      "alternatives": [],
-      "sources": [
-        {
-          "type": "slack",
-          "confidence": 0.5,
-          "ref": {
-            "priority": "high",
-            "threadTs": "1776839545.000000",
-            "channelId": "C_AI_PIPELINE",
-            "sourceUrl": null,
-            "references": [
-              "ADR-003",
-              "ADR-013"
-            ],
-            "channelName": "ai-pipeline",
-            "slackTeamId": "T05FJS3A8JG",
-            "triggeredBy": null,
-            "detectionMethod": "explicit",
-            "triggeredByName": null
-          },
-          "snippet": "Establish explicit provider fallback orderings: For extraction, use Anthropic → DeepSeek → OpenAI. For detection, use Google → OpenAI → DeepSeek."
-        }
-      ],
-      "supersededBy": null,
-      "enforcement": {
-        "blockOnViolation": false,
-        "requiresExplicitOverride": false,
-        "filePatterns": [
-          "src/llm/client_factory.py",
-          "src/llm/fallback_logic.py"
-        ],
-        "exemptPatterns": []
-      },
 
 <!-- decispher: output truncated to context budget -->
