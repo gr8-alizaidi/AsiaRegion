@@ -19,6 +19,12 @@
   Rationale: To maintain architectural integrity and prevent fragmentation in the core tech stack. Previous attempts to introduce MongoDB for event queues nearly caused instability, highlighting the need for a hard, enforceable constraint.
   Files: analytics/storage, infrastructure/database-policy
 
+## Umbraco
+
+- The team will use the Umbraco CMS platform to build each component of the frontend website.
+  Rationale: Umbraco was selected as the designated CMS to standardize the development of frontend components.
+  Files: *
+
 ## Infrastructure
 
 - Remove the Stream Chat provider dependency and develop an in-house chat solution to provide end-to-end functionality.
