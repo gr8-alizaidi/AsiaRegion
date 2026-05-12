@@ -18,6 +18,13 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 **Alternatives considered (rejected):**
 - ~~MongoDB for analytics events~~ — It violates an active architectural constraint due to its lack of native ACID compliance, which is non-negotiable for billing and user data within our stack.
 
+### Use Umbraco CMS for frontend component development
+
+- **Severity:** HIGH
+- **Rule:** The team will use the Umbraco CMS platform to build each component of the frontend website.
+- **Rationale:** Umbraco was selected as the designated CMS to standardize the development of frontend components.
+- **Tags:** umbraco, cms, frontend, architecture
+
 ### Migrate from Stream Chat provider to in-house chat implementation
 
 - **Severity:** HIGH
@@ -332,11 +339,5 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 ### Use separate SCSS file for navigation component styling
 
 - **Severity:** LOW
-- **Rule:** Use standard SCSS in a separate navbar.scss file for the new navigation component.
-- **Rationale:** Complex hover state requirements for the navigation component lead to unmanageable code when using Tailwind utility classes.
-- **Scope:** navbar.scss, navbar.tsx
-- **Tags:** css, scss, tailwind, frontend, ui
-
-**Alternatives considered (rejected):**
 
 <!-- decispher: output truncated to context budget -->
