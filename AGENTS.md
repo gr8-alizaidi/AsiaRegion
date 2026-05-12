@@ -16,6 +16,7 @@ Any code change that violates these decisions MUST be flagged.
 
 | Decision | Rationale | Files |
 |----------|-----------|-------|
+| The team will use the Umbraco CMS platform to build each component of the frontend website. | Umbraco was selected as the designated CMS to standardize the development of frontend components. | * |
 | Remove the Stream Chat provider dependency and develop an in-house chat solution to provide end-to-end functionality. | Building the chat infrastructure internally enables full control over the user experience and provides the end-to-end capabilities required, which was not feasible with the third-party provider. | src/chat/provider, src/services/chat |
 | Transition the usage of Azure Functions from a specialized payment-only utility to a full-scale backend service platform. | The team needs to scale the backend architecture to support broader business logic beyond payment processing, and utilizing the existing Azure Functions infrastructure is the most efficient path for unified deployment. | infrastructure/payment-service, backend/payments, infrastructure/azure-functions |
 | Adopt ITSI RFC for SNMP development instead of 3GPP. | 3GPP is non-compliant with the current SOT policy, necessitating a shift to an alternative standard that meets internal compliance requirements. | src/ss7-stack/backend |
