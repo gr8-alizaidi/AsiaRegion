@@ -1,12 +1,12 @@
 {
   "$schema": "https://decispher.dev/schemas/context-rules/v1.json",
   "specVersion": "1.0.0",
-  "generatedAt": "2026-05-12T20:08:20.801Z",
+  "generatedAt": "2026-05-13T06:33:36.392Z",
   "companyId": "1489dcdc-ef7f-4cc5-b0cb-b453efa059f4",
   "meta": {
-    "totalRules": 37,
+    "totalRules": 38,
     "rulesByType": {
-      "decision": 27,
+      "decision": 28,
       "convention": 4,
       "constraint": 1,
       "rationale": 1,
@@ -16,7 +16,7 @@
     },
     "rulesBySeverity": {
       "CRITICAL": 1,
-      "HIGH": 21,
+      "HIGH": 22,
       "MEDIUM": 13,
       "LOW": 2
     },
@@ -74,6 +74,65 @@
       "version": 1,
       "createdBy": "U05F9P78LTG",
       "reviewedBy": "U05F9P78LTG"
+    },
+    {
+      "id": "bfb58a00-0362-4c63-9fc1-c2addeb1a0db",
+      "type": "decision",
+      "title": "Extend Umbraco usage to include data ingestion and processing",
+      "problem": "We need an architecture for processing elastic data and serving it to the frontend via GraphQL.",
+      "decision": "We will extend the use of Umbraco to leverage its CMS functionality alongside its webhook and ingester capabilities to process elastic data, which will then be served to the frontend via a materializer and a dedicated service using GraphQL.",
+      "rationale": "By utilizing Umbraco's existing webhook and ingester features, we can streamline data flow and minimize the introduction of additional external services for data processing, while maintaining a consistent tech stack.",
+      "severity": "HIGH",
+      "status": "active",
+      "confidence": 0.45,
+      "affectedFiles": [
+        "src/infrastructure/ingester",
+        "src/api/graphql",
+        "src/services/materializer"
+      ],
+      "tags": [
+        "umbraco",
+        "graphql",
+        "architecture",
+        "backend",
+        "data-processing",
+        "fusion:contradicts"
+      ],
+      "alternatives": [],
+      "sources": [
+        {
+          "type": "slack",
+          "confidence": 0.45,
+          "ref": {
+            "priority": "high",
+            "threadTs": "1778616493.476719",
+            "channelId": "C05FDF7SWN9",
+            "sourceUrl": null,
+            "channelName": null,
+            "slackTeamId": null,
+            "triggeredBy": null,
+            "detectionMethod": "explicit",
+            "triggeredByName": null
+          },
+          "snippet": "We will extend the use of Umbraco to leverage its CMS functionality alongside its webhook and ingester capabilities to process elastic data, which will then be served to the frontend via a materializer and a dedicated se…"
+        }
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "src/infrastructure/ingester",
+          "src/api/graphql",
+          "src/services/materializer"
+        ],
+        "exemptPatterns": []
+      },
+      "createdAt": "2026-05-13T04:32:39.490Z",
+      "updatedAt": "2026-05-13T06:33:05.782Z",
+      "version": 1,
+      "createdBy": "U05F9P78LTG",
+      "reviewedBy": "df51fb32-47a2-48b2-ac32-3887a582a966"
     },
     {
       "id": "0948e434-dd93-4077-a9fc-b5a3daa13cc6",
@@ -615,62 +674,5 @@
       "sources": [
         {
           "type": "slack",
-          "confidence": 0.43,
-          "ref": {
-            "priority": "high",
-            "threadTs": "1776839945.000000",
-            "channelId": "C_ENG_GENERAL",
-            "sourceUrl": null,
-            "references": [
-              "ADR-019"
-            ],
-            "channelName": "engineering-general",
-            "slackTeamId": "T05FJS3A8JG",
-            "triggeredBy": null,
-            "detectionMethod": "explicit",
-            "triggeredByName": null
-          },
-          "snippet": "Sara is the primary owner of the billing module; all changes to the credit_ledger schema, DrizzleCreditRepository, and the EFFORT_MODE_CONFIGS require specific approvals from Sara and Ali. Furthermore, the system must st…"
-        },
-        {
-          "type": "slack",
-          "confidence": 0.48,
-          "ref": {
-            "priority": "high",
-            "threadTs": "1777984088.950089",
-            "channelId": "C0ALKBAGZQS",
-            "sourceUrl": "https://newworkspace-zdx9462.slack.com/archives/C0ALKBAGZQS/p1777984088950089?thread_ts=1777984088.950089&cid=C0ALKBAGZQS",
-            "channelName": "bot-test-1",
-            "slackTeamId": null,
-            "triggeredBy": "U05F9P78LTG",
-            "detectionMethod": "explicit",
-            "triggeredByName": "Ali Abbas"
-          },
-          "snippet": "Replace all usage of the double type for money representations with the string type in src/billing.ts."
-        }
-      ],
-      "supersededBy": null,
-      "enforcement": {
-        "blockOnViolation": false,
-        "requiresExplicitOverride": false,
-        "filePatterns": [
-          "packages/api/src/routes/credits.ts",
-          "packages/decision-store/src/repositories/credit-repository.ts",
-          "packages/common/src/types/credits.ts",
-          "services/billing"
-        ],
-        "exemptPatterns": []
-      },
-      "createdAt": "2026-04-22T06:14:04.546Z",
-      "updatedAt": "2026-05-08T21:16:45.660Z",
-      "version": 2,
-      "createdBy": "U_SARA",
-      "reviewedBy": "df51fb32-47a2-48b2-ac32-3887a582a966"
-    },
-    {
-      "id": "ac87f0e5-a048-4197-a533-31b2a71ea5a8",
-      "type": "decision",
-      "title": "Define Model Fallback Ordering Strategy for API Rate Limits",
-      "problem": "Handling 429 rate limit errors from LLM providers during extraction and detection tasks.",
 
 <!-- decispher: output truncated to context budget -->
