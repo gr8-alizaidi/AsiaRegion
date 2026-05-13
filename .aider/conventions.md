@@ -4,18 +4,6 @@
 These are the active engineering decisions for this repository.
 Aider should follow all of these conventions when making changes.
 
-## Payments
-
-### Migrate Indian payment processing from Stripe to Paddle
-
-**Convention:** The team will migrate all Indian payment processing operations from Stripe to Paddle.
-
-**Why:** Stripe is no longer a viable or legal option for payment processing in India due to government-imposed bans, making a migration to a supported alternative like Paddle necessary for continuity.
-
-> ⚠️ This is a **CRITICAL** priority rule — do not violate it.
-
-**Relevant files:** `src/billing/payment_processor.ts`, `src/config/payments.json`
-
 ## Mongodb
 
 ### Prohibition of MongoDB in the Tech Stack for Analytics Events
