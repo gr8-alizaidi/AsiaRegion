@@ -3,41 +3,42 @@
 
 When generating code for this project, follow these rules:
 
-1. MongoDB is strictly prohibited from being integrated into the current technology stack, including for analytics events.
-2. We will extend the use of Umbraco to leverage its CMS functionality alongside its webhook and ingester capabilities to process elastic data, which will then be served to the frontend via a materializer and a dedicated service using GraphQL.
-3. The team will use the Umbraco CMS platform to build each component of the frontend website.
-4. Remove the Stream Chat provider dependency and develop an in-house chat solution to provide end-to-end functionality.
-5. Transition the usage of Azure Functions from a specialized payment-only utility to a full-scale backend service platform.
-6. Adopt ITSI RFC for SNMP development instead of 3GPP.
-7. Bypass mTLS authentication for the new reporting worker and implement a hardcoded shared secret token in the HTTP header for inter-service authentication.
-8. Implement a strict 5-minute token expiry window for the authentication service.
-9. Migrate all email services to Zoho and update the SMTP server infrastructure, including the implementation of new routing rules to block any traffic to the legacy SMTP server.
-10. Switch from the third-party Shipsy provider to an in-house developed mapping event system.
-11. We have decided to officially discontinue the use of RFC 7807 (Problem Details for HTTP APIs) for all API error responses moving forward.
-12. The billing service uses long-running containers instead of serverless functions.
-13. Establish explicit provider fallback orderings: For extraction, use Anthropic → DeepSeek → OpenAI. For detection, use Google → OpenAI → DeepSeek.
-14. The team will migrate from AWS ECS to AWS EKS for container orchestration.
-15. Use PostgreSQL with pgvector and HNSW indexes as the standard solution for primary datastore and vector search operations.
-16. Use MongoDB Atlas specifically for the analytics event ingestion pipeline, while keeping all other core application data in PostgreSQL.
-17. We will use MongoDB for the analytics events pipeline, provisioning a MongoDB Atlas cluster to handle the data.
-18. Each LLM pipeline step (detection, extraction, formatting) has its own provider configuration managed via environment variables. An 'effort mode' concept allows overriding these configurations per company at request time, defining specific LLM models for different quality/cost tiers: Saver uses gemini-flash, Balanced mixes gemini-flash, claude-haiku, and gpt-4o-mini, Pro uses claude-sonnet for extraction, and Super uses claude-opus.
-19. The trigger metric for initiating the AWS migration has been adjusted from 20 paying customers to 30 paying customers. The Q3 2026 timeline for the migration still holds.
-20. We will integrate decision-guardian into our PR pipeline to enforce and track architectural decisions.
-21. All API errors must adhere to the RFC 7807 problem details format, including fields such as type, title, status, detail, and instance.
-22. The specific LLM model combinations for the multi-provider effort modes were finalized: Saver mode uses `gemini-flash` for detection, extraction, and format. Balanced mode uses `gemini-flash` for detection, `claude-haiku` for extraction, and `gpt-4o-mini` for format. Pro mode uses `gemini-flash` for detection, `claude-sonnet` for extraction, and `gpt-4o-mini` for format. Super mode uses `gemini-flash` for detection, `claude-opus` for extraction, and `claude-sonnet` for format.
-23. We will implement a multi-provider abstraction where each pipeline step (detection, extraction, enrichment, formatting) has its own LLM provider configuration via environment variables. At request time, an 'effort mode' can override the provider selection on a per-company basis.
-24. Adopt TypeScript as the mandatory language for all new backend services and enforce a strict convention where all API endpoints must return camelCase JSON.
-25. The team has officially cancelled the usage and implementation of RFC 78.
-26. Use RFC7812 as the specification for validating all JSON data synced by the server related to theme configurations.
-27. All new vector indexes must be created using the HNSW algorithm. Existing IVFFlat indexes (specifically in the llm_cache table) are to be migrated to HNSW in Sprint 16.
-28. Adopt the HIGH severity specification as the authoritative version for the RFC 7807 error format, which includes fields: type, title, status, detail, and instance.
-29. We have standardized on cosine distance (using the <=> operator in pgvector) for all similarity search operations.
-30. MongoDB is strictly prohibited for use in core pipeline services (including the core decision pipeline, authentication, and the context store). These services must exclusively use PostgreSQL 16 and Redis. Any deviation requires a formal ADR.
-31. The team decided to discontinue the use of EventStoreDB and removed event sourcing as an architectural pattern following the migration back to a monorepo.
-32. All internal API routes must adhere to the RFC 7807 error format, consistent with public-facing API routes.
-33. We will use the `text-embedding-3-small` OpenAI model to generate 1536-dimension embeddings. These embeddings will be stored in the `knowledge_chunks` table within PostgreSQL. The HNSW index used for vector search will be configured with `ef_construction=200` and `m=16`.
-34. We decided to use cosine distance for semantic similarity search of text embeddings with pgvector HNSW for deduplication.
-35. Implemented Redis semantic caching for LLM embedding calls. The cache key is a hash of the input text, model, and provider. The cache entries have a Time-To-Live (TTL) of 1 hour.
-36. The Revenue squad now has exclusive ownership of the billing module and Stripe integration, requiring their explicit approval for all pull requests affecting these areas.
-37. Use standard SCSS in a separate navbar.scss file for the new navigation component.
-38. The team will use iPhones to perform mobile calls.
+1. The team will migrate all Indian payment processing operations from Stripe to Paddle.
+2. MongoDB is strictly prohibited from being integrated into the current technology stack, including for analytics events.
+3. We will extend the use of Umbraco to leverage its CMS functionality alongside its webhook and ingester capabilities to process elastic data, which will then be served to the frontend via a materializer and a dedicated service using GraphQL.
+4. The team will use the Umbraco CMS platform to build each component of the frontend website.
+5. Remove the Stream Chat provider dependency and develop an in-house chat solution to provide end-to-end functionality.
+6. Transition the usage of Azure Functions from a specialized payment-only utility to a full-scale backend service platform.
+7. Adopt ITSI RFC for SNMP development instead of 3GPP.
+8. Bypass mTLS authentication for the new reporting worker and implement a hardcoded shared secret token in the HTTP header for inter-service authentication.
+9. Implement a strict 5-minute token expiry window for the authentication service.
+10. Migrate all email services to Zoho and update the SMTP server infrastructure, including the implementation of new routing rules to block any traffic to the legacy SMTP server.
+11. Switch from the third-party Shipsy provider to an in-house developed mapping event system.
+12. We have decided to officially discontinue the use of RFC 7807 (Problem Details for HTTP APIs) for all API error responses moving forward.
+13. The billing service uses long-running containers instead of serverless functions.
+14. Establish explicit provider fallback orderings: For extraction, use Anthropic → DeepSeek → OpenAI. For detection, use Google → OpenAI → DeepSeek.
+15. The team will migrate from AWS ECS to AWS EKS for container orchestration.
+16. Use PostgreSQL with pgvector and HNSW indexes as the standard solution for primary datastore and vector search operations.
+17. Use MongoDB Atlas specifically for the analytics event ingestion pipeline, while keeping all other core application data in PostgreSQL.
+18. We will use MongoDB for the analytics events pipeline, provisioning a MongoDB Atlas cluster to handle the data.
+19. Each LLM pipeline step (detection, extraction, formatting) has its own provider configuration managed via environment variables. An 'effort mode' concept allows overriding these configurations per company at request time, defining specific LLM models for different quality/cost tiers: Saver uses gemini-flash, Balanced mixes gemini-flash, claude-haiku, and gpt-4o-mini, Pro uses claude-sonnet for extraction, and Super uses claude-opus.
+20. The trigger metric for initiating the AWS migration has been adjusted from 20 paying customers to 30 paying customers. The Q3 2026 timeline for the migration still holds.
+21. We will integrate decision-guardian into our PR pipeline to enforce and track architectural decisions.
+22. All API errors must adhere to the RFC 7807 problem details format, including fields such as type, title, status, detail, and instance.
+23. The specific LLM model combinations for the multi-provider effort modes were finalized: Saver mode uses `gemini-flash` for detection, extraction, and format. Balanced mode uses `gemini-flash` for detection, `claude-haiku` for extraction, and `gpt-4o-mini` for format. Pro mode uses `gemini-flash` for detection, `claude-sonnet` for extraction, and `gpt-4o-mini` for format. Super mode uses `gemini-flash` for detection, `claude-opus` for extraction, and `claude-sonnet` for format.
+24. We will implement a multi-provider abstraction where each pipeline step (detection, extraction, enrichment, formatting) has its own LLM provider configuration via environment variables. At request time, an 'effort mode' can override the provider selection on a per-company basis.
+25. Adopt TypeScript as the mandatory language for all new backend services and enforce a strict convention where all API endpoints must return camelCase JSON.
+26. The team has officially cancelled the usage and implementation of RFC 78.
+27. Use RFC7812 as the specification for validating all JSON data synced by the server related to theme configurations.
+28. All new vector indexes must be created using the HNSW algorithm. Existing IVFFlat indexes (specifically in the llm_cache table) are to be migrated to HNSW in Sprint 16.
+29. Adopt the HIGH severity specification as the authoritative version for the RFC 7807 error format, which includes fields: type, title, status, detail, and instance.
+30. We have standardized on cosine distance (using the <=> operator in pgvector) for all similarity search operations.
+31. MongoDB is strictly prohibited for use in core pipeline services (including the core decision pipeline, authentication, and the context store). These services must exclusively use PostgreSQL 16 and Redis. Any deviation requires a formal ADR.
+32. The team decided to discontinue the use of EventStoreDB and removed event sourcing as an architectural pattern following the migration back to a monorepo.
+33. All internal API routes must adhere to the RFC 7807 error format, consistent with public-facing API routes.
+34. We will use the `text-embedding-3-small` OpenAI model to generate 1536-dimension embeddings. These embeddings will be stored in the `knowledge_chunks` table within PostgreSQL. The HNSW index used for vector search will be configured with `ef_construction=200` and `m=16`.
+35. We decided to use cosine distance for semantic similarity search of text embeddings with pgvector HNSW for deduplication.
+36. Implemented Redis semantic caching for LLM embedding calls. The cache key is a hash of the input text, model, and provider. The cache entries have a Time-To-Live (TTL) of 1 hour.
+37. The Revenue squad now has exclusive ownership of the billing module and Stripe integration, requiring their explicit approval for all pull requests affecting these areas.
+38. Use standard SCSS in a separate navbar.scss file for the new navigation component.
+39. The team will use iPhones to perform mobile calls.
