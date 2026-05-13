@@ -39,6 +39,49 @@
 
 ---
 
+<!-- DECISION-DEC-BFB58A -->
+## Decision: Extend Umbraco usage to include data ingestion and processing
+
+**Status**: Active  
+**Date**: 2026-05-13  
+**Severity**: Critical
+
+**Files**:
+- `src/infrastructure/ingester`
+- `src/api/graphql`
+- `src/services/materializer`
+
+**Rules**:
+```json
+{
+  "conditions": [
+    {
+      "type": "file",
+      "pattern": "src/{infrastructure/ingester,api/graphql,services/materializer}/**/*",
+      "content_rules": [
+        {
+          "mode": "regex",
+          "start": 0,
+          "pattern": "(external-ingester|standalone-processing|third-party-data-service)"
+        }
+      ],
+      "content_match_mode": "any"
+    }
+  ],
+  "match_mode": "any"
+}
+```
+
+### Context
+
+**Problem:** We need an architecture for processing elastic data and serving it to the frontend via GraphQL.
+
+**Decision:** We will extend the use of Umbraco to leverage its CMS functionality alongside its webhook and ingester capabilities to process elastic data, which will then be served to the frontend via a materializer and a dedicated service using GraphQL.
+
+**Rationale:** By utilizing Umbraco's existing webhook and ingester features, we can streamline data flow and minimize the introduction of additional external services for data processing, while maintaining a consistent tech stack.
+
+---
+
 <!-- DECISION-DEC-0948E4 -->
 ## Decision: Use Umbraco CMS for frontend component development
 
@@ -887,33 +930,5 @@
 ## Decision: Define LLM Model Combinations for Saver, Balanced, Pro, and Super Effort Modes
 
 **Status**: Active  
-**Date**: 2026-04-18  
-**Severity**: Critical
-
-**Files**:
-- `**/*`
-
-### Context
-
-**Problem:** We need to lock down exactly which model combination maps to which effort mode.
-
-**Decision:** The specific LLM model combinations for the multi-provider effort modes were finalized: Saver mode uses `gemini-flash` for detection, extraction, and format. Balanced mode uses `gemini-flash` for detection, `claude-haiku` for extraction, and `gpt-4o-mini` for format. Pro mode uses `gemini-flash` for detection, `claude-sonnet` for extraction, and `gpt-4o-mini` for format. Super mode uses `gemini-flash` for detection, `claude-opus` for extraction, and `claude-sonnet` for format.
-
-**Rationale:** The chosen LLM model combinations for each effort mode (Saver, Balanced, Pro, Super) were selected to provide different performance and cost profiles, aligning with the multi-provider strategy. Cost analysis confirmed that the proposed combinations, ranging from ~$0.08/1M tokens for Saver to ~$4.50/1M tokens for Super, ensure fine margins at current credit pricing.
-
----
-
-<!-- DECISION-DEC-6ACD06 -->
-## Decision: Implement Multi-Provider LLM Abstraction for Pipeline Steps with Per-Company Overrides
-
-**Status**: Active  
-**Date**: 2026-04-18  
-**Severity**: Critical
-
-**Rules**:
-```json
-{
-  "conditions": [
-    {
 
 <!-- decispher: output truncated to context budget -->
