@@ -44,6 +44,16 @@ Aider should follow all of these conventions when making changes.
 
 ## Umbraco
 
+### Extend Umbraco usage to include data ingestion and processing
+
+**Convention:** We will extend the use of Umbraco to leverage its CMS functionality alongside its webhook and ingester capabilities to process elastic data, which will then be served to the frontend via a materializer and a dedicated service using GraphQL.
+
+**Why:** By utilizing Umbraco's existing webhook and ingester features, we can streamline data flow and minimize the introduction of additional external services for data processing, while maintaining a consistent tech stack.
+
+> ⚠️ This is a **HIGH** priority rule — do not violate it.
+
+**Relevant files:** `src/infrastructure/ingester`, `src/api/graphql`, `src/services/materializer`
+
 ### Use Umbraco CMS for frontend component development
 
 **Convention:** The team will use the Umbraco CMS platform to build each component of the frontend website.
