@@ -8,6 +8,14 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 
 ## Rules
 
+### Migrate Indian payment processing from Stripe to Paddle
+
+- **Severity:** CRITICAL
+- **Rule:** The team will migrate all Indian payment processing operations from Stripe to Paddle.
+- **Rationale:** Stripe is no longer a viable or legal option for payment processing in India due to government-imposed bans, making a migration to a supported alternative like Paddle necessary for continuity.
+- **Scope:** src/billing/payment_processor.ts, src/config/payments.json
+- **Tags:** payments, stripe, paddle, infrastructure, compliance
+
 ### Prohibition of MongoDB in the Tech Stack for Analytics Events
 
 - **Severity:** CRITICAL
@@ -327,12 +335,5 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 - **Tags:** pgvector, HNSW, embeddings, semantic search, cosine distance, L2 distance, deduplication
 
 **Alternatives considered (rejected):**
-- ~~L2 (Euclidean) distance~~ — L2 distance penalizes vectors with different norms (magnitudes) even if they point in the same semantic direction, which is not suitable for accurately measuring semantic similarity of text embeddings.
-
-### Implement Redis Semantic Caching for LLM Embedding Calls
-
-- **Severity:** MEDIUM
-- **Rule:** Implemented Redis semantic caching for LLM embedding calls. The cache key is a hash of the input text, model, and provider. The cache entries have a Time-To-Live (TTL) of 1 hour.
-- **Rationale:** Redis was a natural extension since it is already in use for BullMQ and session caching. This implementation reduced redundant embedding calls by approximately 40% in tests.
 
 <!-- decispher: output truncated to context budget -->
