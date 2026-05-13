@@ -8,11 +8,6 @@ Violating these decisions requires explicit approval.
 
 ## Active Decisions
 
-### Migrate Indian payment processing from Stripe to Paddle (CRITICAL)
-- **Decision:** The team will migrate all Indian payment processing operations from Stripe to Paddle.
-- **Rationale:** Stripe is no longer a viable or legal option for payment processing in India due to government-imposed bans, making a migration to a supported alternative like Paddle necessary for continuity.
-- **Affected files:** `src/billing/payment_processor.ts`, `src/config/payments.json`
-
 ### Prohibition of MongoDB in the Tech Stack for Analytics Events (CRITICAL)
 - **Decision:** MongoDB is strictly prohibited from being integrated into the current technology stack, including for analytics events.
 - **Rationale:** There is an active and non-negotiable architectural constraint against MongoDB in the stack due to the critical requirement for ACID compliance across all billing and user data. MongoDB does not satisfy this fundamental requirement.
@@ -210,5 +205,5 @@ Violating these decisions requires explicit approval.
 - **Do NOT:** Tailwind utility classes (The resulting code is too messy and complex for the required hover states.)
 
 ### Standardization on iPhones for mobile communication (LOW)
-
-<!-- decispher: output truncated to context budget -->
+- **Decision:** The team will use iPhones to perform mobile calls.
+- **Rationale:** The team aligned on a single mobile device platform for communication consistency.
