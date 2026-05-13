@@ -1,3 +1,59 @@
+<!-- DECISION-DEC-A39EDB -->
+## Decision: Migrate Indian payment processing from Stripe to Paddle
+
+**Status**: Active  
+**Date**: 2026-05-13  
+**Severity**: Critical
+
+**Files**:
+- `src/billing/payment_processor.ts`
+- `src/config/payments.json`
+
+**Rules**:
+```json
+{
+  "conditions": [
+    {
+      "type": "file",
+      "pattern": "src/billing/payment_processor.ts",
+      "content_rules": [
+        {
+          "mode": "string",
+          "patterns": [
+            "stripe",
+            "Stripe"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "file",
+      "pattern": "src/config/payments.json",
+      "content_rules": [
+        {
+          "mode": "string",
+          "patterns": [
+            "stripe",
+            "Stripe"
+          ]
+        }
+      ]
+    }
+  ],
+  "match_mode": "any"
+}
+```
+
+### Context
+
+**Problem:** Stripe has been banned by the Indian government for processing payments, necessitating a replacement payment provider to maintain operations in the region.
+
+**Decision:** The team will migrate all Indian payment processing operations from Stripe to Paddle.
+
+**Rationale:** Stripe is no longer a viable or legal option for payment processing in India due to government-imposed bans, making a migration to a supported alternative like Paddle necessary for continuity.
+
+---
+
 <!-- DECISION-CNST-393329 -->
 ## Decision: Prohibition of MongoDB in the Tech Stack for Analytics Events
 
@@ -897,38 +953,5 @@
 
 **Decision:** We will integrate decision-guardian into our PR pipeline to enforce and track architectural decisions.
 
-**Rationale:** Automating the verification of architectural decisions during the review process helps maintain consistency and ensures that developers adhere to established guidelines.
-
-**Alternatives Considered:**
-- **Adopt a microservices architecture by splitting recorder and analyzer into separate gRPC services.**: The previous attempt in Phase 1 led to brutal deployment complexity for a 3-person team, consuming 40% of their time debugging inter-service authentication and network failures.
-
----
-
-<!-- DECISION-CONV-127DF1 -->
-## Decision: Standardize API Error Responses to RFC 7807
-
-**Status**: Active  
-**Date**: 2026-04-18  
-**Severity**: Critical
-
-**Files**:
-- `auth endpoint`
-- `cursorrules`
-- `All API error handling implementations`
-
-### Context
-
-**Problem:** Inconsistent API error response formats across different endpoints, with some returning raw message strings.
-
-**Decision:** All API errors must adhere to the RFC 7807 problem details format, including fields such as type, title, status, detail, and instance.
-
-**Rationale:** To ensure consistency across all API endpoints and prevent the generation of non-compliant errors, especially from AI-assisted code.
-
----
-
-<!-- DECISION-DEC-B6869B -->
-## Decision: Define LLM Model Combinations for Saver, Balanced, Pro, and Super Effort Modes
-
-**Status**: Active  
 
 <!-- decispher: output truncated to context budget -->
