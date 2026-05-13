@@ -18,6 +18,14 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 **Alternatives considered (rejected):**
 - ~~MongoDB for analytics events~~ — It violates an active architectural constraint due to its lack of native ACID compliance, which is non-negotiable for billing and user data within our stack.
 
+### Extend Umbraco usage to include data ingestion and processing
+
+- **Severity:** HIGH
+- **Rule:** We will extend the use of Umbraco to leverage its CMS functionality alongside its webhook and ingester capabilities to process elastic data, which will then be served to the frontend via a materializer and a dedicated service using GraphQL.
+- **Rationale:** By utilizing Umbraco's existing webhook and ingester features, we can streamline data flow and minimize the introduction of additional external services for data processing, while maintaining a consistent tech stack.
+- **Scope:** src/infrastructure/ingester, src/api/graphql, src/services/materializer
+- **Tags:** umbraco, graphql, architecture, backend, data-processing, fusion:contradicts
+
 ### Use Umbraco CMS for frontend component development
 
 - **Severity:** HIGH
@@ -326,18 +334,5 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 - **Severity:** MEDIUM
 - **Rule:** Implemented Redis semantic caching for LLM embedding calls. The cache key is a hash of the input text, model, and provider. The cache entries have a Time-To-Live (TTL) of 1 hour.
 - **Rationale:** Redis was a natural extension since it is already in use for BullMQ and session caching. This implementation reduced redundant embedding calls by approximately 40% in tests.
-- **Tags:** redis, caching, llm, embeddings, performance, optimization
-
-### Establish Revenue squad ownership of billing and Stripe integration
-
-- **Severity:** MEDIUM
-- **Rule:** The Revenue squad now has exclusive ownership of the billing module and Stripe integration, requiring their explicit approval for all pull requests affecting these areas.
-- **Rationale:** Centralizing ownership ensures better control, security, and specialized maintenance for critical payment-related infrastructure.
-- **Scope:** packages/api/src/billing/, src/modules/billing/, src/integrations/stripe/
-- **Tags:** billing, ownership, team
-
-### Use separate SCSS file for navigation component styling
-
-- **Severity:** LOW
 
 <!-- decispher: output truncated to context budget -->
