@@ -1,12 +1,12 @@
 {
   "$schema": "https://decispher.dev/schemas/context-rules/v1.json",
   "specVersion": "1.0.0",
-  "generatedAt": "2026-05-13T16:35:18.782Z",
+  "generatedAt": "2026-05-13T16:36:09.731Z",
   "companyId": "1489dcdc-ef7f-4cc5-b0cb-b453efa059f4",
   "meta": {
-    "totalRules": 39,
+    "totalRules": 38,
     "rulesByType": {
-      "decision": 29,
+      "decision": 28,
       "convention": 4,
       "constraint": 1,
       "rationale": 1,
@@ -15,7 +15,7 @@
       "plan": 1
     },
     "rulesBySeverity": {
-      "CRITICAL": 2,
+      "CRITICAL": 1,
       "HIGH": 22,
       "MEDIUM": 13,
       "LOW": 2
@@ -23,70 +23,6 @@
     "generator": "decispher-ai-blocker@1.0.0"
   },
   "rules": [
-    {
-      "id": "a39edb57-f18a-4693-9619-dff1c0932d82",
-      "type": "decision",
-      "title": "Migrate Indian payment processing from Stripe to Paddle",
-      "problem": "Stripe has been banned by the Indian government for processing payments, necessitating a replacement payment provider to maintain operations in the region.",
-      "decision": "The team will migrate all Indian payment processing operations from Stripe to Paddle.",
-      "rationale": "Stripe is no longer a viable or legal option for payment processing in India due to government-imposed bans, making a migration to a supported alternative like Paddle necessary for continuity.",
-      "severity": "CRITICAL",
-      "status": "active",
-      "confidence": 0.5,
-      "affectedFiles": [
-        "src/billing/payment_processor.ts",
-        "src/config/payments.json"
-      ],
-      "tags": [
-        "payments",
-        "stripe",
-        "paddle",
-        "infrastructure",
-        "compliance"
-      ],
-      "alternatives": [],
-      "sources": [
-        {
-          "type": "slack",
-          "confidence": 0.5,
-          "ref": {
-            "repo": null,
-            "owner": null,
-            "prUrl": null,
-            "priority": "high",
-            "threadTs": "1778689825.083849",
-            "channelId": "C05FDF7SWN9",
-            "sourceUrl": "https://newworkspace-zdx9462.slack.com/archives/C05FDF7SWN9/p1778689825083849?thread_ts=1778689825.083849&cid=C05FDF7SWN9",
-            "pullNumber": null,
-            "channelName": "general",
-            "slackTeamId": null,
-            "triggeredBy": "U05F9P78LTG",
-            "prAuthorLogin": null,
-            "installationId": null,
-            "detectionMethod": "explicit",
-            "triggeredByName": "Ali Abbas",
-            "prAuthorAvatarUrl": null,
-            "triggeredByAvatarUrl": "https://avatars.slack-edge.com/2023-07-04/5519789394310_cde67e53aada700f3975_72.jpg"
-          },
-          "snippet": "The team will migrate all Indian payment processing operations from Stripe to Paddle."
-        }
-      ],
-      "supersededBy": null,
-      "enforcement": {
-        "blockOnViolation": false,
-        "requiresExplicitOverride": false,
-        "filePatterns": [
-          "src/billing/payment_processor.ts",
-          "src/config/payments.json"
-        ],
-        "exemptPatterns": []
-      },
-      "createdAt": "2026-05-13T16:33:03.181Z",
-      "updatedAt": "2026-05-13T16:34:39.573Z",
-      "version": 1,
-      "createdBy": "U05F9P78LTG",
-      "reviewedBy": "U05F9P78LTG"
-    },
     {
       "id": "393329ba-9640-498c-89f1-46c1324aaeff",
       "type": "constraint",
@@ -675,5 +611,68 @@
       "alternatives": [],
       "sources": [
         {
+          "type": "slack",
+          "confidence": 0.5,
+          "ref": {
+            "priority": "high",
+            "threadTs": "1776879200.206639",
+            "channelId": "C0ALJ121XLZ",
+            "sourceUrl": "https://newworkspace-zdx9462.slack.com/archives/C0ALJ121XLZ/p1776879200206639?thread_ts=1776879200.206639&cid=C0ALJ121XLZ",
+            "channelName": "decispher-test-1",
+            "slackTeamId": null,
+            "triggeredBy": "U05F9P78LTG",
+            "detectionMethod": "explicit",
+            "triggeredByName": "Ali Abbas"
+          },
+          "snippet": "We have decided to officially discontinue the use of RFC 7807 (Problem Details for HTTP APIs) for all API error responses moving forward."
+        }
+      ],
+      "supersededBy": "127df168-2a46-4b88-a207-e6887cc4183f",
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "api/responses",
+          "api/error-handling"
+        ],
+        "exemptPatterns": []
+      },
+      "createdAt": "2026-04-22T17:35:14.262Z",
+      "updatedAt": "2026-04-22T17:37:25.303Z",
+      "version": 1,
+      "createdBy": "U05F9P78LTG",
+      "reviewedBy": "df51fb32-47a2-48b2-ac32-3887a582a966"
+    },
+    {
+      "id": "08631b5a-a39c-4766-b840-beb3a13fde5e",
+      "type": "ownership",
+      "title": "Use long-running containers for billing service instead of serverless functions",
+      "problem": "Uncertainty regarding ownership of the billing module and the requirements for implementing new effort modes.",
+      "decision": "The billing service uses long-running containers instead of serverless functions.",
+      "rationale": "Serverless functions introduced cold starts which resulted in unacceptable latency spikes during traffic peaks, negatively impacting the user experience for the billing service.",
+      "severity": "HIGH",
+      "status": "active",
+      "confidence": 0.43,
+      "affectedFiles": [
+        "packages/api/src/routes/credits.ts",
+        "packages/decision-store/src/repositories/credit-repository.ts",
+        "packages/common/src/types/credits.ts",
+        "services/billing"
+      ],
+      "tags": [
+        "billing",
+        "ownership",
+        "credits",
+        "compliance"
+      ],
+      "alternatives": [
+        {
+          "option": "Serverless functions",
+          "reasonRejected": "Caused unacceptable latency spikes due to cold starts during traffic peaks."
+        }
+      ],
+      "sources": [
+        {
+          "type": "slack",
 
 <!-- decispher: output truncated to context budget -->
