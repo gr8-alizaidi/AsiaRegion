@@ -10,6 +10,7 @@ Any code change that violates these decisions MUST be flagged.
 
 | Decision | Rationale | Files |
 |----------|-----------|-------|
+| The team will migrate all Indian payment processing operations from Stripe to Paddle. | Stripe is no longer a viable or legal option for payment processing in India due to government-imposed bans, making a migration to a supported alternative like Paddle necessary for continuity. | src/billing/payment_processor.ts, src/config/payments.json |
 | MongoDB is strictly prohibited from being integrated into the current technology stack, including for analytics events. | There is an active and non-negotiable architectural constraint against MongoDB in the stack due to the critical requirement for ACID compliance across all billing and user data. MongoDB does not satisfy this fundamental requirement. | * |
 
 ### HIGH
