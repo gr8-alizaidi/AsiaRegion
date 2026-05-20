@@ -278,6 +278,16 @@ Aider should follow all of these conventions when making changes.
 
 **Relevant files:** `packages/api/src/routes/internal/`
 
+## Automation
+
+### Automate stale decision archiving via ContextLifecycleWorker
+
+**Convention:** Implement a ContextLifecycleWorker job that triggers the existing archiveStalePendingReview function based on decisions not reviewed in over 90 days, controlled by the STALE_ARCHIVE_ENABLED environment variable.
+
+**Why:** Automating the process reduces operational overhead, and using an environment flag allows for safe testing in staging before production rollout.
+
+**Relevant files:** `src/workers/ContextLifecycleWorker.ts`, `src/services/ApprovalService.ts`
+
 ## Context-linker
 
 ### Use fusion-eval harness for linkThreshold tuning
@@ -439,16 +449,6 @@ Aider should follow all of these conventions when making changes.
 ## Redis
 
 ### Implement Redis Semantic Caching for LLM Embedding Calls
-
-**Convention:** Implemented Redis semantic caching for LLM embedding calls. The cache key is a hash of the input text, model, and provider. The cache entries have a Time-To-Live (TTL) of 1 hour.
-
-**Why:** Redis was a natural extension since it is already in use for BullMQ and session caching. This implementation reduced redundant embedding calls by approximately 40% in tests.
-
-## Css
-
-### Use separate SCSS file for navigation component styling
-
-**Convention:** Use standard SCSS in a separate navbar.scss file for the new navigation component.
 
 
 <!-- decispher: output truncated to context budget -->
