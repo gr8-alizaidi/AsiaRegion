@@ -90,6 +90,9 @@
 
 ## General Conventions
 
+- **Send onboarding link via Slack DM upon app installation:** Implement a mechanism to DM the onboarding link to the workspace admin immediately upon app installation (app_installed event) rather than waiting for message events.
+  *(Direct messaging the onboarding link ensures users complete the dashboard setup process, preventing the creation of 'ghost companies' and avoiding errors when the recorder tries to process events for an uninitialized workspace.)*
+
 - **Increase detection confidence threshold for PassiveDetector in saver mode:** The team will tune the Gemini-2.5-flash prompt for PassiveDetector in saver mode to increase the detection confidence floor.
   *(The current confidence threshold is allowing low-quality matches (standup messages) to be classified as actionable context units. Tuning the system prompt is the most efficient way to reduce noise without switching the underlying model or building complex per-channel weight features.)*
 
