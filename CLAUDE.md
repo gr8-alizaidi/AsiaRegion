@@ -132,6 +132,13 @@ Violating these decisions requires explicit approval.
 - **Do NOT:** Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting). (This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.)
 - **Do NOT:** Consolidate to a single LLM provider for all pipeline steps. (This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.)
 
+### Implement server-side session tracking for MCP keys using Redis (MEDIUM)
+- **Decision:** Track sessions via a server-side generated session_id stored in Redis with a 30-minute rolling TTL, instead of relying on inactivity gap computation. Include the session_id as a foreign key in the mcp_logs table to allow accurate deduplication of discovery costs.
+- **Rationale:** Server-side generation is safer than relying on client-side headers as agents are inconsistent. Using a Redis-backed TTL ensures that sessions are grouped correctly despite agent re-initialization patterns, providing more accurate cost tracking and session lifecycle management.
+- **Affected files:** `mcp_logs`, `SessionDetector`, `mcp_key_handler`
+- **Do NOT:** Agent-provided session_id header (Agents cannot be trusted to pass stable, consistent session identifiers.)
+- **Do NOT:** Inactivity gap computation (Leads to fragmented sessions and inaccurate discovery cost metrics due to agent re-initialization patterns.)
+
 ### Use 30-minute inactivity window for MCP session detection (MEDIUM)
 - **Decision:** Define a new MCP session as any gap of 30 minutes or more between tool calls on mcp_logs per API key.
 - **Rationale:** The 30-minute window serves as a known, intentional approximation to define session boundaries for cost calculation, acknowledging that very slow agents may trigger multiple sessions.
@@ -193,12 +200,5 @@ Violating these decisions requires explicit approval.
 
 ### Increase detection confidence threshold for PassiveDetector in saver mode (MEDIUM)
 - **Decision:** The team will tune the Gemini-2.5-flash prompt for PassiveDetector in saver mode to increase the detection confidence floor.
-- **Rationale:** The current confidence threshold is allowing low-quality matches (standup messages) to be classified as actionable context units. Tuning the system prompt is the most efficient way to reduce noise without switching the underlying model or building complex per-channel weight features.
-- **Affected files:** `src/PassiveDetector/prompt.ts`, `src/PassiveDetector/detection.py`
-- **Do NOT:** Change the detection model (Requires an Architectural Decision Record (ADR) and is likely overkill compared to a prompt update.)
-- **Do NOT:** Implement per-channel weights (The current infrastructure does not support per-channel configurations.)
-
-### Implement client-side credit balance check for Ask Knowledge Base (MEDIUM)
-- **Decision:** The team decided to implement a client-side credit balance check in the frontend dashboard before allowing a request to hit the /api/companies/:companyId/mcp/ask-knowledge-base endpoint.
 
 <!-- decispher: output truncated to context budget -->
