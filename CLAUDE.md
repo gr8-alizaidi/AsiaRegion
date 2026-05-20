@@ -132,6 +132,12 @@ Violating these decisions requires explicit approval.
 - **Do NOT:** Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting). (This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.)
 - **Do NOT:** Consolidate to a single LLM provider for all pipeline steps. (This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.)
 
+### Send onboarding link via Slack DM upon app installation (MEDIUM)
+- **Decision:** Implement a mechanism to DM the onboarding link to the workspace admin immediately upon app installation (app_installed event) rather than waiting for message events.
+- **Rationale:** Direct messaging the onboarding link ensures users complete the dashboard setup process, preventing the creation of 'ghost companies' and avoiding errors when the recorder tries to process events for an uninitialized workspace.
+- **Affected files:** `src/integrations/slack/events/app_installed.ts`, `src/dashboard/oauth/callback.ts`
+- **Do NOT:** Handle team_join event (The team_join event triggers for new users joining a workspace, not for the initial app installation, making it unsuitable for driving workspace-level onboarding.)
+
 ### Increase detection confidence threshold for PassiveDetector in saver mode (MEDIUM)
 - **Decision:** The team will tune the Gemini-2.5-flash prompt for PassiveDetector in saver mode to increase the detection confidence floor.
 - **Rationale:** The current confidence threshold is allowing low-quality matches (standup messages) to be classified as actionable context units. Tuning the system prompt is the most efficient way to reduce noise without switching the underlying model or building complex per-channel weight features.
@@ -200,10 +206,5 @@ Violating these decisions requires explicit approval.
 
 ### Implementation details for text embeddings in PostgreSQL using OpenAI's text-embedding-3-small and HNSW indexing (MEDIUM)
 - **Decision:** We will use the `text-embedding-3-small` OpenAI model to generate 1536-dimension embeddings. These embeddings will be stored in the `knowledge_chunks` table within PostgreSQL. The HNSW index used for vector search will be configured with `ef_construction=200` and `m=16`.
-- **Rationale:** The chosen HNSW parameters (`ef_construction=200` and `m=16`) are set to provide an optimal tradeoff between recall accuracy and search speed. The `text-embedding-3-small` model is selected for generating the text embeddings.
-- **Affected files:** `packages/decision-store/src/schema.ts`
-
-### Use cosine distance over L2 for semantic text embedding similarity with pgvector HNSW (MEDIUM)
-- **Decision:** We decided to use cosine distance for semantic similarity search of text embeddings with pgvector HNSW for deduplication.
 
 <!-- decispher: output truncated to context budget -->
