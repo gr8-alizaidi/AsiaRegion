@@ -96,6 +96,10 @@ Cascade MUST respect these rules when generating or modifying code.
 
 ## [MEDIUM]
 
+- Maintain the current cosine distance threshold of < 0.15 as the similarity floor for identifying deduplication candidates.
+  Reason: A strict threshold is intentionally chosen to prioritize preventing false positives (blocking legitimate new decisions) over false negatives (missing potential duplicates), with plans to refine the threshold once 500+ labeled examples are collected.
+  Files: linker_calibration_events, dedup_logic
+
 - Track sessions via a server-side generated session_id stored in Redis with a 30-minute rolling TTL, instead of relying on inactivity gap computation. Include the session_id as a foreign key in the mcp_logs table to allow accurate deduplication of discovery costs.
   Reason: Server-side generation is safer than relying on client-side headers as agents are inconsistent. Using a Redis-backed TTL ensures that sessions are grouped correctly despite agent re-initialization patterns, providing more accurate cost tracking and session lifecycle management.
   Files: mcp_logs, SessionDetector, mcp_key_handler
