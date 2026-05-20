@@ -9,9 +9,9 @@ Before writing or modifying code, review these rules and do not violate them.
 1. 🔴 **[CRITICAL]** MongoDB is strictly prohibited from being integrated into the current technology stack, including for analytics events.
    - **Why:** There is an active and non-negotiable architectural constraint against MongoDB in the stack due to the critical requirement for ACID compliance across all billing and user data. MongoDB does not satisfy this fundamental requirement.
 
-2. 🟠 **[HIGH]** We will extend the use of Umbraco to leverage its CMS functionality alongside its webhook and ingester capabilities to process elastic data, which will then be served to the frontend via a materializer and a dedicated service using GraphQL.
-   - **Why:** By utilizing Umbraco's existing webhook and ingester features, we can streamline data flow and minimize the introduction of additional external services for data processing, while maintaining a consistent tech stack.
-   - **Files:** `src/infrastructure/ingester`, `src/api/graphql`, `src/services/materializer`
+2. 🟠 **[HIGH]** All LLM calls must be made through the GuardedProviderRegistry using either wrapTextProvider or wrapEmbeddingProvider instead of direct SDK calls.
+   - **Why:** Using the registry ensures that all calls are tracked for cost accounting and can be dynamically controlled via system-wide kill switches.
+   - **Files:** `src/llm/providers/registry.ts`, `src/llm/providers/guarded_registry.ts`
 
 3. 🟠 **[HIGH]** The team will use the Umbraco CMS platform to build each component of the frontend website.
    - **Why:** Umbraco was selected as the designated CMS to standardize the development of frontend components.
@@ -91,56 +91,60 @@ Before writing or modifying code, review these rules and do not violate them.
 23. 🟠 **[HIGH]** We will implement a multi-provider abstraction where each pipeline step (detection, extraction, enrichment, formatting) has its own LLM provider configuration via environment variables. At request time, an 'effort mode' can override the provider selection on a per-company basis.
    - **Why:** This approach allows companies with high context volume (Tier 3+) to pay extra for Claude-Sonnet's accuracy where needed, while companies with tighter budgets can use more cost-effective options like Gemini-Flash for all steps. It also decouples our infrastructure from individual LLM vendor stability and enables independent contract negotiations with different providers (Anthropic, OpenAI, Google).
 
-24. 🟡 **[MEDIUM]** Adopt TypeScript as the mandatory language for all new backend services and enforce a strict convention where all API endpoints must return camelCase JSON.
+24. 🟡 **[MEDIUM]** The team will migrate all Indian payment processing operations from Stripe to Paddle.
+   - **Why:** Stripe is no longer a viable or legal option for payment processing in India due to government-imposed bans, making a migration to a supported alternative like Paddle necessary for continuity.
+   - **Files:** `src/billing/payment_processor.ts`, `src/config/payments.json`
+
+25. 🟡 **[MEDIUM]** Adopt TypeScript as the mandatory language for all new backend services and enforce a strict convention where all API endpoints must return camelCase JSON.
    - **Why:** TypeScript provides necessary type safety to reduce runtime errors in backend services, and a consistent camelCase JSON format ensures predictability for frontend consumption and API consistency.
    - **Files:** `/src/backend/`
 
-25. 🟡 **[MEDIUM]** The team has officially cancelled the usage and implementation of RFC 78.
+26. 🟡 **[MEDIUM]** The team has officially cancelled the usage and implementation of RFC 78.
    - **Why:** The conversation indicates a strategic shift away from the previously proposed RFC 78, implying it is no longer aligned with current requirements or priorities.
 
-26. 🟡 **[MEDIUM]** Use RFC7812 as the specification for validating all JSON data synced by the server related to theme configurations.
+27. 🟡 **[MEDIUM]** Use RFC7812 as the specification for validating all JSON data synced by the server related to theme configurations.
    - **Why:** RFC7812 provides a standardized approach for schema validation, ensuring consistency and reliability across synced theme data.
    - **Files:** `src/sync/theme-validation.js`
 
-27. 🟡 **[MEDIUM]** All new vector indexes must be created using the HNSW algorithm. Existing IVFFlat indexes (specifically in the llm_cache table) are to be migrated to HNSW in Sprint 16.
+28. 🟡 **[MEDIUM]** All new vector indexes must be created using the HNSW algorithm. Existing IVFFlat indexes (specifically in the llm_cache table) are to be migrated to HNSW in Sprint 16.
    - **Why:** HNSW is the current architectural standard for vector indexing. The previous rejection of the migration to HNSW was due to operational risks in production, not a lack of performance or technical suitability of HNSW.
    - **Files:** `db/schema/vector_indexes`, `db/migrations/sprint_16/migrate_llm_cache_to_hnsw`
 
-28. 🟡 **[MEDIUM]** Adopt the HIGH severity specification as the authoritative version for the RFC 7807 error format, which includes fields: type, title, status, detail, and instance.
+29. 🟡 **[MEDIUM]** Adopt the HIGH severity specification as the authoritative version for the RFC 7807 error format, which includes fields: type, title, status, detail, and instance.
    - **Why:** The team identified that two existing conventions were redundant. Designating the HIGH severity entry as canonical while allowing the fusion engine to merge duplicate references ensures consistency across documentation and API implementations.
    - **Files:** `packages/api/src/plugins/error-handler.ts`
 
-29. 🟡 **[MEDIUM]** We have standardized on cosine distance (using the <=> operator in pgvector) for all similarity search operations.
+30. 🟡 **[MEDIUM]** We have standardized on cosine distance (using the <=> operator in pgvector) for all similarity search operations.
    - **Why:** Cosine distance provides significantly better recall (12% improvement) on normalized text embeddings compared to L2 distance. Furthermore, L2 distance is overly sensitive to embedding magnitude, making it less reliable for our specific use case.
 
-30. 🟡 **[MEDIUM]** MongoDB is strictly prohibited for use in core pipeline services (including the core decision pipeline, authentication, and the context store). These services must exclusively use PostgreSQL 16 and Redis. Any deviation requires a formal ADR.
+31. 🟡 **[MEDIUM]** MongoDB is strictly prohibited for use in core pipeline services (including the core decision pipeline, authentication, and the context store). These services must exclusively use PostgreSQL 16 and Redis. Any deviation requires a formal ADR.
    - **Why:** To maintain architectural integrity and prevent fragmentation in the core tech stack. Previous attempts to introduce MongoDB for event queues nearly caused instability, highlighting the need for a hard, enforceable constraint.
    - **Files:** `analytics/storage`, `infrastructure/database-policy`
 
-31. 🟡 **[MEDIUM]** The team decided to discontinue the use of EventStoreDB and removed event sourcing as an architectural pattern following the migration back to a monorepo.
+32. 🟡 **[MEDIUM]** The team decided to discontinue the use of EventStoreDB and removed event sourcing as an architectural pattern following the migration back to a monorepo.
    - **Why:** The complexity of maintaining three separate runbooks for EventStoreDB operations outweighed the benefits of its auditability features for the current team size and system scale.
 
-32. 🟡 **[MEDIUM]** All internal API routes must adhere to the RFC 7807 error format, consistent with public-facing API routes.
+33. 🟡 **[MEDIUM]** All internal API routes must adhere to the RFC 7807 error format, consistent with public-facing API routes.
    - **Why:** Inconsistent error formats, specifically plain strings from internal routes, prevent AI tools from reliably parsing and analyzing errors, leading to broken analysis workflows.
    - **Files:** `packages/api/src/routes/internal/`
 
-33. 🟡 **[MEDIUM]** We will use the `text-embedding-3-small` OpenAI model to generate 1536-dimension embeddings. These embeddings will be stored in the `knowledge_chunks` table within PostgreSQL. The HNSW index used for vector search will be configured with `ef_construction=200` and `m=16`.
+34. 🟡 **[MEDIUM]** We will use the `text-embedding-3-small` OpenAI model to generate 1536-dimension embeddings. These embeddings will be stored in the `knowledge_chunks` table within PostgreSQL. The HNSW index used for vector search will be configured with `ef_construction=200` and `m=16`.
    - **Why:** The chosen HNSW parameters (`ef_construction=200` and `m=16`) are set to provide an optimal tradeoff between recall accuracy and search speed. The `text-embedding-3-small` model is selected for generating the text embeddings.
    - **Files:** `packages/decision-store/src/schema.ts`
 
-34. 🟡 **[MEDIUM]** We decided to use cosine distance for semantic similarity search of text embeddings with pgvector HNSW for deduplication.
+35. 🟡 **[MEDIUM]** We decided to use cosine distance for semantic similarity search of text embeddings with pgvector HNSW for deduplication.
    - **Why:** Cosine distance is invariant to vector magnitude, meaning it only considers the direction of vectors. This property is precisely what is desired for semantic similarity of text embeddings, as it allows for accurate comparison of semantic meaning regardless of variations in embedding vector norms. L2 (Euclidean) distance, on the other hand, would incorrectly penalize vectors with different magnitudes, even if they share the same semantic direction.
 
-35. 🟡 **[MEDIUM]** Implemented Redis semantic caching for LLM embedding calls. The cache key is a hash of the input text, model, and provider. The cache entries have a Time-To-Live (TTL) of 1 hour.
+36. 🟡 **[MEDIUM]** Implemented Redis semantic caching for LLM embedding calls. The cache key is a hash of the input text, model, and provider. The cache entries have a Time-To-Live (TTL) of 1 hour.
    - **Why:** Redis was a natural extension since it is already in use for BullMQ and session caching. This implementation reduced redundant embedding calls by approximately 40% in tests.
 
-36. 🟡 **[MEDIUM]** The Revenue squad now has exclusive ownership of the billing module and Stripe integration, requiring their explicit approval for all pull requests affecting these areas.
+37. 🟡 **[MEDIUM]** The Revenue squad now has exclusive ownership of the billing module and Stripe integration, requiring their explicit approval for all pull requests affecting these areas.
    - **Why:** Centralizing ownership ensures better control, security, and specialized maintenance for critical payment-related infrastructure.
    - **Files:** `packages/api/src/billing/`, `src/modules/billing/`, `src/integrations/stripe/`
 
-37. 🟢 **[LOW]** Use standard SCSS in a separate navbar.scss file for the new navigation component.
+38. 🟢 **[LOW]** Use standard SCSS in a separate navbar.scss file for the new navigation component.
    - **Why:** Complex hover state requirements for the navigation component lead to unmanageable code when using Tailwind utility classes.
    - **Files:** `navbar.scss`, `navbar.tsx`
 
-38. 🟢 **[LOW]** The team will use iPhones to perform mobile calls.
+39. 🟢 **[LOW]** The team will use iPhones to perform mobile calls.
    - **Why:** The team aligned on a single mobile device platform for communication consistency.
