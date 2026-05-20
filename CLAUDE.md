@@ -132,6 +132,12 @@ Violating these decisions requires explicit approval.
 - **Do NOT:** Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting). (This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.)
 - **Do NOT:** Consolidate to a single LLM provider for all pipeline steps. (This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.)
 
+### Set similarity threshold for decision deduplication to 0.15 cosine distance (MEDIUM)
+- **Decision:** Maintain the current cosine distance threshold of < 0.15 as the similarity floor for identifying deduplication candidates.
+- **Rationale:** A strict threshold is intentionally chosen to prioritize preventing false positives (blocking legitimate new decisions) over false negatives (missing potential duplicates), with plans to refine the threshold once 500+ labeled examples are collected.
+- **Affected files:** `linker_calibration_events`, `dedup_logic`
+- **Do NOT:** Lowering the similarity threshold (e.g., to 0.18) (The current threshold is intentionally strict to avoid false positives and maintain a high bar for what constitutes a duplicate decision.)
+
 ### Implement server-side session tracking for MCP keys using Redis (MEDIUM)
 - **Decision:** Track sessions via a server-side generated session_id stored in Redis with a 30-minute rolling TTL, instead of relying on inactivity gap computation. Include the session_id as a foreign key in the mcp_logs table to allow accurate deduplication of discovery costs.
 - **Rationale:** Server-side generation is safer than relying on client-side headers as agents are inconsistent. Using a Redis-backed TTL ensures that sessions are grouped correctly despite agent re-initialization patterns, providing more accurate cost tracking and session lifecycle management.
@@ -194,11 +200,5 @@ Violating these decisions requires explicit approval.
 
 ### Send onboarding link via Slack DM upon app installation (MEDIUM)
 - **Decision:** Implement a mechanism to DM the onboarding link to the workspace admin immediately upon app installation (app_installed event) rather than waiting for message events.
-- **Rationale:** Direct messaging the onboarding link ensures users complete the dashboard setup process, preventing the creation of 'ghost companies' and avoiding errors when the recorder tries to process events for an uninitialized workspace.
-- **Affected files:** `src/integrations/slack/events/app_installed.ts`, `src/dashboard/oauth/callback.ts`
-- **Do NOT:** Handle team_join event (The team_join event triggers for new users joining a workspace, not for the initial app installation, making it unsuitable for driving workspace-level onboarding.)
-
-### Increase detection confidence threshold for PassiveDetector in saver mode (MEDIUM)
-- **Decision:** The team will tune the Gemini-2.5-flash prompt for PassiveDetector in saver mode to increase the detection confidence floor.
 
 <!-- decispher: output truncated to context budget -->
