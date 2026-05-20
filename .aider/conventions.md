@@ -288,6 +288,14 @@ Aider should follow all of these conventions when making changes.
 
 ## Mcp
 
+### Implement server-side session tracking for MCP keys using Redis
+
+**Convention:** Track sessions via a server-side generated session_id stored in Redis with a 30-minute rolling TTL, instead of relying on inactivity gap computation. Include the session_id as a foreign key in the mcp_logs table to allow accurate deduplication of discovery costs.
+
+**Why:** Server-side generation is safer than relying on client-side headers as agents are inconsistent. Using a Redis-backed TTL ensures that sessions are grouped correctly despite agent re-initialization patterns, providing more accurate cost tracking and session lifecycle management.
+
+**Relevant files:** `mcp_logs`, `SessionDetector`, `mcp_key_handler`
+
 ### Use 30-minute inactivity window for MCP session detection
 
 **Convention:** Define a new MCP session as any gap of 30 minutes or more between tool calls on mcp_logs per API key.
@@ -439,22 +447,6 @@ Aider should follow all of these conventions when making changes.
 **Convention:** All new vector indexes must be created using the HNSW algorithm. Existing IVFFlat indexes (specifically in the llm_cache table) are to be migrated to HNSW in Sprint 16.
 
 **Why:** HNSW is the current architectural standard for vector indexing. The previous rejection of the migration to HNSW was due to operational risks in production, not a lack of performance or technical suitability of HNSW.
-
-**Relevant files:** `db/schema/vector_indexes`, `db/migrations/sprint_16/migrate_llm_cache_to_hnsw`
-
-## Rfc-7807
-
-### Establish authoritative RFC 7807 error format convention
-
-**Convention:** Adopt the HIGH severity specification as the authoritative version for the RFC 7807 error format, which includes fields: type, title, status, detail, and instance.
-
-**Why:** The team identified that two existing conventions were redundant. Designating the HIGH severity entry as canonical while allowing the fusion engine to merge duplicate references ensures consistency across documentation and API implementations.
-
-**Relevant files:** `packages/api/src/plugins/error-handler.ts`
-
-## Pgvector
-
-### Use cosine distance for pgvector similarity searches
 
 
 <!-- decispher: output truncated to context budget -->
