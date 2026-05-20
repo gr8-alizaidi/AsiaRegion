@@ -286,6 +286,16 @@ Aider should follow all of these conventions when making changes.
 
 **Relevant files:** `packages/api/src/routes/internal/`
 
+## Mcp
+
+### Use 30-minute inactivity window for MCP session detection
+
+**Convention:** Define a new MCP session as any gap of 30 minutes or more between tool calls on mcp_logs per API key.
+
+**Why:** The 30-minute window serves as a known, intentional approximation to define session boundaries for cost calculation, acknowledging that very slow agents may trigger multiple sessions.
+
+**Relevant files:** `ADR-033`, `SessionDetector`
+
 ## Backend
 
 ### Bypass minConfidence check for manual source type in analyzer
@@ -445,12 +455,6 @@ Aider should follow all of these conventions when making changes.
 ## Pgvector
 
 ### Use cosine distance for pgvector similarity searches
-
-**Convention:** We have standardized on cosine distance (using the <=> operator in pgvector) for all similarity search operations.
-
-**Why:** Cosine distance provides significantly better recall (12% improvement) on normalized text embeddings compared to L2 distance. Furthermore, L2 distance is overly sensitive to embedding magnitude, making it less reliable for our specific use case.
-
-### Use cosine distance over L2 for semantic text embedding similarity with pgvector HNSW
 
 
 <!-- decispher: output truncated to context budget -->
