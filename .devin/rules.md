@@ -227,6 +227,14 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 - ~~Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting).~~ — This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.
 - ~~Consolidate to a single LLM provider for all pipeline steps.~~ — This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.
 
+### Bypass confidence threshold for explicit capture intents
+
+- **Severity:** MEDIUM
+- **Rule:** Implement a 'captureIntent' field in the pipeline context where 'explicit' intent (manual dashboard entry or @decispher command) bypasses the minConfidence threshold, while 'passive' intent remains subject to it.
+- **Rationale:** Explicit user commands indicate a deliberate intent to capture data, overriding the need for confidence filtering which is primarily intended for passive/automated collection.
+- **Scope:** app/workers/process_comment_worker.rb, app/services/pipeline_context.rb
+- **Tags:** llm, threshold, pipeline, backend
+
 ### Bypass minConfidence check for manual source type in analyzer
 
 - **Severity:** MEDIUM
@@ -318,16 +326,5 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 
 - **Severity:** MEDIUM
 - **Rule:** The team will tune the Gemini-2.5-flash prompt for PassiveDetector in saver mode to increase the detection confidence floor.
-- **Rationale:** The current confidence threshold is allowing low-quality matches (standup messages) to be classified as actionable context units. Tuning the system prompt is the most efficient way to reduce noise without switching the underlying model or building complex per-channel weight features.
-- **Scope:** src/PassiveDetector/prompt.ts, src/PassiveDetector/detection.py
-- **Tags:** PassiveDetector, Gemini, AI, configuration, filtering
-
-**Alternatives considered (rejected):**
-- ~~Change the detection model~~ — Requires an Architectural Decision Record (ADR) and is likely overkill compared to a prompt update.
-- ~~Implement per-channel weights~~ — The current infrastructure does not support per-channel configurations.
-
-### Implement client-side credit balance check for Ask Knowledge Base
-
-- **Severity:** MEDIUM
 
 <!-- decispher: output truncated to context budget -->
