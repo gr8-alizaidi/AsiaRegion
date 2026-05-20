@@ -132,6 +132,11 @@ Violating these decisions requires explicit approval.
 - **Do NOT:** Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting). (This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.)
 - **Do NOT:** Consolidate to a single LLM provider for all pipeline steps. (This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.)
 
+### Automate stale decision archiving via ContextLifecycleWorker (MEDIUM)
+- **Decision:** Implement a ContextLifecycleWorker job that triggers the existing archiveStalePendingReview function based on decisions not reviewed in over 90 days, controlled by the STALE_ARCHIVE_ENABLED environment variable.
+- **Rationale:** Automating the process reduces operational overhead, and using an environment flag allows for safe testing in staging before production rollout.
+- **Affected files:** `src/workers/ContextLifecycleWorker.ts`, `src/services/ApprovalService.ts`
+
 ### Use fusion-eval harness for linkThreshold tuning (MEDIUM)
 - **Decision:** The team will refrain from manually adjusting DEFAULT_FUSION_PARAMS.linkThreshold and instead utilize the existing precision/recall harness in packages/fusion-eval to empirically evaluate changes before deployment.
 - **Rationale:** Blindly changing global thresholds can negatively impact system accuracy. Validating threshold adjustments through the dedicated fusion-eval harness ensures that changes to the linkage logic do not reduce recall for valid links.
@@ -198,10 +203,5 @@ Violating these decisions requires explicit approval.
 - **Affected files:** `src/sync/theme-validation.js`
 
 ### Standardize on HNSW for new vector indexes (MEDIUM)
-- **Decision:** All new vector indexes must be created using the HNSW algorithm. Existing IVFFlat indexes (specifically in the llm_cache table) are to be migrated to HNSW in Sprint 16.
-- **Rationale:** HNSW is the current architectural standard for vector indexing. The previous rejection of the migration to HNSW was due to operational risks in production, not a lack of performance or technical suitability of HNSW.
-- **Affected files:** `db/schema/vector_indexes`, `db/migrations/sprint_16/migrate_llm_cache_to_hnsw`
-- **Do NOT:** IVFFlat (The team has standardized on HNSW for new indexes to maintain architectural consistency, despite potential performance profiles for specific query patterns.)
-
 
 <!-- decispher: output truncated to context budget -->
