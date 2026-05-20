@@ -143,6 +143,12 @@
   Rationale: Inconsistent error formats, specifically plain strings from internal routes, prevent AI tools from reliably parsing and analyzing errors, leading to broken analysis workflows.
   Files: packages/api/src/routes/internal/
 
+## Mcp
+
+- Define a new MCP session as any gap of 30 minutes or more between tool calls on mcp_logs per API key.
+  Rationale: The 30-minute window serves as a known, intentional approximation to define session boundaries for cost calculation, acknowledging that very slow agents may trigger multiple sessions.
+  Files: ADR-033, SessionDetector
+
 ## Backend
 
 - Manual captures with sourceType='manual' will bypass the minConfidence check entirely by adding an explicit guard in the detection step where shouldRun returns true by default for manual types.
