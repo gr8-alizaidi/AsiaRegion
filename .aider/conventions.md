@@ -286,6 +286,16 @@ Aider should follow all of these conventions when making changes.
 
 **Relevant files:** `packages/api/src/routes/internal/`
 
+## Deduplication
+
+### Set similarity threshold for decision deduplication to 0.15 cosine distance
+
+**Convention:** Maintain the current cosine distance threshold of < 0.15 as the similarity floor for identifying deduplication candidates.
+
+**Why:** A strict threshold is intentionally chosen to prioritize preventing false positives (blocking legitimate new decisions) over false negatives (missing potential duplicates), with plans to refine the threshold once 500+ labeled examples are collected.
+
+**Relevant files:** `linker_calibration_events`, `dedup_logic`
+
 ## Mcp
 
 ### Implement server-side session tracking for MCP keys using Redis
@@ -437,16 +447,6 @@ Aider should follow all of these conventions when making changes.
 **Convention:** Use RFC7812 as the specification for validating all JSON data synced by the server related to theme configurations.
 
 **Why:** RFC7812 provides a standardized approach for schema validation, ensuring consistency and reliability across synced theme data.
-
-**Relevant files:** `src/sync/theme-validation.js`
-
-## Vector-search
-
-### Standardize on HNSW for new vector indexes
-
-**Convention:** All new vector indexes must be created using the HNSW algorithm. Existing IVFFlat indexes (specifically in the llm_cache table) are to be migrated to HNSW in Sprint 16.
-
-**Why:** HNSW is the current architectural standard for vector indexing. The previous rejection of the migration to HNSW was due to operational risks in production, not a lack of performance or technical suitability of HNSW.
 
 
 <!-- decispher: output truncated to context budget -->
