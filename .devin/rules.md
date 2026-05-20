@@ -18,13 +18,13 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 **Alternatives considered (rejected):**
 - ~~MongoDB for analytics events~~ — It violates an active architectural constraint due to its lack of native ACID compliance, which is non-negotiable for billing and user data within our stack.
 
-### Extend Umbraco usage to include data ingestion and processing
+### Mandate use of GuardedProviderRegistry for all LLM service calls
 
 - **Severity:** HIGH
-- **Rule:** We will extend the use of Umbraco to leverage its CMS functionality alongside its webhook and ingester capabilities to process elastic data, which will then be served to the frontend via a materializer and a dedicated service using GraphQL.
-- **Rationale:** By utilizing Umbraco's existing webhook and ingester features, we can streamline data flow and minimize the introduction of additional external services for data processing, while maintaining a consistent tech stack.
-- **Scope:** src/infrastructure/ingester, src/api/graphql, src/services/materializer
-- **Tags:** umbraco, graphql, architecture, backend, data-processing, fusion:contradicts
+- **Rule:** All LLM calls must be made through the GuardedProviderRegistry using either wrapTextProvider or wrapEmbeddingProvider instead of direct SDK calls.
+- **Rationale:** Using the registry ensures that all calls are tracked for cost accounting and can be dynamically controlled via system-wide kill switches.
+- **Scope:** src/llm/providers/registry.ts, src/llm/providers/guarded_registry.ts
+- **Tags:** llm, infrastructure, governance, cost-management
 
 ### Use Umbraco CMS for frontend component development
 
@@ -227,6 +227,14 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 - ~~Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting).~~ — This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.
 - ~~Consolidate to a single LLM provider for all pipeline steps.~~ — This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.
 
+### Migrate Indian payment processing from Stripe to Paddle
+
+- **Severity:** MEDIUM
+- **Rule:** The team will migrate all Indian payment processing operations from Stripe to Paddle.
+- **Rationale:** Stripe is no longer a viable or legal option for payment processing in India due to government-imposed bans, making a migration to a supported alternative like Paddle necessary for continuity.
+- **Scope:** src/billing/payment_processor.ts, src/config/payments.json
+- **Tags:** payments, stripe, paddle, infrastructure, compliance
+
 ### Standardize on TypeScript and camelCase JSON for backend services
 
 - **Severity:** MEDIUM
@@ -332,7 +340,5 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 ### Implement Redis Semantic Caching for LLM Embedding Calls
 
 - **Severity:** MEDIUM
-- **Rule:** Implemented Redis semantic caching for LLM embedding calls. The cache key is a hash of the input text, model, and provider. The cache entries have a Time-To-Live (TTL) of 1 hour.
-- **Rationale:** Redis was a natural extension since it is already in use for BullMQ and session caching. This implementation reduced redundant embedding calls by approximately 40% in tests.
 
 <!-- decispher: output truncated to context budget -->
