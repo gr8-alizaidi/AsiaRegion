@@ -278,6 +278,16 @@ Aider should follow all of these conventions when making changes.
 
 **Relevant files:** `packages/api/src/routes/internal/`
 
+## Slack
+
+### Send onboarding link via Slack DM upon app installation
+
+**Convention:** Implement a mechanism to DM the onboarding link to the workspace admin immediately upon app installation (app_installed event) rather than waiting for message events.
+
+**Why:** Direct messaging the onboarding link ensures users complete the dashboard setup process, preventing the creation of 'ghost companies' and avoiding errors when the recorder tries to process events for an uninitialized workspace.
+
+**Relevant files:** `src/integrations/slack/events/app_installed.ts`, `src/dashboard/oauth/callback.ts`
+
 ## PassiveDetector
 
 ### Increase detection confidence threshold for PassiveDetector in saver mode
