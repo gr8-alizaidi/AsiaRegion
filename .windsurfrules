@@ -12,9 +12,9 @@ Cascade MUST respect these rules when generating or modifying code.
 
 ## [HIGH]
 
-- We will extend the use of Umbraco to leverage its CMS functionality alongside its webhook and ingester capabilities to process elastic data, which will then be served to the frontend via a materializer and a dedicated service using GraphQL.
-  Reason: By utilizing Umbraco's existing webhook and ingester features, we can streamline data flow and minimize the introduction of additional external services for data processing, while maintaining a consistent tech stack.
-  Files: src/infrastructure/ingester, src/api/graphql, src/services/materializer
+- All LLM calls must be made through the GuardedProviderRegistry using either wrapTextProvider or wrapEmbeddingProvider instead of direct SDK calls.
+  Reason: Using the registry ensures that all calls are tracked for cost accounting and can be dynamically controlled via system-wide kill switches.
+  Files: src/llm/providers/registry.ts, src/llm/providers/guarded_registry.ts
 
 - The team will use the Umbraco CMS platform to build each component of the frontend website.
   Reason: Umbraco was selected as the designated CMS to standardize the development of frontend components.
@@ -95,6 +95,10 @@ Cascade MUST respect these rules when generating or modifying code.
   Reason: This approach allows companies with high context volume (Tier 3+) to pay extra for Claude-Sonnet's accuracy where needed, while companies with tighter budgets can use more cost-effective options like Gemini-Flash for all steps. It also decouples our infrastructure from individual LLM vendor stability and enables independent contract negotiations with different providers (Anthropic, OpenAI, Google).
 
 ## [MEDIUM]
+
+- The team will migrate all Indian payment processing operations from Stripe to Paddle.
+  Reason: Stripe is no longer a viable or legal option for payment processing in India due to government-imposed bans, making a migration to a supported alternative like Paddle necessary for continuity.
+  Files: src/billing/payment_processor.ts, src/config/payments.json
 
 - Adopt TypeScript as the mandatory language for all new backend services and enforce a strict convention where all API endpoints must return camelCase JSON.
   Reason: TypeScript provides necessary type safety to reduce runtime errors in backend services, and a consistent camelCase JSON format ensures predictability for frontend consumption and API consistency.
