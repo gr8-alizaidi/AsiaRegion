@@ -39,46 +39,24 @@
 
 ---
 
-<!-- DECISION-DEC-BFB58A -->
-## Decision: Extend Umbraco usage to include data ingestion and processing
+<!-- DECISION-CNST-08702B -->
+## Decision: Mandate use of GuardedProviderRegistry for all LLM service calls
 
 **Status**: Active  
-**Date**: 2026-05-13  
+**Date**: 2026-05-20  
 **Severity**: Critical
 
 **Files**:
-- `src/infrastructure/ingester`
-- `src/api/graphql`
-- `src/services/materializer`
-
-**Rules**:
-```json
-{
-  "conditions": [
-    {
-      "type": "file",
-      "pattern": "src/{infrastructure/ingester,api/graphql,services/materializer}/**/*",
-      "content_rules": [
-        {
-          "mode": "regex",
-          "start": 0,
-          "pattern": "(external-ingester|standalone-processing|third-party-data-service)"
-        }
-      ],
-      "content_match_mode": "any"
-    }
-  ],
-  "match_mode": "any"
-}
-```
+- `src/llm/providers/registry.ts`
+- `src/llm/providers/guarded_registry.ts`
 
 ### Context
 
-**Problem:** We need an architecture for processing elastic data and serving it to the frontend via GraphQL.
+**Problem:** Direct SDK calls to LLM providers bypass centralized cost recording and kill switch mechanisms.
 
-**Decision:** We will extend the use of Umbraco to leverage its CMS functionality alongside its webhook and ingester capabilities to process elastic data, which will then be served to the frontend via a materializer and a dedicated service using GraphQL.
+**Decision:** All LLM calls must be made through the GuardedProviderRegistry using either wrapTextProvider or wrapEmbeddingProvider instead of direct SDK calls.
 
-**Rationale:** By utilizing Umbraco's existing webhook and ingester features, we can streamline data flow and minimize the introduction of additional external services for data processing, while maintaining a consistent tech stack.
+**Rationale:** Using the registry ensures that all calls are tracked for cost accounting and can be dynamically controlled via system-wide kill switches.
 
 ---
 
@@ -930,5 +908,15 @@
 ## Decision: Define LLM Model Combinations for Saver, Balanced, Pro, and Super Effort Modes
 
 **Status**: Active  
+**Date**: 2026-04-18  
+**Severity**: Critical
+
+**Files**:
+- `**/*`
+
+### Context
+
+**Problem:** We need to lock down exactly which model combination maps to which effort mode.
+
 
 <!-- decispher: output truncated to context budget -->
