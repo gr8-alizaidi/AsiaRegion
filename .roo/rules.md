@@ -90,6 +90,9 @@
 
 ## General Conventions
 
+- **Bypass minConfidence check for manual source type in analyzer:** Manual captures with sourceType='manual' will bypass the minConfidence check entirely by adding an explicit guard in the detection step where shouldRun returns true by default for manual types.
+  *(Manual content is explicitly created by the user, making confidence scoring irrelevant compared to automated conversational or code sources.)*
+
 - **Establish stale archival notification process for decision units:** Implement a notification process where owners receive a Slack message 7 days before the archival cutoff. This involves adding a 'stale_warning' type to the NotificationService, querying for decisions with a last_reviewed_at timestamp between 83 and 84 days ago, and triggering a notification job. Viewing a decision on the dashboard does not reset the review timestamp; only an explicit approve, reject, or mark_active action will.
   *(Ensures stakeholders are informed before data archival without creating a loop where passive dashboard activity prevents legitimate cleanup of stale data.)*
 
