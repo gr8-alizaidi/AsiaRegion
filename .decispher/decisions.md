@@ -50,6 +50,31 @@
 - `src/llm/providers/registry.ts`
 - `src/llm/providers/guarded_registry.ts`
 
+**Rules**:
+```json
+{
+  "conditions": [
+    {
+      "type": "file",
+      "pattern": "src/llm/**/*.ts",
+      "content_rules": [
+        {
+          "mode": "regex",
+          "pattern": "(OpenAI|Anthropic|GoogleGenAI|LangChain)\\.",
+          "patterns": [
+            "new OpenAI(",
+            "new Anthropic(",
+            "createClient("
+          ]
+        }
+      ],
+      "content_match_mode": "any"
+    }
+  ],
+  "match_mode": "any"
+}
+```
+
 ### Context
 
 **Problem:** Direct SDK calls to LLM providers bypass centralized cost recording and kill switch mechanisms.
@@ -915,8 +940,6 @@
 - `**/*`
 
 ### Context
-
-**Problem:** We need to lock down exactly which model combination maps to which effort mode.
 
 
 <!-- decispher: output truncated to context budget -->
