@@ -43,6 +43,7 @@ Any code change that violates these decisions MUST be flagged.
 
 | Decision | Rationale | Files |
 |----------|-----------|-------|
+| Extend the session timeout period for the web dashboard application to 4 hours. | Extended sessions improve usability for long review tasks, while maintaining shorter token life for mobile to satisfy security requirements regarding background app behavior. | web/config/session.js |
 | Increased the web API rate limit to 500 requests per minute for premium tier users. | Internal testing confirmed that existing system latency remains within acceptable thresholds and the database is capable of handling the increased load. | middleware/rate-limit-config.js |
 | Deduplication will now only occur between decisions of the same type. The threshold for same-type deduplication is lowered from 0.15 to 0.12. | Calibration analysis of 847 labeled examples indicates that cross-type deduplication is invalid and 0.12 is the optimal threshold for same-type matching to ensure accurate dedup behavior. | findSimilarActiveWithScores, findSimilarByTypes |
 | Maintain the current cosine distance threshold of < 0.15 as the similarity floor for identifying deduplication candidates. | A strict threshold is intentionally chosen to prioritize preventing false positives (blocking legitimate new decisions) over false negatives (missing potential duplicates), with plans to refine the threshold once 500+ labeled examples are collected. | linker_calibration_events, dedup_logic |
