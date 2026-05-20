@@ -132,6 +132,13 @@ Violating these decisions requires explicit approval.
 - **Do NOT:** Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting). (This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.)
 - **Do NOT:** Consolidate to a single LLM provider for all pipeline steps. (This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.)
 
+### Use fusion-eval harness for linkThreshold tuning (MEDIUM)
+- **Decision:** The team will refrain from manually adjusting DEFAULT_FUSION_PARAMS.linkThreshold and instead utilize the existing precision/recall harness in packages/fusion-eval to empirically evaluate changes before deployment.
+- **Rationale:** Blindly changing global thresholds can negatively impact system accuracy. Validating threshold adjustments through the dedicated fusion-eval harness ensures that changes to the linkage logic do not reduce recall for valid links.
+- **Affected files:** `packages/fusion-eval`, `src/context-linker/params.ts`
+- **Do NOT:** Add 'redis' to the stopword list (Stopwords in the context-linker are restricted to title tokens and do not influence the entity extraction path.)
+- **Do NOT:** Blindly lower linkThreshold to 0.32 (Risk of unintended side effects and reduction in true positive linkage performance without empirical validation.)
+
 ### Unify hard conflict review notifications via NotificationService (MEDIUM)
 - **Decision:** Route all hard conflict notifications through the centralized NotificationService using a CONTRADICTS_REVIEW template, replacing the localized implementation in InteractionHandler.
 - **Rationale:** Routing through the NotificationService ensures consistent notification delivery regardless of the input channel (Slack or GitHub PRs), eliminating the inconsistency where GitHub-sourced conflicts currently lack alert logic.
@@ -196,13 +203,5 @@ Violating these decisions requires explicit approval.
 - **Affected files:** `db/schema/vector_indexes`, `db/migrations/sprint_16/migrate_llm_cache_to_hnsw`
 - **Do NOT:** IVFFlat (The team has standardized on HNSW for new indexes to maintain architectural consistency, despite potential performance profiles for specific query patterns.)
 
-### Establish authoritative RFC 7807 error format convention (MEDIUM)
-- **Decision:** Adopt the HIGH severity specification as the authoritative version for the RFC 7807 error format, which includes fields: type, title, status, detail, and instance.
-- **Rationale:** The team identified that two existing conventions were redundant. Designating the HIGH severity entry as canonical while allowing the fusion engine to merge duplicate references ensures consistency across documentation and API implementations.
-- **Affected files:** `packages/api/src/plugins/error-handler.ts`
-- **Do NOT:** MEDIUM severity specification (The HIGH severity version was explicitly selected as the authoritative and canonical standard.)
-
-### Use cosine distance for pgvector similarity searches (MEDIUM)
-- **Decision:** We have standardized on cosine distance (using the <=> operator in pgvector) for all similarity search operations.
 
 <!-- decispher: output truncated to context budget -->
