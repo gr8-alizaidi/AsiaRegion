@@ -132,6 +132,13 @@ Violating these decisions requires explicit approval.
 - **Do NOT:** Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting). (This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.)
 - **Do NOT:** Consolidate to a single LLM provider for all pipeline steps. (This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.)
 
+### Increase detection confidence threshold for PassiveDetector in saver mode (MEDIUM)
+- **Decision:** The team will tune the Gemini-2.5-flash prompt for PassiveDetector in saver mode to increase the detection confidence floor.
+- **Rationale:** The current confidence threshold is allowing low-quality matches (standup messages) to be classified as actionable context units. Tuning the system prompt is the most efficient way to reduce noise without switching the underlying model or building complex per-channel weight features.
+- **Affected files:** `src/PassiveDetector/prompt.ts`, `src/PassiveDetector/detection.py`
+- **Do NOT:** Change the detection model (Requires an Architectural Decision Record (ADR) and is likely overkill compared to a prompt update.)
+- **Do NOT:** Implement per-channel weights (The current infrastructure does not support per-channel configurations.)
+
 ### Implement client-side credit balance check for Ask Knowledge Base (MEDIUM)
 - **Decision:** The team decided to implement a client-side credit balance check in the frontend dashboard before allowing a request to hit the /api/companies/:companyId/mcp/ask-knowledge-base endpoint.
 - **Rationale:** The existing Redis pre-check in the backend is fail-open and only blocks after a SERIALIZABLE transaction confirms insufficient balance. A client-side check provides better user experience by surfacing the warning in the dashboard before the query is attempted, preventing unnecessary 402 errors.
@@ -198,12 +205,5 @@ Violating these decisions requires explicit approval.
 
 ### Use cosine distance over L2 for semantic text embedding similarity with pgvector HNSW (MEDIUM)
 - **Decision:** We decided to use cosine distance for semantic similarity search of text embeddings with pgvector HNSW for deduplication.
-- **Rationale:** Cosine distance is invariant to vector magnitude, meaning it only considers the direction of vectors. This property is precisely what is desired for semantic similarity of text embeddings, as it allows for accurate comparison of semantic meaning regardless of variations in embedding vector norms. L2 (Euclidean) distance, on the other hand, would incorrectly penalize vectors with different magnitudes, even if they share the same semantic direction.
-- **Do NOT:** L2 (Euclidean) distance (L2 distance penalizes vectors with different norms (magnitudes) even if they point in the same semantic direction, which is not suitable for accurately measuring semantic similarity of text embeddings.)
-
-### Implement Redis Semantic Caching for LLM Embedding Calls (MEDIUM)
-- **Decision:** Implemented Redis semantic caching for LLM embedding calls. The cache key is a hash of the input text, model, and provider. The cache entries have a Time-To-Live (TTL) of 1 hour.
-- **Rationale:** Redis was a natural extension since it is already in use for BullMQ and session caching. This implementation reduced redundant embedding calls by approximately 40% in tests.
-
 
 <!-- decispher: output truncated to context budget -->
