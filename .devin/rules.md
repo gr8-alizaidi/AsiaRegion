@@ -227,6 +227,17 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 - ~~Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting).~~ — This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.
 - ~~Consolidate to a single LLM provider for all pipeline steps.~~ — This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.
 
+### Send onboarding link via Slack DM upon app installation
+
+- **Severity:** MEDIUM
+- **Rule:** Implement a mechanism to DM the onboarding link to the workspace admin immediately upon app installation (app_installed event) rather than waiting for message events.
+- **Rationale:** Direct messaging the onboarding link ensures users complete the dashboard setup process, preventing the creation of 'ghost companies' and avoiding errors when the recorder tries to process events for an uninitialized workspace.
+- **Scope:** src/integrations/slack/events/app_installed.ts, src/dashboard/oauth/callback.ts
+- **Tags:** slack, onboarding, oauth, backend, error-handling
+
+**Alternatives considered (rejected):**
+- ~~Handle team_join event~~ — The team_join event triggers for new users joining a workspace, not for the initial app installation, making it unsuitable for driving workspace-level onboarding.
+
 ### Increase detection confidence threshold for PassiveDetector in saver mode
 
 - **Severity:** MEDIUM
@@ -328,16 +339,5 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 ### Abandoning EventStoreDB for monorepo event handling
 
 - **Severity:** MEDIUM
-- **Rule:** The team decided to discontinue the use of EventStoreDB and removed event sourcing as an architectural pattern following the migration back to a monorepo.
-- **Rationale:** The complexity of maintaining three separate runbooks for EventStoreDB operations outweighed the benefits of its auditability features for the current team size and system scale.
-- **Tags:** event-sourcing, eventstoredb, monorepo, architecture, infrastructure
-
-**Alternatives considered (rejected):**
-- ~~Retaining EventStoreDB for event sourcing~~ — The operational complexity was too high and not justified by the benefits gained.
-
-### Enforce RFC 7807 for Internal API Error Formats
-
-- **Severity:** MEDIUM
-- **Rule:** All internal API routes must adhere to the RFC 7807 error format, consistent with public-facing API routes.
 
 <!-- decispher: output truncated to context budget -->
