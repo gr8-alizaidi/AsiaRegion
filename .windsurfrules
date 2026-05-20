@@ -96,6 +96,10 @@ Cascade MUST respect these rules when generating or modifying code.
 
 ## [MEDIUM]
 
+- Implement a 'captureIntent' field in the pipeline context where 'explicit' intent (manual dashboard entry or @decispher command) bypasses the minConfidence threshold, while 'passive' intent remains subject to it.
+  Reason: Explicit user commands indicate a deliberate intent to capture data, overriding the need for confidence filtering which is primarily intended for passive/automated collection.
+  Files: app/workers/process_comment_worker.rb, app/services/pipeline_context.rb
+
 - Manual captures with sourceType='manual' will bypass the minConfidence check entirely by adding an explicit guard in the detection step where shouldRun returns true by default for manual types.
   Reason: Manual content is explicitly created by the user, making confidence scoring irrelevant compared to automated conversational or code sources.
   Files: src/analyzer/detection.ts
