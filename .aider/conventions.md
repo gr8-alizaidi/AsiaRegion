@@ -278,6 +278,16 @@ Aider should follow all of these conventions when making changes.
 
 **Relevant files:** `packages/api/src/routes/internal/`
 
+## Frontend
+
+### Implement client-side credit balance check for Ask Knowledge Base
+
+**Convention:** The team decided to implement a client-side credit balance check in the frontend dashboard before allowing a request to hit the /api/companies/:companyId/mcp/ask-knowledge-base endpoint.
+
+**Why:** The existing Redis pre-check in the backend is fail-open and only blocks after a SERIALIZABLE transaction confirms insufficient balance. A client-side check provides better user experience by surfacing the warning in the dashboard before the query is attempted, preventing unnecessary 402 errors.
+
+**Relevant files:** `/api/companies/:companyId/mcp/ask-knowledge-base`, `src/components/dashboard/CreditsPanel.tsx`, `src/hooks/useCreditBalance.ts`
+
 ## Payments
 
 ### Migrate Indian payment processing from Stripe to Paddle
