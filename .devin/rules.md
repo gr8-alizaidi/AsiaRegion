@@ -227,6 +227,18 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 - ~~Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting).~~ — This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.
 - ~~Consolidate to a single LLM provider for all pipeline steps.~~ — This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.
 
+### Use fusion-eval harness for linkThreshold tuning
+
+- **Severity:** MEDIUM
+- **Rule:** The team will refrain from manually adjusting DEFAULT_FUSION_PARAMS.linkThreshold and instead utilize the existing precision/recall harness in packages/fusion-eval to empirically evaluate changes before deployment.
+- **Rationale:** Blindly changing global thresholds can negatively impact system accuracy. Validating threshold adjustments through the dedicated fusion-eval harness ensures that changes to the linkage logic do not reduce recall for valid links.
+- **Scope:** packages/fusion-eval, src/context-linker/params.ts
+- **Tags:** context-linker, fusion-eval, search, configuration
+
+**Alternatives considered (rejected):**
+- ~~Add 'redis' to the stopword list~~ — Stopwords in the context-linker are restricted to title tokens and do not influence the entity extraction path.
+- ~~Blindly lower linkThreshold to 0.32~~ — Risk of unintended side effects and reduction in true positive linkage performance without empirical validation.
+
 ### Unify hard conflict review notifications via NotificationService
 
 - **Severity:** MEDIUM
@@ -316,20 +328,5 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 
 - **Severity:** MEDIUM
 - **Rule:** The team has officially cancelled the usage and implementation of RFC 78.
-- **Rationale:** The conversation indicates a strategic shift away from the previously proposed RFC 78, implying it is no longer aligned with current requirements or priorities.
-- **Tags:** rfc, architecture, process
-
-### Adopt RFC7812 for theme data JSON validation
-
-- **Severity:** MEDIUM
-- **Rule:** Use RFC7812 as the specification for validating all JSON data synced by the server related to theme configurations.
-- **Rationale:** RFC7812 provides a standardized approach for schema validation, ensuring consistency and reliability across synced theme data.
-- **Scope:** src/sync/theme-validation.js
-- **Tags:** rfc7812, json, validation, theme, sync
-
-### Standardize on HNSW for new vector indexes
-
-- **Severity:** MEDIUM
-- **Rule:** All new vector indexes must be created using the HNSW algorithm. Existing IVFFlat indexes (specifically in the llm_cache table) are to be migrated to HNSW in Sprint 16.
 
 <!-- decispher: output truncated to context budget -->
