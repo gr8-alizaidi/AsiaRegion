@@ -90,6 +90,9 @@
 
 ## General Conventions
 
+- **Use 30-minute inactivity window for MCP session detection:** Define a new MCP session as any gap of 30 minutes or more between tool calls on mcp_logs per API key.
+  *(The 30-minute window serves as a known, intentional approximation to define session boundaries for cost calculation, acknowledging that very slow agents may trigger multiple sessions.)*
+
 - **Bypass confidence threshold for explicit capture intents:** Implement a 'captureIntent' field in the pipeline context where 'explicit' intent (manual dashboard entry or @decispher command) bypasses the minConfidence threshold, while 'passive' intent remains subject to it.
   *(Explicit user commands indicate a deliberate intent to capture data, overriding the need for confidence filtering which is primarily intended for passive/automated collection.)*
 
