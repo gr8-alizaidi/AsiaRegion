@@ -294,6 +294,16 @@ Aider should follow all of these conventions when making changes.
 
 **Relevant files:** `packages/api/src/routes/internal/`
 
+## Web
+
+### Increase web dashboard session timeout to 4 hours
+
+**Convention:** Extend the session timeout period for the web dashboard application to 4 hours.
+
+**Why:** Extended sessions improve usability for long review tasks, while maintaining shorter token life for mobile to satisfy security requirements regarding background app behavior.
+
+**Relevant files:** `web/config/session.js`
+
 ## Deduplication
 
 ### Restrict record deduplication to same-type comparisons and update thresholds
@@ -433,16 +443,6 @@ Aider should follow all of these conventions when making changes.
 ### Migrate Indian payment processing from Stripe to Paddle
 
 **Convention:** The team will migrate all Indian payment processing operations from Stripe to Paddle.
-
-**Why:** Stripe is no longer a viable or legal option for payment processing in India due to government-imposed bans, making a migration to a supported alternative like Paddle necessary for continuity.
-
-**Relevant files:** `src/billing/payment_processor.ts`, `src/config/payments.json`
-
-## Typescript
-
-### Standardize on TypeScript and camelCase JSON for backend services
-
-**Convention:** Adopt TypeScript as the mandatory language for all new backend services and enforce a strict convention where all API endpoints must return camelCase JSON.
 
 
 <!-- decispher: output truncated to context budget -->
