@@ -227,6 +227,18 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 - ~~Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting).~~ — This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.
 - ~~Consolidate to a single LLM provider for all pipeline steps.~~ — This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.
 
+### Implement client-side credit balance check for Ask Knowledge Base
+
+- **Severity:** MEDIUM
+- **Rule:** The team decided to implement a client-side credit balance check in the frontend dashboard before allowing a request to hit the /api/companies/:companyId/mcp/ask-knowledge-base endpoint.
+- **Rationale:** The existing Redis pre-check in the backend is fail-open and only blocks after a SERIALIZABLE transaction confirms insufficient balance. A client-side check provides better user experience by surfacing the warning in the dashboard before the query is attempted, preventing unnecessary 402 errors.
+- **Scope:** /api/companies/:companyId/mcp/ask-knowledge-base, src/components/dashboard/CreditsPanel.tsx, src/hooks/useCreditBalance.ts
+- **Tags:** frontend, credits, user-experience, api-design
+
+**Alternatives considered (rejected):**
+- ~~Backend fail-closed check~~ — The current Redis architecture is fail-open for performance reasons; changing it would involve complex architectural changes to handle transaction locking and potential performance degradation.
+- ~~Surface 402 error in UI~~ — Displaying a 402 error after the user has already submitted the request is a poor user experience compared to preventing the request entirely via a dashboard warning.
+
 ### Migrate Indian payment processing from Stripe to Paddle
 
 - **Severity:** MEDIUM
@@ -325,20 +337,5 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 - **Rule:** We will use the `text-embedding-3-small` OpenAI model to generate 1536-dimension embeddings. These embeddings will be stored in the `knowledge_chunks` table within PostgreSQL. The HNSW index used for vector search will be configured with `ef_construction=200` and `m=16`.
 - **Rationale:** The chosen HNSW parameters (`ef_construction=200` and `m=16`) are set to provide an optimal tradeoff between recall accuracy and search speed. The `text-embedding-3-small` model is selected for generating the text embeddings.
 - **Scope:** packages/decision-store/src/schema.ts
-- **Tags:** vector-database, embeddings, PostgreSQL, HNSW, OpenAI, text-embedding-3-small
-
-### Use cosine distance over L2 for semantic text embedding similarity with pgvector HNSW
-
-- **Severity:** MEDIUM
-- **Rule:** We decided to use cosine distance for semantic similarity search of text embeddings with pgvector HNSW for deduplication.
-- **Rationale:** Cosine distance is invariant to vector magnitude, meaning it only considers the direction of vectors. This property is precisely what is desired for semantic similarity of text embeddings, as it allows for accurate comparison of semantic meaning regardless of variations in embedding vector norms. L2 (Euclidean) distance, on the other hand, would incorrectly penalize vectors with different magnitudes, even if they share the same semantic direction.
-- **Tags:** pgvector, HNSW, embeddings, semantic search, cosine distance, L2 distance, deduplication
-
-**Alternatives considered (rejected):**
-- ~~L2 (Euclidean) distance~~ — L2 distance penalizes vectors with different norms (magnitudes) even if they point in the same semantic direction, which is not suitable for accurately measuring semantic similarity of text embeddings.
-
-### Implement Redis Semantic Caching for LLM Embedding Calls
-
-- **Severity:** MEDIUM
 
 <!-- decispher: output truncated to context budget -->
