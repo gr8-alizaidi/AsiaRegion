@@ -227,6 +227,18 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 - ~~Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting).~~ — This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.
 - ~~Consolidate to a single LLM provider for all pipeline steps.~~ — This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.
 
+### Increase detection confidence threshold for PassiveDetector in saver mode
+
+- **Severity:** MEDIUM
+- **Rule:** The team will tune the Gemini-2.5-flash prompt for PassiveDetector in saver mode to increase the detection confidence floor.
+- **Rationale:** The current confidence threshold is allowing low-quality matches (standup messages) to be classified as actionable context units. Tuning the system prompt is the most efficient way to reduce noise without switching the underlying model or building complex per-channel weight features.
+- **Scope:** src/PassiveDetector/prompt.ts, src/PassiveDetector/detection.py
+- **Tags:** PassiveDetector, Gemini, AI, configuration, filtering
+
+**Alternatives considered (rejected):**
+- ~~Change the detection model~~ — Requires an Architectural Decision Record (ADR) and is likely overkill compared to a prompt update.
+- ~~Implement per-channel weights~~ — The current infrastructure does not support per-channel configurations.
+
 ### Implement client-side credit balance check for Ask Knowledge Base
 
 - **Severity:** MEDIUM
@@ -327,15 +339,5 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 
 - **Severity:** MEDIUM
 - **Rule:** All internal API routes must adhere to the RFC 7807 error format, consistent with public-facing API routes.
-- **Rationale:** Inconsistent error formats, specifically plain strings from internal routes, prevent AI tools from reliably parsing and analyzing errors, leading to broken analysis workflows.
-- **Scope:** packages/api/src/routes/internal/
-- **Tags:** API, error handling, RFC 7807, internal API, convention
-
-### Implementation details for text embeddings in PostgreSQL using OpenAI's text-embedding-3-small and HNSW indexing
-
-- **Severity:** MEDIUM
-- **Rule:** We will use the `text-embedding-3-small` OpenAI model to generate 1536-dimension embeddings. These embeddings will be stored in the `knowledge_chunks` table within PostgreSQL. The HNSW index used for vector search will be configured with `ef_construction=200` and `m=16`.
-- **Rationale:** The chosen HNSW parameters (`ef_construction=200` and `m=16`) are set to provide an optimal tradeoff between recall accuracy and search speed. The `text-embedding-3-small` model is selected for generating the text embeddings.
-- **Scope:** packages/decision-store/src/schema.ts
 
 <!-- decispher: output truncated to context budget -->
