@@ -227,6 +227,14 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 - ~~Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting).~~ — This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.
 - ~~Consolidate to a single LLM provider for all pipeline steps.~~ — This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.
 
+### Use 30-minute inactivity window for MCP session detection
+
+- **Severity:** MEDIUM
+- **Rule:** Define a new MCP session as any gap of 30 minutes or more between tool calls on mcp_logs per API key.
+- **Rationale:** The 30-minute window serves as a known, intentional approximation to define session boundaries for cost calculation, acknowledging that very slow agents may trigger multiple sessions.
+- **Scope:** ADR-033, SessionDetector
+- **Tags:** mcp, token-savings, session-detection
+
 ### Bypass confidence threshold for explicit capture intents
 
 - **Severity:** MEDIUM
@@ -322,9 +330,5 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 **Alternatives considered (rejected):**
 - ~~Handle team_join event~~ — The team_join event triggers for new users joining a workspace, not for the initial app installation, making it unsuitable for driving workspace-level onboarding.
 
-### Increase detection confidence threshold for PassiveDetector in saver mode
-
-- **Severity:** MEDIUM
-- **Rule:** The team will tune the Gemini-2.5-flash prompt for PassiveDetector in saver mode to increase the detection confidence floor.
 
 <!-- decispher: output truncated to context budget -->
