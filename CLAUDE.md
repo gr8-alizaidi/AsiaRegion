@@ -132,6 +132,11 @@ Violating these decisions requires explicit approval.
 - **Do NOT:** Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting). (This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.)
 - **Do NOT:** Consolidate to a single LLM provider for all pipeline steps. (This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.)
 
+### Bypass confidence threshold for explicit capture intents (MEDIUM)
+- **Decision:** Implement a 'captureIntent' field in the pipeline context where 'explicit' intent (manual dashboard entry or @decispher command) bypasses the minConfidence threshold, while 'passive' intent remains subject to it.
+- **Rationale:** Explicit user commands indicate a deliberate intent to capture data, overriding the need for confidence filtering which is primarily intended for passive/automated collection.
+- **Affected files:** `app/workers/process_comment_worker.rb`, `app/services/pipeline_context.rb`
+
 ### Bypass minConfidence check for manual source type in analyzer (MEDIUM)
 - **Decision:** Manual captures with sourceType='manual' will bypass the minConfidence check entirely by adding an explicit guard in the detection step where shouldRun returns true by default for manual types.
 - **Rationale:** Manual content is explicitly created by the user, making confidence scoring irrelevant compared to automated conversational or code sources.
@@ -192,10 +197,5 @@ Violating these decisions requires explicit approval.
 - **Decision:** The team decided to implement a client-side credit balance check in the frontend dashboard before allowing a request to hit the /api/companies/:companyId/mcp/ask-knowledge-base endpoint.
 - **Rationale:** The existing Redis pre-check in the backend is fail-open and only blocks after a SERIALIZABLE transaction confirms insufficient balance. A client-side check provides better user experience by surfacing the warning in the dashboard before the query is attempted, preventing unnecessary 402 errors.
 - **Affected files:** `/api/companies/:companyId/mcp/ask-knowledge-base`, `src/components/dashboard/CreditsPanel.tsx`, `src/hooks/useCreditBalance.ts`
-- **Do NOT:** Backend fail-closed check (The current Redis architecture is fail-open for performance reasons; changing it would involve complex architectural changes to handle transaction locking and potential performance degradation.)
-- **Do NOT:** Surface 402 error in UI (Displaying a 402 error after the user has already submitted the request is a poor user experience compared to preventing the request entirely via a dashboard warning.)
-
-### Migrate Indian payment processing from Stripe to Paddle (MEDIUM)
-- **Decision:** The team will migrate all Indian payment processing operations from Stripe to Paddle.
 
 <!-- decispher: output truncated to context budget -->
