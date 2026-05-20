@@ -43,6 +43,7 @@ Any code change that violates these decisions MUST be flagged.
 
 | Decision | Rationale | Files |
 |----------|-----------|-------|
+| Increased the web API rate limit to 500 requests per minute for premium tier users. | Internal testing confirmed that existing system latency remains within acceptable thresholds and the database is capable of handling the increased load. | middleware/rate-limit-config.js |
 | Deduplication will now only occur between decisions of the same type. The threshold for same-type deduplication is lowered from 0.15 to 0.12. | Calibration analysis of 847 labeled examples indicates that cross-type deduplication is invalid and 0.12 is the optimal threshold for same-type matching to ensure accurate dedup behavior. | findSimilarActiveWithScores, findSimilarByTypes |
 | Maintain the current cosine distance threshold of < 0.15 as the similarity floor for identifying deduplication candidates. | A strict threshold is intentionally chosen to prioritize preventing false positives (blocking legitimate new decisions) over false negatives (missing potential duplicates), with plans to refine the threshold once 500+ labeled examples are collected. | linker_calibration_events, dedup_logic |
 | Track sessions via a server-side generated session_id stored in Redis with a 30-minute rolling TTL, instead of relying on inactivity gap computation. Include the session_id as a foreign key in the mcp_logs table to allow accurate deduplication of discovery costs. | Server-side generation is safer than relying on client-side headers as agents are inconsistent. Using a Redis-backed TTL ensures that sessions are grouped correctly despite agent re-initialization patterns, providing more accurate cost tracking and session lifecycle management. | mcp_logs, SessionDetector, mcp_key_handler |
@@ -71,11 +72,5 @@ Any code change that violates these decisions MUST be flagged.
 | We will use the `text-embedding-3-small` OpenAI model to generate 1536-dimension embeddings. These embeddings will be stored in the `knowledge_chunks` table within PostgreSQL. The HNSW index used for vector search will be configured with `ef_construction=200` and `m=16`. | The chosen HNSW parameters (`ef_construction=200` and `m=16`) are set to provide an optimal tradeoff between recall accuracy and search speed. The `text-embedding-3-small` model is selected for generating the text embeddings. | packages/decision-store/src/schema.ts |
 | We decided to use cosine distance for semantic similarity search of text embeddings with pgvector HNSW for deduplication. | Cosine distance is invariant to vector magnitude, meaning it only considers the direction of vectors. This property is precisely what is desired for semantic similarity of text embeddings, as it allows for accurate comparison of semantic meaning regardless of variations in embedding vector norms. L2 (Euclidean) distance, on the other hand, would incorrectly penalize vectors with different magnitudes, even if they share the same semantic direction. | * |
 | Implemented Redis semantic caching for LLM embedding calls. The cache key is a hash of the input text, model, and provider. The cache entries have a Time-To-Live (TTL) of 1 hour. | Redis was a natural extension since it is already in use for BullMQ and session caching. This implementation reduced redundant embedding calls by approximately 40% in tests. | * |
-| The Revenue squad now has exclusive ownership of the billing module and Stripe integration, requiring their explicit approval for all pull requests affecting these areas. | Centralizing ownership ensures better control, security, and specialized maintenance for critical payment-related infrastructure. | packages/api/src/billing/, src/modules/billing/, src/integrations/stripe/ |
-
-### LOW
-
-| Decision | Rationale | Files |
-|----------|-----------|-------|
 
 <!-- decispher: output truncated to context budget -->
