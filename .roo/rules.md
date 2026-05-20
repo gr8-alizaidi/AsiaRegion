@@ -90,6 +90,9 @@
 
 ## General Conventions
 
+- **Increase web dashboard session timeout to 4 hours:** Extend the session timeout period for the web dashboard application to 4 hours.
+  *(Extended sessions improve usability for long review tasks, while maintaining shorter token life for mobile to satisfy security requirements regarding background app behavior.)*
+
 - **Increase web API rate limit for premium users to 500 req/min:** Increased the web API rate limit to 500 requests per minute for premium tier users.
   *(Internal testing confirmed that existing system latency remains within acceptable thresholds and the database is capable of handling the increased load.)*
 
@@ -181,7 +184,5 @@
   *(Centralizing ownership ensures better control, security, and specialized maintenance for critical payment-related infrastructure.)*
 
 - **Use separate SCSS file for navigation component styling:** Use standard SCSS in a separate navbar.scss file for the new navigation component.
-  *(Complex hover state requirements for the navigation component lead to unmanageable code when using Tailwind utility classes.)*
 
-- **Standardization on iPhones for mobile communication:** The team will use iPhones to perform mobile calls.
-  *(The team aligned on a single mobile device platform for communication consistency.)*
+<!-- decispher: output truncated to context budget -->
