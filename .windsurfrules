@@ -96,6 +96,10 @@ Cascade MUST respect these rules when generating or modifying code.
 
 ## [MEDIUM]
 
+- Implement a ContextLifecycleWorker job that triggers the existing archiveStalePendingReview function based on decisions not reviewed in over 90 days, controlled by the STALE_ARCHIVE_ENABLED environment variable.
+  Reason: Automating the process reduces operational overhead, and using an environment flag allows for safe testing in staging before production rollout.
+  Files: src/workers/ContextLifecycleWorker.ts, src/services/ApprovalService.ts
+
 - The team will refrain from manually adjusting DEFAULT_FUSION_PARAMS.linkThreshold and instead utilize the existing precision/recall harness in packages/fusion-eval to empirically evaluate changes before deployment.
   Reason: Blindly changing global thresholds can negatively impact system accuracy. Validating threshold adjustments through the dedicated fusion-eval harness ensures that changes to the linkage logic do not reduce recall for valid links.
   Files: packages/fusion-eval, src/context-linker/params.ts
