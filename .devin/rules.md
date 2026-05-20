@@ -227,6 +227,17 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 - ~~Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting).~~ — This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.
 - ~~Consolidate to a single LLM provider for all pipeline steps.~~ — This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.
 
+### Set similarity threshold for decision deduplication to 0.15 cosine distance
+
+- **Severity:** MEDIUM
+- **Rule:** Maintain the current cosine distance threshold of < 0.15 as the similarity floor for identifying deduplication candidates.
+- **Rationale:** A strict threshold is intentionally chosen to prioritize preventing false positives (blocking legitimate new decisions) over false negatives (missing potential duplicates), with plans to refine the threshold once 500+ labeled examples are collected.
+- **Scope:** linker_calibration_events, dedup_logic
+- **Tags:** deduplication, machine-learning, embeddings, cosine-similarity
+
+**Alternatives considered (rejected):**
+- ~~Lowering the similarity threshold (e.g., to 0.18)~~ — The current threshold is intentionally strict to avoid false positives and maintain a high bar for what constitutes a duplicate decision.
+
 ### Implement server-side session tracking for MCP keys using Redis
 
 - **Severity:** MEDIUM
@@ -321,13 +332,5 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 
 ### Trigger dashboard onboarding redirect after Slack OAuth completion
 
-- **Severity:** MEDIUM
-- **Rule:** Implement a redirect to the dashboard onboarding flow immediately after the Slack OAuth callback is successfully completed to ensure the integration record is created.
-- **Rationale:** Directing users to the onboarding flow upon OAuth completion captures the integration state before the bot begins receiving event messages, preventing orphaned bot installations without corresponding database records.
-- **Scope:** services/slack/oauth_callback.js, services/onboarding/dashboard_redirect.js
-- **Tags:** slack, onboarding, oauth, backend
-
-**Alternatives considered (rejected):**
-- ~~DM the user the onboarding link when the bot joins~~ — The team determined that handling the event on the OAuth callback side is more reliable and ensures the flow is completed immediately after the installation.
 
 <!-- decispher: output truncated to context budget -->
