@@ -139,6 +139,12 @@
   Rationale: Inconsistent error formats, specifically plain strings from internal routes, prevent AI tools from reliably parsing and analyzing errors, leading to broken analysis workflows.
   Files: packages/api/src/routes/internal/
 
+## Performance
+
+- Set LLM_CLASSIFY_BATCH_SIZE_PRO to 10 and maintain LLM_CLASSIFY_CONCURRENCY at 5 for the pro mode classification process.
+  Rationale: Increasing the batch size to 10 improves throughput to address latency issues, while keeping the batch size at 10 (instead of 15) prevents a loss in model precision for candidates later in the list. Concurrency is kept at 5 to balance processing load.
+  Files: decision-fusion-queue
+
 ## Slack
 
 - Implement a redirect to the dashboard onboarding flow immediately after the Slack OAuth callback is successfully completed to ensure the integration record is created.
