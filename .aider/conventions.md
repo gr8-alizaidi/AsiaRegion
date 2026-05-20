@@ -64,6 +64,14 @@ Aider should follow all of these conventions when making changes.
 
 **Relevant files:** `src/llm/client_factory.py`, `src/llm/fallback_logic.py`
 
+### Bypass confidence threshold for explicit capture intents
+
+**Convention:** Implement a 'captureIntent' field in the pipeline context where 'explicit' intent (manual dashboard entry or @decispher command) bypasses the minConfidence threshold, while 'passive' intent remains subject to it.
+
+**Why:** Explicit user commands indicate a deliberate intent to capture data, overriding the need for confidence filtering which is primarily intended for passive/automated collection.
+
+**Relevant files:** `app/workers/process_comment_worker.rb`, `app/services/pipeline_context.rb`
+
 ## Umbraco
 
 ### Use Umbraco CMS for frontend component development
@@ -443,8 +451,6 @@ Aider should follow all of these conventions when making changes.
 **Why:** Cosine distance provides significantly better recall (12% improvement) on normalized text embeddings compared to L2 distance. Furthermore, L2 distance is overly sensitive to embedding magnitude, making it less reliable for our specific use case.
 
 ### Use cosine distance over L2 for semantic text embedding similarity with pgvector HNSW
-
-**Convention:** We decided to use cosine distance for semantic similarity search of text embeddings with pgvector HNSW for deduplication.
 
 
 <!-- decispher: output truncated to context budget -->
