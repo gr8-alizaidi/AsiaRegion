@@ -132,6 +132,12 @@ Violating these decisions requires explicit approval.
 - **Do NOT:** Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting). (This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.)
 - **Do NOT:** Consolidate to a single LLM provider for all pipeline steps. (This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.)
 
+### Establish stale archival notification process for decision units (MEDIUM)
+- **Decision:** Implement a notification process where owners receive a Slack message 7 days before the archival cutoff. This involves adding a 'stale_warning' type to the NotificationService, querying for decisions with a last_reviewed_at timestamp between 83 and 84 days ago, and triggering a notification job. Viewing a decision on the dashboard does not reset the review timestamp; only an explicit approve, reject, or mark_active action will.
+- **Rationale:** Ensures stakeholders are informed before data archival without creating a loop where passive dashboard activity prevents legitimate cleanup of stale data.
+- **Affected files:** `services/NotificationService.js`, `jobs/ArchiveNotificationJob.js`, `controllers/DecisionController.js`
+- **Do NOT:** Reset last_reviewed_at on dashboard view (Viewing the dashboard does not constitute a formal review; doing so would prevent the archival of truly stale decisions.)
+
 ### Automate stale decision archiving via ContextLifecycleWorker (MEDIUM)
 - **Decision:** Implement a ContextLifecycleWorker job that triggers the existing archiveStalePendingReview function based on decisions not reviewed in over 90 days, controlled by the STALE_ARCHIVE_ENABLED environment variable.
 - **Rationale:** Automating the process reduces operational overhead, and using an environment flag allows for safe testing in staging before production rollout.
@@ -190,18 +196,5 @@ Violating these decisions requires explicit approval.
 
 ### Standardize on TypeScript and camelCase JSON for backend services (MEDIUM)
 - **Decision:** Adopt TypeScript as the mandatory language for all new backend services and enforce a strict convention where all API endpoints must return camelCase JSON.
-- **Rationale:** TypeScript provides necessary type safety to reduce runtime errors in backend services, and a consistent camelCase JSON format ensures predictability for frontend consumption and API consistency.
-- **Affected files:** `/src/backend/`
-
-### Cancellation of RFC 78 implementation (MEDIUM)
-- **Decision:** The team has officially cancelled the usage and implementation of RFC 78.
-- **Rationale:** The conversation indicates a strategic shift away from the previously proposed RFC 78, implying it is no longer aligned with current requirements or priorities.
-
-### Adopt RFC7812 for theme data JSON validation (MEDIUM)
-- **Decision:** Use RFC7812 as the specification for validating all JSON data synced by the server related to theme configurations.
-- **Rationale:** RFC7812 provides a standardized approach for schema validation, ensuring consistency and reliability across synced theme data.
-- **Affected files:** `src/sync/theme-validation.js`
-
-### Standardize on HNSW for new vector indexes (MEDIUM)
 
 <!-- decispher: output truncated to context budget -->
