@@ -227,6 +227,14 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 - ~~Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting).~~ — This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.
 - ~~Consolidate to a single LLM provider for all pipeline steps.~~ — This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.
 
+### Automate stale decision archiving via ContextLifecycleWorker
+
+- **Severity:** MEDIUM
+- **Rule:** Implement a ContextLifecycleWorker job that triggers the existing archiveStalePendingReview function based on decisions not reviewed in over 90 days, controlled by the STALE_ARCHIVE_ENABLED environment variable.
+- **Rationale:** Automating the process reduces operational overhead, and using an environment flag allows for safe testing in staging before production rollout.
+- **Scope:** src/workers/ContextLifecycleWorker.ts, src/services/ApprovalService.ts
+- **Tags:** automation, backend, archiving, job-scheduling
+
 ### Use fusion-eval harness for linkThreshold tuning
 
 - **Severity:** MEDIUM
@@ -319,14 +327,5 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 ### Standardize on TypeScript and camelCase JSON for backend services
 
 - **Severity:** MEDIUM
-- **Rule:** Adopt TypeScript as the mandatory language for all new backend services and enforce a strict convention where all API endpoints must return camelCase JSON.
-- **Rationale:** TypeScript provides necessary type safety to reduce runtime errors in backend services, and a consistent camelCase JSON format ensures predictability for frontend consumption and API consistency.
-- **Scope:** /src/backend/
-- **Tags:** typescript, api, backend, json, coding-standards
-
-### Cancellation of RFC 78 implementation
-
-- **Severity:** MEDIUM
-- **Rule:** The team has officially cancelled the usage and implementation of RFC 78.
 
 <!-- decispher: output truncated to context budget -->
