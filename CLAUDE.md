@@ -132,6 +132,12 @@ Violating these decisions requires explicit approval.
 - **Do NOT:** Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting). (This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.)
 - **Do NOT:** Consolidate to a single LLM provider for all pipeline steps. (This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.)
 
+### Restrict record deduplication to same-type comparisons and update thresholds (MEDIUM)
+- **Decision:** Deduplication will now only occur between decisions of the same type. The threshold for same-type deduplication is lowered from 0.15 to 0.12.
+- **Rationale:** Calibration analysis of 847 labeled examples indicates that cross-type deduplication is invalid and 0.12 is the optimal threshold for same-type matching to ensure accurate dedup behavior.
+- **Affected files:** `findSimilarActiveWithScores`, `findSimilarByTypes`
+- **Do NOT:** Allow cross-type deduplication (It was determined that dedup should only fire when existing and incoming decisions have the same type to maintain data integrity.)
+
 ### Set similarity threshold for decision deduplication to 0.15 cosine distance (MEDIUM)
 - **Decision:** Maintain the current cosine distance threshold of < 0.15 as the similarity floor for identifying deduplication candidates.
 - **Rationale:** A strict threshold is intentionally chosen to prioritize preventing false positives (blocking legitimate new decisions) over false negatives (missing potential duplicates), with plans to refine the threshold once 500+ labeled examples are collected.
@@ -195,10 +201,5 @@ Violating these decisions requires explicit approval.
 - **Decision:** Implement a redirect to the dashboard onboarding flow immediately after the Slack OAuth callback is successfully completed to ensure the integration record is created.
 - **Rationale:** Directing users to the onboarding flow upon OAuth completion captures the integration state before the bot begins receiving event messages, preventing orphaned bot installations without corresponding database records.
 - **Affected files:** `services/slack/oauth_callback.js`, `services/onboarding/dashboard_redirect.js`
-- **Do NOT:** DM the user the onboarding link when the bot joins (The team determined that handling the event on the OAuth callback side is more reliable and ensures the flow is completed immediately after the installation.)
-- **Do NOT:** Use team_join event to trigger onboarding (The team identified that team_join events are specific to individual users joining a workspace and are not suitable for the initial workspace-level integration onboarding.)
-
-### Send onboarding link via Slack DM upon app installation (MEDIUM)
-- **Decision:** Implement a mechanism to DM the onboarding link to the workspace admin immediately upon app installation (app_installed event) rather than waiting for message events.
 
 <!-- decispher: output truncated to context budget -->
