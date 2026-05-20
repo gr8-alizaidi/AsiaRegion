@@ -90,6 +90,9 @@
 
 ## General Conventions
 
+- **Trigger dashboard onboarding redirect after Slack OAuth completion:** Implement a redirect to the dashboard onboarding flow immediately after the Slack OAuth callback is successfully completed to ensure the integration record is created.
+  *(Directing users to the onboarding flow upon OAuth completion captures the integration state before the bot begins receiving event messages, preventing orphaned bot installations without corresponding database records.)*
+
 - **Send onboarding link via Slack DM upon app installation:** Implement a mechanism to DM the onboarding link to the workspace admin immediately upon app installation (app_installed event) rather than waiting for message events.
   *(Direct messaging the onboarding link ensures users complete the dashboard setup process, preventing the creation of 'ghost companies' and avoiding errors when the recorder tries to process events for an uninitialized workspace.)*
 
