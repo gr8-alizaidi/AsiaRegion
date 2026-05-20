@@ -278,6 +278,16 @@ Aider should follow all of these conventions when making changes.
 
 **Relevant files:** `packages/api/src/routes/internal/`
 
+## Context-linker
+
+### Use fusion-eval harness for linkThreshold tuning
+
+**Convention:** The team will refrain from manually adjusting DEFAULT_FUSION_PARAMS.linkThreshold and instead utilize the existing precision/recall harness in packages/fusion-eval to empirically evaluate changes before deployment.
+
+**Why:** Blindly changing global thresholds can negatively impact system accuracy. Validating threshold adjustments through the dedicated fusion-eval harness ensures that changes to the linkage logic do not reduce recall for valid links.
+
+**Relevant files:** `packages/fusion-eval`, `src/context-linker/params.ts`
+
 ## Notification-system
 
 ### Unify hard conflict review notifications via NotificationService
@@ -440,14 +450,5 @@ Aider should follow all of these conventions when making changes.
 
 **Convention:** Use standard SCSS in a separate navbar.scss file for the new navigation component.
 
-**Why:** Complex hover state requirements for the navigation component lead to unmanageable code when using Tailwind utility classes.
 
-**Relevant files:** `navbar.scss`, `navbar.tsx`
-
-## Mobile
-
-### Standardization on iPhones for mobile communication
-
-**Convention:** The team will use iPhones to perform mobile calls.
-
-**Why:** The team aligned on a single mobile device platform for communication consistency.
+<!-- decispher: output truncated to context budget -->
