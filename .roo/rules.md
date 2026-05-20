@@ -90,6 +90,9 @@
 
 ## General Conventions
 
+- **Restrict record deduplication to same-type comparisons and update thresholds:** Deduplication will now only occur between decisions of the same type. The threshold for same-type deduplication is lowered from 0.15 to 0.12.
+  *(Calibration analysis of 847 labeled examples indicates that cross-type deduplication is invalid and 0.12 is the optimal threshold for same-type matching to ensure accurate dedup behavior.)*
+
 - **Set similarity threshold for decision deduplication to 0.15 cosine distance:** Maintain the current cosine distance threshold of < 0.15 as the similarity floor for identifying deduplication candidates.
   *(A strict threshold is intentionally chosen to prioritize preventing false positives (blocking legitimate new decisions) over false negatives (missing potential duplicates), with plans to refine the threshold once 500+ labeled examples are collected.)*
 
