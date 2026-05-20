@@ -13,10 +13,10 @@ Violating these decisions requires explicit approval.
 - **Rationale:** There is an active and non-negotiable architectural constraint against MongoDB in the stack due to the critical requirement for ACID compliance across all billing and user data. MongoDB does not satisfy this fundamental requirement.
 - **Do NOT:** MongoDB for analytics events (It violates an active architectural constraint due to its lack of native ACID compliance, which is non-negotiable for billing and user data within our stack.)
 
-### Extend Umbraco usage to include data ingestion and processing (HIGH)
-- **Decision:** We will extend the use of Umbraco to leverage its CMS functionality alongside its webhook and ingester capabilities to process elastic data, which will then be served to the frontend via a materializer and a dedicated service using GraphQL.
-- **Rationale:** By utilizing Umbraco's existing webhook and ingester features, we can streamline data flow and minimize the introduction of additional external services for data processing, while maintaining a consistent tech stack.
-- **Affected files:** `src/infrastructure/ingester`, `src/api/graphql`, `src/services/materializer`
+### Mandate use of GuardedProviderRegistry for all LLM service calls (HIGH)
+- **Decision:** All LLM calls must be made through the GuardedProviderRegistry using either wrapTextProvider or wrapEmbeddingProvider instead of direct SDK calls.
+- **Rationale:** Using the registry ensures that all calls are tracked for cost accounting and can be dynamically controlled via system-wide kill switches.
+- **Affected files:** `src/llm/providers/registry.ts`, `src/llm/providers/guarded_registry.ts`
 
 ### Use Umbraco CMS for frontend component development (HIGH)
 - **Decision:** The team will use the Umbraco CMS platform to build each component of the frontend website.
@@ -131,6 +131,11 @@ Violating these decisions requires explicit approval.
 - **Rationale:** This approach allows companies with high context volume (Tier 3+) to pay extra for Claude-Sonnet's accuracy where needed, while companies with tighter budgets can use more cost-effective options like Gemini-Flash for all steps. It also decouples our infrastructure from individual LLM vendor stability and enables independent contract negotiations with different providers (Anthropic, OpenAI, Google).
 - **Do NOT:** Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting). (This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.)
 - **Do NOT:** Consolidate to a single LLM provider for all pipeline steps. (This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.)
+
+### Migrate Indian payment processing from Stripe to Paddle (MEDIUM)
+- **Decision:** The team will migrate all Indian payment processing operations from Stripe to Paddle.
+- **Rationale:** Stripe is no longer a viable or legal option for payment processing in India due to government-imposed bans, making a migration to a supported alternative like Paddle necessary for continuity.
+- **Affected files:** `src/billing/payment_processor.ts`, `src/config/payments.json`
 
 ### Standardize on TypeScript and camelCase JSON for backend services (MEDIUM)
 - **Decision:** Adopt TypeScript as the mandatory language for all new backend services and enforce a strict convention where all API endpoints must return camelCase JSON.
