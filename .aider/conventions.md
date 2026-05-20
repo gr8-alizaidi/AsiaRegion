@@ -280,6 +280,14 @@ Aider should follow all of these conventions when making changes.
 
 ## Slack
 
+### Trigger dashboard onboarding redirect after Slack OAuth completion
+
+**Convention:** Implement a redirect to the dashboard onboarding flow immediately after the Slack OAuth callback is successfully completed to ensure the integration record is created.
+
+**Why:** Directing users to the onboarding flow upon OAuth completion captures the integration state before the bot begins receiving event messages, preventing orphaned bot installations without corresponding database records.
+
+**Relevant files:** `services/slack/oauth_callback.js`, `services/onboarding/dashboard_redirect.js`
+
 ### Send onboarding link via Slack DM upon app installation
 
 **Convention:** Implement a mechanism to DM the onboarding link to the workspace admin immediately upon app installation (app_installed event) rather than waiting for message events.
