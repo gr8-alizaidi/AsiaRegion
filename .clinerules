@@ -91,104 +91,108 @@ Before writing or modifying code, review these rules and do not violate them.
 23. 🟠 **[HIGH]** We will implement a multi-provider abstraction where each pipeline step (detection, extraction, enrichment, formatting) has its own LLM provider configuration via environment variables. At request time, an 'effort mode' can override the provider selection on a per-company basis.
    - **Why:** This approach allows companies with high context volume (Tier 3+) to pay extra for Claude-Sonnet's accuracy where needed, while companies with tighter budgets can use more cost-effective options like Gemini-Flash for all steps. It also decouples our infrastructure from individual LLM vendor stability and enables independent contract negotiations with different providers (Anthropic, OpenAI, Google).
 
-24. 🟡 **[MEDIUM]** Implement a 'captureIntent' field in the pipeline context where 'explicit' intent (manual dashboard entry or @decispher command) bypasses the minConfidence threshold, while 'passive' intent remains subject to it.
+24. 🟡 **[MEDIUM]** Define a new MCP session as any gap of 30 minutes or more between tool calls on mcp_logs per API key.
+   - **Why:** The 30-minute window serves as a known, intentional approximation to define session boundaries for cost calculation, acknowledging that very slow agents may trigger multiple sessions.
+   - **Files:** `ADR-033`, `SessionDetector`
+
+25. 🟡 **[MEDIUM]** Implement a 'captureIntent' field in the pipeline context where 'explicit' intent (manual dashboard entry or @decispher command) bypasses the minConfidence threshold, while 'passive' intent remains subject to it.
    - **Why:** Explicit user commands indicate a deliberate intent to capture data, overriding the need for confidence filtering which is primarily intended for passive/automated collection.
    - **Files:** `app/workers/process_comment_worker.rb`, `app/services/pipeline_context.rb`
 
-25. 🟡 **[MEDIUM]** Manual captures with sourceType='manual' will bypass the minConfidence check entirely by adding an explicit guard in the detection step where shouldRun returns true by default for manual types.
+26. 🟡 **[MEDIUM]** Manual captures with sourceType='manual' will bypass the minConfidence check entirely by adding an explicit guard in the detection step where shouldRun returns true by default for manual types.
    - **Why:** Manual content is explicitly created by the user, making confidence scoring irrelevant compared to automated conversational or code sources.
    - **Files:** `src/analyzer/detection.ts`
 
-26. 🟡 **[MEDIUM]** Implement a notification process where owners receive a Slack message 7 days before the archival cutoff. This involves adding a 'stale_warning' type to the NotificationService, querying for decisions with a last_reviewed_at timestamp between 83 and 84 days ago, and triggering a notification job. Viewing a decision on the dashboard does not reset the review timestamp; only an explicit approve, reject, or mark_active action will.
+27. 🟡 **[MEDIUM]** Implement a notification process where owners receive a Slack message 7 days before the archival cutoff. This involves adding a 'stale_warning' type to the NotificationService, querying for decisions with a last_reviewed_at timestamp between 83 and 84 days ago, and triggering a notification job. Viewing a decision on the dashboard does not reset the review timestamp; only an explicit approve, reject, or mark_active action will.
    - **Why:** Ensures stakeholders are informed before data archival without creating a loop where passive dashboard activity prevents legitimate cleanup of stale data.
    - **Files:** `services/NotificationService.js`, `jobs/ArchiveNotificationJob.js`, `controllers/DecisionController.js`
 
-27. 🟡 **[MEDIUM]** Implement a ContextLifecycleWorker job that triggers the existing archiveStalePendingReview function based on decisions not reviewed in over 90 days, controlled by the STALE_ARCHIVE_ENABLED environment variable.
+28. 🟡 **[MEDIUM]** Implement a ContextLifecycleWorker job that triggers the existing archiveStalePendingReview function based on decisions not reviewed in over 90 days, controlled by the STALE_ARCHIVE_ENABLED environment variable.
    - **Why:** Automating the process reduces operational overhead, and using an environment flag allows for safe testing in staging before production rollout.
    - **Files:** `src/workers/ContextLifecycleWorker.ts`, `src/services/ApprovalService.ts`
 
-28. 🟡 **[MEDIUM]** The team will refrain from manually adjusting DEFAULT_FUSION_PARAMS.linkThreshold and instead utilize the existing precision/recall harness in packages/fusion-eval to empirically evaluate changes before deployment.
+29. 🟡 **[MEDIUM]** The team will refrain from manually adjusting DEFAULT_FUSION_PARAMS.linkThreshold and instead utilize the existing precision/recall harness in packages/fusion-eval to empirically evaluate changes before deployment.
    - **Why:** Blindly changing global thresholds can negatively impact system accuracy. Validating threshold adjustments through the dedicated fusion-eval harness ensures that changes to the linkage logic do not reduce recall for valid links.
    - **Files:** `packages/fusion-eval`, `src/context-linker/params.ts`
 
-29. 🟡 **[MEDIUM]** Route all hard conflict notifications through the centralized NotificationService using a CONTRADICTS_REVIEW template, replacing the localized implementation in InteractionHandler.
+30. 🟡 **[MEDIUM]** Route all hard conflict notifications through the centralized NotificationService using a CONTRADICTS_REVIEW template, replacing the localized implementation in InteractionHandler.
    - **Why:** Routing through the NotificationService ensures consistent notification delivery regardless of the input channel (Slack or GitHub PRs), eliminating the inconsistency where GitHub-sourced conflicts currently lack alert logic.
    - **Files:** `services/InteractionHandler.ts`, `services/github-notification-queue.ts`, `services/NotificationService.ts`
 
-30. 🟡 **[MEDIUM]** Set LLM_CLASSIFY_BATCH_SIZE_PRO to 10 and maintain LLM_CLASSIFY_CONCURRENCY at 5 for the pro mode classification process.
+31. 🟡 **[MEDIUM]** Set LLM_CLASSIFY_BATCH_SIZE_PRO to 10 and maintain LLM_CLASSIFY_CONCURRENCY at 5 for the pro mode classification process.
    - **Why:** Increasing the batch size to 10 improves throughput to address latency issues, while keeping the batch size at 10 (instead of 15) prevents a loss in model precision for candidates later in the list. Concurrency is kept at 5 to balance processing load.
    - **Files:** `decision-fusion-queue`
 
-31. 🟡 **[MEDIUM]** Implement a redirect to the dashboard onboarding flow immediately after the Slack OAuth callback is successfully completed to ensure the integration record is created.
+32. 🟡 **[MEDIUM]** Implement a redirect to the dashboard onboarding flow immediately after the Slack OAuth callback is successfully completed to ensure the integration record is created.
    - **Why:** Directing users to the onboarding flow upon OAuth completion captures the integration state before the bot begins receiving event messages, preventing orphaned bot installations without corresponding database records.
    - **Files:** `services/slack/oauth_callback.js`, `services/onboarding/dashboard_redirect.js`
 
-32. 🟡 **[MEDIUM]** Implement a mechanism to DM the onboarding link to the workspace admin immediately upon app installation (app_installed event) rather than waiting for message events.
+33. 🟡 **[MEDIUM]** Implement a mechanism to DM the onboarding link to the workspace admin immediately upon app installation (app_installed event) rather than waiting for message events.
    - **Why:** Direct messaging the onboarding link ensures users complete the dashboard setup process, preventing the creation of 'ghost companies' and avoiding errors when the recorder tries to process events for an uninitialized workspace.
    - **Files:** `src/integrations/slack/events/app_installed.ts`, `src/dashboard/oauth/callback.ts`
 
-33. 🟡 **[MEDIUM]** The team will tune the Gemini-2.5-flash prompt for PassiveDetector in saver mode to increase the detection confidence floor.
+34. 🟡 **[MEDIUM]** The team will tune the Gemini-2.5-flash prompt for PassiveDetector in saver mode to increase the detection confidence floor.
    - **Why:** The current confidence threshold is allowing low-quality matches (standup messages) to be classified as actionable context units. Tuning the system prompt is the most efficient way to reduce noise without switching the underlying model or building complex per-channel weight features.
    - **Files:** `src/PassiveDetector/prompt.ts`, `src/PassiveDetector/detection.py`
 
-34. 🟡 **[MEDIUM]** The team decided to implement a client-side credit balance check in the frontend dashboard before allowing a request to hit the /api/companies/:companyId/mcp/ask-knowledge-base endpoint.
+35. 🟡 **[MEDIUM]** The team decided to implement a client-side credit balance check in the frontend dashboard before allowing a request to hit the /api/companies/:companyId/mcp/ask-knowledge-base endpoint.
    - **Why:** The existing Redis pre-check in the backend is fail-open and only blocks after a SERIALIZABLE transaction confirms insufficient balance. A client-side check provides better user experience by surfacing the warning in the dashboard before the query is attempted, preventing unnecessary 402 errors.
    - **Files:** `/api/companies/:companyId/mcp/ask-knowledge-base`, `src/components/dashboard/CreditsPanel.tsx`, `src/hooks/useCreditBalance.ts`
 
-35. 🟡 **[MEDIUM]** The team will migrate all Indian payment processing operations from Stripe to Paddle.
+36. 🟡 **[MEDIUM]** The team will migrate all Indian payment processing operations from Stripe to Paddle.
    - **Why:** Stripe is no longer a viable or legal option for payment processing in India due to government-imposed bans, making a migration to a supported alternative like Paddle necessary for continuity.
    - **Files:** `src/billing/payment_processor.ts`, `src/config/payments.json`
 
-36. 🟡 **[MEDIUM]** Adopt TypeScript as the mandatory language for all new backend services and enforce a strict convention where all API endpoints must return camelCase JSON.
+37. 🟡 **[MEDIUM]** Adopt TypeScript as the mandatory language for all new backend services and enforce a strict convention where all API endpoints must return camelCase JSON.
    - **Why:** TypeScript provides necessary type safety to reduce runtime errors in backend services, and a consistent camelCase JSON format ensures predictability for frontend consumption and API consistency.
    - **Files:** `/src/backend/`
 
-37. 🟡 **[MEDIUM]** The team has officially cancelled the usage and implementation of RFC 78.
+38. 🟡 **[MEDIUM]** The team has officially cancelled the usage and implementation of RFC 78.
    - **Why:** The conversation indicates a strategic shift away from the previously proposed RFC 78, implying it is no longer aligned with current requirements or priorities.
 
-38. 🟡 **[MEDIUM]** Use RFC7812 as the specification for validating all JSON data synced by the server related to theme configurations.
+39. 🟡 **[MEDIUM]** Use RFC7812 as the specification for validating all JSON data synced by the server related to theme configurations.
    - **Why:** RFC7812 provides a standardized approach for schema validation, ensuring consistency and reliability across synced theme data.
    - **Files:** `src/sync/theme-validation.js`
 
-39. 🟡 **[MEDIUM]** All new vector indexes must be created using the HNSW algorithm. Existing IVFFlat indexes (specifically in the llm_cache table) are to be migrated to HNSW in Sprint 16.
+40. 🟡 **[MEDIUM]** All new vector indexes must be created using the HNSW algorithm. Existing IVFFlat indexes (specifically in the llm_cache table) are to be migrated to HNSW in Sprint 16.
    - **Why:** HNSW is the current architectural standard for vector indexing. The previous rejection of the migration to HNSW was due to operational risks in production, not a lack of performance or technical suitability of HNSW.
    - **Files:** `db/schema/vector_indexes`, `db/migrations/sprint_16/migrate_llm_cache_to_hnsw`
 
-40. 🟡 **[MEDIUM]** Adopt the HIGH severity specification as the authoritative version for the RFC 7807 error format, which includes fields: type, title, status, detail, and instance.
+41. 🟡 **[MEDIUM]** Adopt the HIGH severity specification as the authoritative version for the RFC 7807 error format, which includes fields: type, title, status, detail, and instance.
    - **Why:** The team identified that two existing conventions were redundant. Designating the HIGH severity entry as canonical while allowing the fusion engine to merge duplicate references ensures consistency across documentation and API implementations.
    - **Files:** `packages/api/src/plugins/error-handler.ts`
 
-41. 🟡 **[MEDIUM]** We have standardized on cosine distance (using the <=> operator in pgvector) for all similarity search operations.
+42. 🟡 **[MEDIUM]** We have standardized on cosine distance (using the <=> operator in pgvector) for all similarity search operations.
    - **Why:** Cosine distance provides significantly better recall (12% improvement) on normalized text embeddings compared to L2 distance. Furthermore, L2 distance is overly sensitive to embedding magnitude, making it less reliable for our specific use case.
 
-42. 🟡 **[MEDIUM]** MongoDB is strictly prohibited for use in core pipeline services (including the core decision pipeline, authentication, and the context store). These services must exclusively use PostgreSQL 16 and Redis. Any deviation requires a formal ADR.
+43. 🟡 **[MEDIUM]** MongoDB is strictly prohibited for use in core pipeline services (including the core decision pipeline, authentication, and the context store). These services must exclusively use PostgreSQL 16 and Redis. Any deviation requires a formal ADR.
    - **Why:** To maintain architectural integrity and prevent fragmentation in the core tech stack. Previous attempts to introduce MongoDB for event queues nearly caused instability, highlighting the need for a hard, enforceable constraint.
    - **Files:** `analytics/storage`, `infrastructure/database-policy`
 
-43. 🟡 **[MEDIUM]** The team decided to discontinue the use of EventStoreDB and removed event sourcing as an architectural pattern following the migration back to a monorepo.
+44. 🟡 **[MEDIUM]** The team decided to discontinue the use of EventStoreDB and removed event sourcing as an architectural pattern following the migration back to a monorepo.
    - **Why:** The complexity of maintaining three separate runbooks for EventStoreDB operations outweighed the benefits of its auditability features for the current team size and system scale.
 
-44. 🟡 **[MEDIUM]** All internal API routes must adhere to the RFC 7807 error format, consistent with public-facing API routes.
+45. 🟡 **[MEDIUM]** All internal API routes must adhere to the RFC 7807 error format, consistent with public-facing API routes.
    - **Why:** Inconsistent error formats, specifically plain strings from internal routes, prevent AI tools from reliably parsing and analyzing errors, leading to broken analysis workflows.
    - **Files:** `packages/api/src/routes/internal/`
 
-45. 🟡 **[MEDIUM]** We will use the `text-embedding-3-small` OpenAI model to generate 1536-dimension embeddings. These embeddings will be stored in the `knowledge_chunks` table within PostgreSQL. The HNSW index used for vector search will be configured with `ef_construction=200` and `m=16`.
+46. 🟡 **[MEDIUM]** We will use the `text-embedding-3-small` OpenAI model to generate 1536-dimension embeddings. These embeddings will be stored in the `knowledge_chunks` table within PostgreSQL. The HNSW index used for vector search will be configured with `ef_construction=200` and `m=16`.
    - **Why:** The chosen HNSW parameters (`ef_construction=200` and `m=16`) are set to provide an optimal tradeoff between recall accuracy and search speed. The `text-embedding-3-small` model is selected for generating the text embeddings.
    - **Files:** `packages/decision-store/src/schema.ts`
 
-46. 🟡 **[MEDIUM]** We decided to use cosine distance for semantic similarity search of text embeddings with pgvector HNSW for deduplication.
+47. 🟡 **[MEDIUM]** We decided to use cosine distance for semantic similarity search of text embeddings with pgvector HNSW for deduplication.
    - **Why:** Cosine distance is invariant to vector magnitude, meaning it only considers the direction of vectors. This property is precisely what is desired for semantic similarity of text embeddings, as it allows for accurate comparison of semantic meaning regardless of variations in embedding vector norms. L2 (Euclidean) distance, on the other hand, would incorrectly penalize vectors with different magnitudes, even if they share the same semantic direction.
 
-47. 🟡 **[MEDIUM]** Implemented Redis semantic caching for LLM embedding calls. The cache key is a hash of the input text, model, and provider. The cache entries have a Time-To-Live (TTL) of 1 hour.
+48. 🟡 **[MEDIUM]** Implemented Redis semantic caching for LLM embedding calls. The cache key is a hash of the input text, model, and provider. The cache entries have a Time-To-Live (TTL) of 1 hour.
    - **Why:** Redis was a natural extension since it is already in use for BullMQ and session caching. This implementation reduced redundant embedding calls by approximately 40% in tests.
 
-48. 🟡 **[MEDIUM]** The Revenue squad now has exclusive ownership of the billing module and Stripe integration, requiring their explicit approval for all pull requests affecting these areas.
+49. 🟡 **[MEDIUM]** The Revenue squad now has exclusive ownership of the billing module and Stripe integration, requiring their explicit approval for all pull requests affecting these areas.
    - **Why:** Centralizing ownership ensures better control, security, and specialized maintenance for critical payment-related infrastructure.
    - **Files:** `packages/api/src/billing/`, `src/modules/billing/`, `src/integrations/stripe/`
 
-49. 🟢 **[LOW]** Use standard SCSS in a separate navbar.scss file for the new navigation component.
+50. 🟢 **[LOW]** Use standard SCSS in a separate navbar.scss file for the new navigation component.
    - **Why:** Complex hover state requirements for the navigation component lead to unmanageable code when using Tailwind utility classes.
    - **Files:** `navbar.scss`, `navbar.tsx`
 
-50. 🟢 **[LOW]** The team will use iPhones to perform mobile calls.
+51. 🟢 **[LOW]** The team will use iPhones to perform mobile calls.
    - **Why:** The team aligned on a single mobile device platform for communication consistency.
