@@ -132,6 +132,13 @@ Violating these decisions requires explicit approval.
 - **Do NOT:** Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting). (This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.)
 - **Do NOT:** Consolidate to a single LLM provider for all pipeline steps. (This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.)
 
+### Implement client-side credit balance check for Ask Knowledge Base (MEDIUM)
+- **Decision:** The team decided to implement a client-side credit balance check in the frontend dashboard before allowing a request to hit the /api/companies/:companyId/mcp/ask-knowledge-base endpoint.
+- **Rationale:** The existing Redis pre-check in the backend is fail-open and only blocks after a SERIALIZABLE transaction confirms insufficient balance. A client-side check provides better user experience by surfacing the warning in the dashboard before the query is attempted, preventing unnecessary 402 errors.
+- **Affected files:** `/api/companies/:companyId/mcp/ask-knowledge-base`, `src/components/dashboard/CreditsPanel.tsx`, `src/hooks/useCreditBalance.ts`
+- **Do NOT:** Backend fail-closed check (The current Redis architecture is fail-open for performance reasons; changing it would involve complex architectural changes to handle transaction locking and potential performance degradation.)
+- **Do NOT:** Surface 402 error in UI (Displaying a 402 error after the user has already submitted the request is a poor user experience compared to preventing the request entirely via a dashboard warning.)
+
 ### Migrate Indian payment processing from Stripe to Paddle (MEDIUM)
 - **Decision:** The team will migrate all Indian payment processing operations from Stripe to Paddle.
 - **Rationale:** Stripe is no longer a viable or legal option for payment processing in India due to government-imposed bans, making a migration to a supported alternative like Paddle necessary for continuity.
@@ -198,17 +205,5 @@ Violating these decisions requires explicit approval.
 - **Decision:** Implemented Redis semantic caching for LLM embedding calls. The cache key is a hash of the input text, model, and provider. The cache entries have a Time-To-Live (TTL) of 1 hour.
 - **Rationale:** Redis was a natural extension since it is already in use for BullMQ and session caching. This implementation reduced redundant embedding calls by approximately 40% in tests.
 
-### Establish Revenue squad ownership of billing and Stripe integration (MEDIUM)
-- **Decision:** The Revenue squad now has exclusive ownership of the billing module and Stripe integration, requiring their explicit approval for all pull requests affecting these areas.
-- **Rationale:** Centralizing ownership ensures better control, security, and specialized maintenance for critical payment-related infrastructure.
-- **Affected files:** `packages/api/src/billing/`, `src/modules/billing/`, `src/integrations/stripe/`
 
-### Use separate SCSS file for navigation component styling (LOW)
-- **Decision:** Use standard SCSS in a separate navbar.scss file for the new navigation component.
-- **Rationale:** Complex hover state requirements for the navigation component lead to unmanageable code when using Tailwind utility classes.
-- **Affected files:** `navbar.scss`, `navbar.tsx`
-- **Do NOT:** Tailwind utility classes (The resulting code is too messy and complex for the required hover states.)
-
-### Standardization on iPhones for mobile communication (LOW)
-- **Decision:** The team will use iPhones to perform mobile calls.
-- **Rationale:** The team aligned on a single mobile device platform for communication consistency.
+<!-- decispher: output truncated to context budget -->
