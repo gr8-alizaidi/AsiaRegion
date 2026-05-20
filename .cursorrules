@@ -19,11 +19,17 @@
   Rationale: To maintain architectural integrity and prevent fragmentation in the core tech stack. Previous attempts to introduce MongoDB for event queues nearly caused instability, highlighting the need for a hard, enforceable constraint.
   Files: analytics/storage, infrastructure/database-policy
 
-## Umbraco
+## Llm
 
-- We will extend the use of Umbraco to leverage its CMS functionality alongside its webhook and ingester capabilities to process elastic data, which will then be served to the frontend via a materializer and a dedicated service using GraphQL.
-  Rationale: By utilizing Umbraco's existing webhook and ingester features, we can streamline data flow and minimize the introduction of additional external services for data processing, while maintaining a consistent tech stack.
-  Files: src/infrastructure/ingester, src/api/graphql, src/services/materializer
+- All LLM calls must be made through the GuardedProviderRegistry using either wrapTextProvider or wrapEmbeddingProvider instead of direct SDK calls.
+  Rationale: Using the registry ensures that all calls are tracked for cost accounting and can be dynamically controlled via system-wide kill switches.
+  Files: src/llm/providers/registry.ts, src/llm/providers/guarded_registry.ts
+
+- Establish explicit provider fallback orderings: For extraction, use Anthropic → DeepSeek → OpenAI. For detection, use Google → OpenAI → DeepSeek.
+  Rationale: To maintain system reliability and avoid task failure when individual LLM providers hit rate limits, a hierarchical fallback mechanism ensures work is diverted to alternative models before resorting to the Dead Letter Queue (DLQ) after retries.
+  Files: src/llm/client_factory.py, src/llm/fallback_logic.py
+
+## Umbraco
 
 - The team will use the Umbraco CMS platform to build each component of the frontend website.
   Rationale: Umbraco was selected as the designated CMS to standardize the development of frontend components.
@@ -85,12 +91,6 @@
   Rationale: Centralizing ownership ensures better control, security, and specialized maintenance for critical payment-related infrastructure.
   Files: packages/api/src/billing/, src/modules/billing/, src/integrations/stripe/
 
-## Llm
-
-- Establish explicit provider fallback orderings: For extraction, use Anthropic → DeepSeek → OpenAI. For detection, use Google → OpenAI → DeepSeek.
-  Rationale: To maintain system reliability and avoid task failure when individual LLM providers hit rate limits, a hierarchical fallback mechanism ensures work is diverted to alternative models before resorting to the Dead Letter Queue (DLQ) after retries.
-  Files: src/llm/client_factory.py, src/llm/fallback_logic.py
-
 ## Aws
 
 - The team will migrate from AWS ECS to AWS EKS for container orchestration.
@@ -138,6 +138,12 @@
 - All internal API routes must adhere to the RFC 7807 error format, consistent with public-facing API routes.
   Rationale: Inconsistent error formats, specifically plain strings from internal routes, prevent AI tools from reliably parsing and analyzing errors, leading to broken analysis workflows.
   Files: packages/api/src/routes/internal/
+
+## Payments
+
+- The team will migrate all Indian payment processing operations from Stripe to Paddle.
+  Rationale: Stripe is no longer a viable or legal option for payment processing in India due to government-imposed bans, making a migration to a supported alternative like Paddle necessary for continuity.
+  Files: src/billing/payment_processor.ts, src/config/payments.json
 
 ## Typescript
 
