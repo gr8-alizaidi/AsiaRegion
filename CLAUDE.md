@@ -132,6 +132,12 @@ Violating these decisions requires explicit approval.
 - **Do NOT:** Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting). (This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.)
 - **Do NOT:** Consolidate to a single LLM provider for all pipeline steps. (This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.)
 
+### Increase web dashboard session timeout to 4 hours (MEDIUM)
+- **Decision:** Extend the session timeout period for the web dashboard application to 4 hours.
+- **Rationale:** Extended sessions improve usability for long review tasks, while maintaining shorter token life for mobile to satisfy security requirements regarding background app behavior.
+- **Affected files:** `web/config/session.js`
+- **Do NOT:** Extend session timeout for both web and mobile (Mobile requires shorter session tokens due to security risks associated with background application behavior.)
+
 ### Increase web API rate limit for premium users to 500 req/min (MEDIUM)
 - **Decision:** Increased the web API rate limit to 500 requests per minute for premium tier users.
 - **Rationale:** Internal testing confirmed that existing system latency remains within acceptable thresholds and the database is capable of handling the increased load.
@@ -198,11 +204,5 @@ Violating these decisions requires explicit approval.
 
 ### Configure LLM classification batch size and concurrency for Pro mode (MEDIUM)
 - **Decision:** Set LLM_CLASSIFY_BATCH_SIZE_PRO to 10 and maintain LLM_CLASSIFY_CONCURRENCY at 5 for the pro mode classification process.
-- **Rationale:** Increasing the batch size to 10 improves throughput to address latency issues, while keeping the batch size at 10 (instead of 15) prevents a loss in model precision for candidates later in the list. Concurrency is kept at 5 to balance processing load.
-- **Affected files:** `decision-fusion-queue`
-- **Do NOT:** Batch size 15 and concurrency 3 (The larger batch size of 15 risked decreasing the model's precision on candidate evaluation.)
-
-### Trigger dashboard onboarding redirect after Slack OAuth completion (MEDIUM)
-- **Decision:** Implement a redirect to the dashboard onboarding flow immediately after the Slack OAuth callback is successfully completed to ensure the integration record is created.
 
 <!-- decispher: output truncated to context budget -->
