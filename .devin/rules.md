@@ -227,6 +227,18 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 - ~~Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting).~~ — This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.
 - ~~Consolidate to a single LLM provider for all pipeline steps.~~ — This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.
 
+### Implement server-side session tracking for MCP keys using Redis
+
+- **Severity:** MEDIUM
+- **Rule:** Track sessions via a server-side generated session_id stored in Redis with a 30-minute rolling TTL, instead of relying on inactivity gap computation. Include the session_id as a foreign key in the mcp_logs table to allow accurate deduplication of discovery costs.
+- **Rationale:** Server-side generation is safer than relying on client-side headers as agents are inconsistent. Using a Redis-backed TTL ensures that sessions are grouped correctly despite agent re-initialization patterns, providing more accurate cost tracking and session lifecycle management.
+- **Scope:** mcp_logs, SessionDetector, mcp_key_handler
+- **Tags:** mcp, redis, session-management, backend, cost-optimization
+
+**Alternatives considered (rejected):**
+- ~~Agent-provided session_id header~~ — Agents cannot be trusted to pass stable, consistent session identifiers.
+- ~~Inactivity gap computation~~ — Leads to fragmented sessions and inaccurate discovery cost metrics due to agent re-initialization patterns.
+
 ### Use 30-minute inactivity window for MCP session detection
 
 - **Severity:** MEDIUM
@@ -317,18 +329,5 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 
 **Alternatives considered (rejected):**
 - ~~DM the user the onboarding link when the bot joins~~ — The team determined that handling the event on the OAuth callback side is more reliable and ensures the flow is completed immediately after the installation.
-- ~~Use team_join event to trigger onboarding~~ — The team identified that team_join events are specific to individual users joining a workspace and are not suitable for the initial workspace-level integration onboarding.
-
-### Send onboarding link via Slack DM upon app installation
-
-- **Severity:** MEDIUM
-- **Rule:** Implement a mechanism to DM the onboarding link to the workspace admin immediately upon app installation (app_installed event) rather than waiting for message events.
-- **Rationale:** Direct messaging the onboarding link ensures users complete the dashboard setup process, preventing the creation of 'ghost companies' and avoiding errors when the recorder tries to process events for an uninitialized workspace.
-- **Scope:** src/integrations/slack/events/app_installed.ts, src/dashboard/oauth/callback.ts
-- **Tags:** slack, onboarding, oauth, backend, error-handling
-
-**Alternatives considered (rejected):**
-- ~~Handle team_join event~~ — The team_join event triggers for new users joining a workspace, not for the initial app installation, making it unsuitable for driving workspace-level onboarding.
-
 
 <!-- decispher: output truncated to context budget -->
