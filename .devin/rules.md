@@ -227,6 +227,17 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 - ~~Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting).~~ — This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.
 - ~~Consolidate to a single LLM provider for all pipeline steps.~~ — This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.
 
+### Increase web dashboard session timeout to 4 hours
+
+- **Severity:** MEDIUM
+- **Rule:** Extend the session timeout period for the web dashboard application to 4 hours.
+- **Rationale:** Extended sessions improve usability for long review tasks, while maintaining shorter token life for mobile to satisfy security requirements regarding background app behavior.
+- **Scope:** web/config/session.js
+- **Tags:** web, security, authentication, dashboard, fusion:contradicts
+
+**Alternatives considered (rejected):**
+- ~~Extend session timeout for both web and mobile~~ — Mobile requires shorter session tokens due to security risks associated with background application behavior.
+
 ### Increase web API rate limit for premium users to 500 req/min
 
 - **Severity:** MEDIUM
@@ -325,12 +336,5 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 
 **Alternatives considered (rejected):**
 - ~~Add 'redis' to the stopword list~~ — Stopwords in the context-linker are restricted to title tokens and do not influence the entity extraction path.
-- ~~Blindly lower linkThreshold to 0.32~~ — Risk of unintended side effects and reduction in true positive linkage performance without empirical validation.
-
-### Unify hard conflict review notifications via NotificationService
-
-- **Severity:** MEDIUM
-- **Rule:** Route all hard conflict notifications through the centralized NotificationService using a CONTRADICTS_REVIEW template, replacing the localized implementation in InteractionHandler.
-- **Rationale:** Routing through the NotificationService ensures consistent notification delivery regardless of the input channel (Slack or GitHub PRs), eliminating the inconsistency where GitHub-sourced conflicts currently lack alert logic.
 
 <!-- decispher: output truncated to context budget -->
