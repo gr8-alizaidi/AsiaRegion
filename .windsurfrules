@@ -96,6 +96,10 @@ Cascade MUST respect these rules when generating or modifying code.
 
 ## [MEDIUM]
 
+- Extend the session timeout period for the web dashboard application to 4 hours.
+  Reason: Extended sessions improve usability for long review tasks, while maintaining shorter token life for mobile to satisfy security requirements regarding background app behavior.
+  Files: web/config/session.js
+
 - Increased the web API rate limit to 500 requests per minute for premium tier users.
   Reason: Internal testing confirmed that existing system latency remains within acceptable thresholds and the database is capable of handling the increased load.
   Files: middleware/rate-limit-config.js
