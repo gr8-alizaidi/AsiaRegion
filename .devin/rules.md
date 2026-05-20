@@ -227,6 +227,17 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 - ~~Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting).~~ — This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.
 - ~~Consolidate to a single LLM provider for all pipeline steps.~~ — This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.
 
+### Restrict record deduplication to same-type comparisons and update thresholds
+
+- **Severity:** MEDIUM
+- **Rule:** Deduplication will now only occur between decisions of the same type. The threshold for same-type deduplication is lowered from 0.15 to 0.12.
+- **Rationale:** Calibration analysis of 847 labeled examples indicates that cross-type deduplication is invalid and 0.12 is the optimal threshold for same-type matching to ensure accurate dedup behavior.
+- **Scope:** findSimilarActiveWithScores, findSimilarByTypes
+- **Tags:** deduplication, threshold, backend, algorithm, fusion:contradicts
+
+**Alternatives considered (rejected):**
+- ~~Allow cross-type deduplication~~ — It was determined that dedup should only fire when existing and incoming decisions have the same type to maintain data integrity.
+
 ### Set similarity threshold for decision deduplication to 0.15 cosine distance
 
 - **Severity:** MEDIUM
@@ -318,19 +329,6 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 
 **Alternatives considered (rejected):**
 - ~~Implement an equivalent postContradictReviewDm method in the github-notification-queue worker~~ — This would result in fragmented notification logic across multiple services, increasing maintenance overhead and the likelihood of future inconsistencies.
-
-### Configure LLM classification batch size and concurrency for Pro mode
-
-- **Severity:** MEDIUM
-- **Rule:** Set LLM_CLASSIFY_BATCH_SIZE_PRO to 10 and maintain LLM_CLASSIFY_CONCURRENCY at 5 for the pro mode classification process.
-- **Rationale:** Increasing the batch size to 10 improves throughput to address latency issues, while keeping the batch size at 10 (instead of 15) prevents a loss in model precision for candidates later in the list. Concurrency is kept at 5 to balance processing load.
-- **Scope:** decision-fusion-queue
-- **Tags:** performance, llm, infrastructure, batch-processing
-
-**Alternatives considered (rejected):**
-- ~~Batch size 15 and concurrency 3~~ — The larger batch size of 15 risked decreasing the model's precision on candidate evaluation.
-
-### Trigger dashboard onboarding redirect after Slack OAuth completion
 
 
 <!-- decispher: output truncated to context budget -->
