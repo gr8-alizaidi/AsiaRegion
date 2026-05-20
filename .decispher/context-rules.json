@@ -1,23 +1,23 @@
 {
   "$schema": "https://decispher.dev/schemas/context-rules/v1.json",
   "specVersion": "1.0.0",
-  "generatedAt": "2026-05-13T16:36:09.731Z",
+  "generatedAt": "2026-05-20T05:37:25.476Z",
   "companyId": "1489dcdc-ef7f-4cc5-b0cb-b453efa059f4",
   "meta": {
-    "totalRules": 38,
+    "totalRules": 39,
     "rulesByType": {
-      "decision": 28,
+      "decision": 27,
       "convention": 4,
-      "constraint": 1,
+      "constraint": 2,
       "rationale": 1,
       "ownership": 2,
       "history": 1,
-      "plan": 1
+      "plan": 2
     },
     "rulesBySeverity": {
       "CRITICAL": 1,
       "HIGH": 22,
-      "MEDIUM": 13,
+      "MEDIUM": 14,
       "LOW": 2
     },
     "generator": "decispher-ai-blocker@1.0.0"
@@ -76,63 +76,59 @@
       "reviewedBy": "U05F9P78LTG"
     },
     {
-      "id": "bfb58a00-0362-4c63-9fc1-c2addeb1a0db",
-      "type": "decision",
-      "title": "Extend Umbraco usage to include data ingestion and processing",
-      "problem": "We need an architecture for processing elastic data and serving it to the frontend via GraphQL.",
-      "decision": "We will extend the use of Umbraco to leverage its CMS functionality alongside its webhook and ingester capabilities to process elastic data, which will then be served to the frontend via a materializer and a dedicated service using GraphQL.",
-      "rationale": "By utilizing Umbraco's existing webhook and ingester features, we can streamline data flow and minimize the introduction of additional external services for data processing, while maintaining a consistent tech stack.",
+      "id": "08702be0-9097-4015-89a9-6f3307cdd76c",
+      "type": "constraint",
+      "title": "Mandate use of GuardedProviderRegistry for all LLM service calls",
+      "problem": "Direct SDK calls to LLM providers bypass centralized cost recording and kill switch mechanisms.",
+      "decision": "All LLM calls must be made through the GuardedProviderRegistry using either wrapTextProvider or wrapEmbeddingProvider instead of direct SDK calls.",
+      "rationale": "Using the registry ensures that all calls are tracked for cost accounting and can be dynamically controlled via system-wide kill switches.",
       "severity": "HIGH",
       "status": "active",
-      "confidence": 0.45,
+      "confidence": 0.48,
       "affectedFiles": [
-        "src/infrastructure/ingester",
-        "src/api/graphql",
-        "src/services/materializer"
+        "src/llm/providers/registry.ts",
+        "src/llm/providers/guarded_registry.ts"
       ],
       "tags": [
-        "umbraco",
-        "graphql",
-        "architecture",
-        "backend",
-        "data-processing",
-        "fusion:contradicts"
+        "llm",
+        "infrastructure",
+        "governance",
+        "cost-management"
       ],
       "alternatives": [],
       "sources": [
         {
           "type": "slack",
-          "confidence": 0.45,
+          "confidence": 0.48,
           "ref": {
+            "repo": null,
+            "owner": null,
+            "prUrl": null,
             "priority": "high",
-            "threadTs": "1778616493.476719",
-            "channelId": "C05FDF7SWN9",
-            "sourceUrl": null,
-            "channelName": null,
+            "threadTs": "1779255256.478919",
+            "channelId": "C0B217R7516",
+            "sourceUrl": "https://newworkspace-zdx9462.slack.com/archives/C0B217R7516/p1779255256478919?thread_ts=1779255256.478919&cid=C0B217R7516",
+            "pullNumber": null,
+            "channelName": "decispher-bot-demo-1",
             "slackTeamId": null,
-            "triggeredBy": null,
+            "triggeredBy": "U05F9P78LTG",
+            "prAuthorLogin": null,
+            "installationId": null,
             "detectionMethod": "explicit",
-            "triggeredByName": null
+            "triggeredByName": "Ali Abbas",
+            "prAuthorAvatarUrl": null,
+            "triggeredByAvatarUrl": "https://avatars.slack-edge.com/2023-07-04/5519789394310_cde67e53aada700f3975_72.jpg"
           },
-          "snippet": "We will extend the use of Umbraco to leverage its CMS functionality alongside its webhook and ingester capabilities to process elastic data, which will then be served to the frontend via a materializer and a dedicated se…"
+          "snippet": "All LLM calls must be made through the GuardedProviderRegistry using either wrapTextProvider or wrapEmbeddingProvider instead of direct SDK calls."
         }
       ],
       "supersededBy": null,
-      "enforcement": {
-        "blockOnViolation": false,
-        "requiresExplicitOverride": false,
-        "filePatterns": [
-          "src/infrastructure/ingester",
-          "src/api/graphql",
-          "src/services/materializer"
-        ],
-        "exemptPatterns": []
-      },
-      "createdAt": "2026-05-13T04:32:39.490Z",
-      "updatedAt": "2026-05-13T06:33:05.782Z",
+      "enforcement": null,
+      "createdAt": "2026-05-20T05:35:10.820Z",
+      "updatedAt": "2026-05-20T05:36:49.927Z",
       "version": 1,
       "createdBy": "U05F9P78LTG",
-      "reviewedBy": "df51fb32-47a2-48b2-ac32-3887a582a966"
+      "reviewedBy": "U05F9P78LTG"
     },
     {
       "id": "0948e434-dd93-4077-a9fc-b5a3daa13cc6",
@@ -674,5 +670,8 @@
       "sources": [
         {
           "type": "slack",
+          "confidence": 0.43,
+          "ref": {
+            "priority": "high",
 
 <!-- decispher: output truncated to context budget -->
