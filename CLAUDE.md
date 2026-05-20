@@ -132,6 +132,12 @@ Violating these decisions requires explicit approval.
 - **Do NOT:** Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting). (This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.)
 - **Do NOT:** Consolidate to a single LLM provider for all pipeline steps. (This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.)
 
+### Unify hard conflict review notifications via NotificationService (MEDIUM)
+- **Decision:** Route all hard conflict notifications through the centralized NotificationService using a CONTRADICTS_REVIEW template, replacing the localized implementation in InteractionHandler.
+- **Rationale:** Routing through the NotificationService ensures consistent notification delivery regardless of the input channel (Slack or GitHub PRs), eliminating the inconsistency where GitHub-sourced conflicts currently lack alert logic.
+- **Affected files:** `services/InteractionHandler.ts`, `services/github-notification-queue.ts`, `services/NotificationService.ts`
+- **Do NOT:** Implement an equivalent postContradictReviewDm method in the github-notification-queue worker (This would result in fragmented notification logic across multiple services, increasing maintenance overhead and the likelihood of future inconsistencies.)
+
 ### Configure LLM classification batch size and concurrency for Pro mode (MEDIUM)
 - **Decision:** Set LLM_CLASSIFY_BATCH_SIZE_PRO to 10 and maintain LLM_CLASSIFY_CONCURRENCY at 5 for the pro mode classification process.
 - **Rationale:** Increasing the batch size to 10 improves throughput to address latency issues, while keeping the batch size at 10 (instead of 15) prevents a loss in model precision for candidates later in the list. Concurrency is kept at 5 to balance processing load.
@@ -198,10 +204,5 @@ Violating these decisions requires explicit approval.
 
 ### Use cosine distance for pgvector similarity searches (MEDIUM)
 - **Decision:** We have standardized on cosine distance (using the <=> operator in pgvector) for all similarity search operations.
-- **Rationale:** Cosine distance provides significantly better recall (12% improvement) on normalized text embeddings compared to L2 distance. Furthermore, L2 distance is overly sensitive to embedding magnitude, making it less reliable for our specific use case.
-- **Do NOT:** L2 distance (It is sensitive to embedding magnitude and demonstrated poorer recall compared to cosine distance for our data.)
-
-### Use MongoDB Atlas for analytics event ingestion (MEDIUM)
-- **Decision:** MongoDB is strictly prohibited for use in core pipeline services (including the core decision pipeline, authentication, and the context store). These services must exclusively use PostgreSQL 16 and Redis. Any deviation requires a formal ADR.
 
 <!-- decispher: output truncated to context budget -->
