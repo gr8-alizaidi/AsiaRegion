@@ -143,6 +143,12 @@
   Rationale: Inconsistent error formats, specifically plain strings from internal routes, prevent AI tools from reliably parsing and analyzing errors, leading to broken analysis workflows.
   Files: packages/api/src/routes/internal/
 
+## Deduplication
+
+- Maintain the current cosine distance threshold of < 0.15 as the similarity floor for identifying deduplication candidates.
+  Rationale: A strict threshold is intentionally chosen to prioritize preventing false positives (blocking legitimate new decisions) over false negatives (missing potential duplicates), with plans to refine the threshold once 500+ labeled examples are collected.
+  Files: linker_calibration_events, dedup_logic
+
 ## Mcp
 
 - Track sessions via a server-side generated session_id stored in Redis with a 30-minute rolling TTL, instead of relying on inactivity gap computation. Include the session_id as a foreign key in the mcp_logs table to allow accurate deduplication of discovery costs.
