@@ -278,6 +278,16 @@ Aider should follow all of these conventions when making changes.
 
 **Relevant files:** `packages/api/src/routes/internal/`
 
+## Notification
+
+### Establish stale archival notification process for decision units
+
+**Convention:** Implement a notification process where owners receive a Slack message 7 days before the archival cutoff. This involves adding a 'stale_warning' type to the NotificationService, querying for decisions with a last_reviewed_at timestamp between 83 and 84 days ago, and triggering a notification job. Viewing a decision on the dashboard does not reset the review timestamp; only an explicit approve, reject, or mark_active action will.
+
+**Why:** Ensures stakeholders are informed before data archival without creating a loop where passive dashboard activity prevents legitimate cleanup of stale data.
+
+**Relevant files:** `services/NotificationService.js`, `jobs/ArchiveNotificationJob.js`, `controllers/DecisionController.js`
+
 ## Automation
 
 ### Automate stale decision archiving via ContextLifecycleWorker
@@ -437,18 +447,6 @@ Aider should follow all of these conventions when making changes.
 **Why:** The complexity of maintaining three separate runbooks for EventStoreDB operations outweighed the benefits of its auditability features for the current team size and system scale.
 
 ## Vector-database
-
-### Implementation details for text embeddings in PostgreSQL using OpenAI's text-embedding-3-small and HNSW indexing
-
-**Convention:** We will use the `text-embedding-3-small` OpenAI model to generate 1536-dimension embeddings. These embeddings will be stored in the `knowledge_chunks` table within PostgreSQL. The HNSW index used for vector search will be configured with `ef_construction=200` and `m=16`.
-
-**Why:** The chosen HNSW parameters (`ef_construction=200` and `m=16`) are set to provide an optimal tradeoff between recall accuracy and search speed. The `text-embedding-3-small` model is selected for generating the text embeddings.
-
-**Relevant files:** `packages/decision-store/src/schema.ts`
-
-## Redis
-
-### Implement Redis Semantic Caching for LLM Embedding Calls
 
 
 <!-- decispher: output truncated to context budget -->
