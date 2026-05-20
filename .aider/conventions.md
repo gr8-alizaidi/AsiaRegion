@@ -278,6 +278,16 @@ Aider should follow all of these conventions when making changes.
 
 **Relevant files:** `packages/api/src/routes/internal/`
 
+## Notification-system
+
+### Unify hard conflict review notifications via NotificationService
+
+**Convention:** Route all hard conflict notifications through the centralized NotificationService using a CONTRADICTS_REVIEW template, replacing the localized implementation in InteractionHandler.
+
+**Why:** Routing through the NotificationService ensures consistent notification delivery regardless of the input channel (Slack or GitHub PRs), eliminating the inconsistency where GitHub-sourced conflicts currently lack alert logic.
+
+**Relevant files:** `services/InteractionHandler.ts`, `services/github-notification-queue.ts`, `services/NotificationService.ts`
+
 ## Performance
 
 ### Configure LLM classification batch size and concurrency for Pro mode
