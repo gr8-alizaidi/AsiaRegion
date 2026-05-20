@@ -42,17 +42,29 @@ Aider should follow all of these conventions when making changes.
 
 **Relevant files:** `analytics/storage`, `infrastructure/database-policy`
 
-## Umbraco
+## Llm
 
-### Extend Umbraco usage to include data ingestion and processing
+### Mandate use of GuardedProviderRegistry for all LLM service calls
 
-**Convention:** We will extend the use of Umbraco to leverage its CMS functionality alongside its webhook and ingester capabilities to process elastic data, which will then be served to the frontend via a materializer and a dedicated service using GraphQL.
+**Convention:** All LLM calls must be made through the GuardedProviderRegistry using either wrapTextProvider or wrapEmbeddingProvider instead of direct SDK calls.
 
-**Why:** By utilizing Umbraco's existing webhook and ingester features, we can streamline data flow and minimize the introduction of additional external services for data processing, while maintaining a consistent tech stack.
+**Why:** Using the registry ensures that all calls are tracked for cost accounting and can be dynamically controlled via system-wide kill switches.
 
 > ⚠️ This is a **HIGH** priority rule — do not violate it.
 
-**Relevant files:** `src/infrastructure/ingester`, `src/api/graphql`, `src/services/materializer`
+**Relevant files:** `src/llm/providers/registry.ts`, `src/llm/providers/guarded_registry.ts`
+
+### Define Model Fallback Ordering Strategy for API Rate Limits
+
+**Convention:** Establish explicit provider fallback orderings: For extraction, use Anthropic → DeepSeek → OpenAI. For detection, use Google → OpenAI → DeepSeek.
+
+**Why:** To maintain system reliability and avoid task failure when individual LLM providers hit rate limits, a hierarchical fallback mechanism ensures work is diverted to alternative models before resorting to the Dead Letter Queue (DLQ) after retries.
+
+> ⚠️ This is a **HIGH** priority rule — do not violate it.
+
+**Relevant files:** `src/llm/client_factory.py`, `src/llm/fallback_logic.py`
+
+## Umbraco
 
 ### Use Umbraco CMS for frontend component development
 
@@ -176,18 +188,6 @@ Aider should follow all of these conventions when making changes.
 
 **Relevant files:** `packages/api/src/billing/`, `src/modules/billing/`, `src/integrations/stripe/`
 
-## Llm
-
-### Define Model Fallback Ordering Strategy for API Rate Limits
-
-**Convention:** Establish explicit provider fallback orderings: For extraction, use Anthropic → DeepSeek → OpenAI. For detection, use Google → OpenAI → DeepSeek.
-
-**Why:** To maintain system reliability and avoid task failure when individual LLM providers hit rate limits, a hierarchical fallback mechanism ensures work is diverted to alternative models before resorting to the Dead Letter Queue (DLQ) after retries.
-
-> ⚠️ This is a **HIGH** priority rule — do not violate it.
-
-**Relevant files:** `src/llm/client_factory.py`, `src/llm/fallback_logic.py`
-
 ## Aws
 
 ### Migrate infrastructure orchestration from AWS ECS to AWS EKS
@@ -277,6 +277,16 @@ Aider should follow all of these conventions when making changes.
 **Why:** Inconsistent error formats, specifically plain strings from internal routes, prevent AI tools from reliably parsing and analyzing errors, leading to broken analysis workflows.
 
 **Relevant files:** `packages/api/src/routes/internal/`
+
+## Payments
+
+### Migrate Indian payment processing from Stripe to Paddle
+
+**Convention:** The team will migrate all Indian payment processing operations from Stripe to Paddle.
+
+**Why:** Stripe is no longer a viable or legal option for payment processing in India due to government-imposed bans, making a migration to a supported alternative like Paddle necessary for continuity.
+
+**Relevant files:** `src/billing/payment_processor.ts`, `src/config/payments.json`
 
 ## Typescript
 
