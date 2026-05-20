@@ -85,6 +85,10 @@
   Rationale: The team determined that the RFC 7807 specification is outdated and no longer aligns with the current requirements and standards of the API architecture.
   Files: api/responses, api/error-handling
 
+- Increased the web API rate limit to 500 requests per minute for premium tier users.
+  Rationale: Internal testing confirmed that existing system latency remains within acceptable thresholds and the database is capable of handling the increased load.
+  Files: middleware/rate-limit-config.js
+
 ## Billing
 
 - The billing service uses long-running containers instead of serverless functions.
