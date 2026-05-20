@@ -43,6 +43,7 @@ Any code change that violates these decisions MUST be flagged.
 
 | Decision | Rationale | Files |
 |----------|-----------|-------|
+| Deduplication will now only occur between decisions of the same type. The threshold for same-type deduplication is lowered from 0.15 to 0.12. | Calibration analysis of 847 labeled examples indicates that cross-type deduplication is invalid and 0.12 is the optimal threshold for same-type matching to ensure accurate dedup behavior. | findSimilarActiveWithScores, findSimilarByTypes |
 | Maintain the current cosine distance threshold of < 0.15 as the similarity floor for identifying deduplication candidates. | A strict threshold is intentionally chosen to prioritize preventing false positives (blocking legitimate new decisions) over false negatives (missing potential duplicates), with plans to refine the threshold once 500+ labeled examples are collected. | linker_calibration_events, dedup_logic |
 | Track sessions via a server-side generated session_id stored in Redis with a 30-minute rolling TTL, instead of relying on inactivity gap computation. Include the session_id as a foreign key in the mcp_logs table to allow accurate deduplication of discovery costs. | Server-side generation is safer than relying on client-side headers as agents are inconsistent. Using a Redis-backed TTL ensures that sessions are grouped correctly despite agent re-initialization patterns, providing more accurate cost tracking and session lifecycle management. | mcp_logs, SessionDetector, mcp_key_handler |
 | Define a new MCP session as any gap of 30 minutes or more between tool calls on mcp_logs per API key. | The 30-minute window serves as a known, intentional approximation to define session boundaries for cost calculation, acknowledging that very slow agents may trigger multiple sessions. | ADR-033, SessionDetector |
@@ -76,5 +77,5 @@ Any code change that violates these decisions MUST be flagged.
 
 | Decision | Rationale | Files |
 |----------|-----------|-------|
-| Use standard SCSS in a separate navbar.scss file for the new navigation component. | Complex hover state requirements for the navigation component lead to unmanageable code when using Tailwind utility classes. | navbar.scss, navbar.tsx |
-| The team will use iPhones to perform mobile calls. | The team aligned on a single mobile device platform for communication consistency. | * |
+
+<!-- decispher: output truncated to context budget -->
