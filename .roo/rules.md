@@ -90,6 +90,9 @@
 
 ## General Conventions
 
+- **Bypass confidence threshold for explicit capture intents:** Implement a 'captureIntent' field in the pipeline context where 'explicit' intent (manual dashboard entry or @decispher command) bypasses the minConfidence threshold, while 'passive' intent remains subject to it.
+  *(Explicit user commands indicate a deliberate intent to capture data, overriding the need for confidence filtering which is primarily intended for passive/automated collection.)*
+
 - **Bypass minConfidence check for manual source type in analyzer:** Manual captures with sourceType='manual' will bypass the minConfidence check entirely by adding an explicit guard in the detection step where shouldRun returns true by default for manual types.
   *(Manual content is explicitly created by the user, making confidence scoring irrelevant compared to automated conversational or code sources.)*
 
