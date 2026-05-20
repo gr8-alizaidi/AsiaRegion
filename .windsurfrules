@@ -96,6 +96,10 @@ Cascade MUST respect these rules when generating or modifying code.
 
 ## [MEDIUM]
 
+- Implement a mechanism to DM the onboarding link to the workspace admin immediately upon app installation (app_installed event) rather than waiting for message events.
+  Reason: Direct messaging the onboarding link ensures users complete the dashboard setup process, preventing the creation of 'ghost companies' and avoiding errors when the recorder tries to process events for an uninitialized workspace.
+  Files: src/integrations/slack/events/app_installed.ts, src/dashboard/oauth/callback.ts
+
 - The team will tune the Gemini-2.5-flash prompt for PassiveDetector in saver mode to increase the detection confidence floor.
   Reason: The current confidence threshold is allowing low-quality matches (standup messages) to be classified as actionable context units. Tuning the system prompt is the most efficient way to reduce noise without switching the underlying model or building complex per-channel weight features.
   Files: src/PassiveDetector/prompt.ts, src/PassiveDetector/detection.py
