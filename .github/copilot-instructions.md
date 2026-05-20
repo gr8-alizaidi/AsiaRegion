@@ -26,27 +26,28 @@ When generating code for this project, follow these rules:
 21. All API errors must adhere to the RFC 7807 problem details format, including fields such as type, title, status, detail, and instance.
 22. The specific LLM model combinations for the multi-provider effort modes were finalized: Saver mode uses `gemini-flash` for detection, extraction, and format. Balanced mode uses `gemini-flash` for detection, `claude-haiku` for extraction, and `gpt-4o-mini` for format. Pro mode uses `gemini-flash` for detection, `claude-sonnet` for extraction, and `gpt-4o-mini` for format. Super mode uses `gemini-flash` for detection, `claude-opus` for extraction, and `claude-sonnet` for format.
 23. We will implement a multi-provider abstraction where each pipeline step (detection, extraction, enrichment, formatting) has its own LLM provider configuration via environment variables. At request time, an 'effort mode' can override the provider selection on a per-company basis.
-24. Implement a ContextLifecycleWorker job that triggers the existing archiveStalePendingReview function based on decisions not reviewed in over 90 days, controlled by the STALE_ARCHIVE_ENABLED environment variable.
-25. The team will refrain from manually adjusting DEFAULT_FUSION_PARAMS.linkThreshold and instead utilize the existing precision/recall harness in packages/fusion-eval to empirically evaluate changes before deployment.
-26. Route all hard conflict notifications through the centralized NotificationService using a CONTRADICTS_REVIEW template, replacing the localized implementation in InteractionHandler.
-27. Set LLM_CLASSIFY_BATCH_SIZE_PRO to 10 and maintain LLM_CLASSIFY_CONCURRENCY at 5 for the pro mode classification process.
-28. Implement a redirect to the dashboard onboarding flow immediately after the Slack OAuth callback is successfully completed to ensure the integration record is created.
-29. Implement a mechanism to DM the onboarding link to the workspace admin immediately upon app installation (app_installed event) rather than waiting for message events.
-30. The team will tune the Gemini-2.5-flash prompt for PassiveDetector in saver mode to increase the detection confidence floor.
-31. The team decided to implement a client-side credit balance check in the frontend dashboard before allowing a request to hit the /api/companies/:companyId/mcp/ask-knowledge-base endpoint.
-32. The team will migrate all Indian payment processing operations from Stripe to Paddle.
-33. Adopt TypeScript as the mandatory language for all new backend services and enforce a strict convention where all API endpoints must return camelCase JSON.
-34. The team has officially cancelled the usage and implementation of RFC 78.
-35. Use RFC7812 as the specification for validating all JSON data synced by the server related to theme configurations.
-36. All new vector indexes must be created using the HNSW algorithm. Existing IVFFlat indexes (specifically in the llm_cache table) are to be migrated to HNSW in Sprint 16.
-37. Adopt the HIGH severity specification as the authoritative version for the RFC 7807 error format, which includes fields: type, title, status, detail, and instance.
-38. We have standardized on cosine distance (using the <=> operator in pgvector) for all similarity search operations.
-39. MongoDB is strictly prohibited for use in core pipeline services (including the core decision pipeline, authentication, and the context store). These services must exclusively use PostgreSQL 16 and Redis. Any deviation requires a formal ADR.
-40. The team decided to discontinue the use of EventStoreDB and removed event sourcing as an architectural pattern following the migration back to a monorepo.
-41. All internal API routes must adhere to the RFC 7807 error format, consistent with public-facing API routes.
-42. We will use the `text-embedding-3-small` OpenAI model to generate 1536-dimension embeddings. These embeddings will be stored in the `knowledge_chunks` table within PostgreSQL. The HNSW index used for vector search will be configured with `ef_construction=200` and `m=16`.
-43. We decided to use cosine distance for semantic similarity search of text embeddings with pgvector HNSW for deduplication.
-44. Implemented Redis semantic caching for LLM embedding calls. The cache key is a hash of the input text, model, and provider. The cache entries have a Time-To-Live (TTL) of 1 hour.
-45. The Revenue squad now has exclusive ownership of the billing module and Stripe integration, requiring their explicit approval for all pull requests affecting these areas.
-46. Use standard SCSS in a separate navbar.scss file for the new navigation component.
-47. The team will use iPhones to perform mobile calls.
+24. Implement a notification process where owners receive a Slack message 7 days before the archival cutoff. This involves adding a 'stale_warning' type to the NotificationService, querying for decisions with a last_reviewed_at timestamp between 83 and 84 days ago, and triggering a notification job. Viewing a decision on the dashboard does not reset the review timestamp; only an explicit approve, reject, or mark_active action will.
+25. Implement a ContextLifecycleWorker job that triggers the existing archiveStalePendingReview function based on decisions not reviewed in over 90 days, controlled by the STALE_ARCHIVE_ENABLED environment variable.
+26. The team will refrain from manually adjusting DEFAULT_FUSION_PARAMS.linkThreshold and instead utilize the existing precision/recall harness in packages/fusion-eval to empirically evaluate changes before deployment.
+27. Route all hard conflict notifications through the centralized NotificationService using a CONTRADICTS_REVIEW template, replacing the localized implementation in InteractionHandler.
+28. Set LLM_CLASSIFY_BATCH_SIZE_PRO to 10 and maintain LLM_CLASSIFY_CONCURRENCY at 5 for the pro mode classification process.
+29. Implement a redirect to the dashboard onboarding flow immediately after the Slack OAuth callback is successfully completed to ensure the integration record is created.
+30. Implement a mechanism to DM the onboarding link to the workspace admin immediately upon app installation (app_installed event) rather than waiting for message events.
+31. The team will tune the Gemini-2.5-flash prompt for PassiveDetector in saver mode to increase the detection confidence floor.
+32. The team decided to implement a client-side credit balance check in the frontend dashboard before allowing a request to hit the /api/companies/:companyId/mcp/ask-knowledge-base endpoint.
+33. The team will migrate all Indian payment processing operations from Stripe to Paddle.
+34. Adopt TypeScript as the mandatory language for all new backend services and enforce a strict convention where all API endpoints must return camelCase JSON.
+35. The team has officially cancelled the usage and implementation of RFC 78.
+36. Use RFC7812 as the specification for validating all JSON data synced by the server related to theme configurations.
+37. All new vector indexes must be created using the HNSW algorithm. Existing IVFFlat indexes (specifically in the llm_cache table) are to be migrated to HNSW in Sprint 16.
+38. Adopt the HIGH severity specification as the authoritative version for the RFC 7807 error format, which includes fields: type, title, status, detail, and instance.
+39. We have standardized on cosine distance (using the <=> operator in pgvector) for all similarity search operations.
+40. MongoDB is strictly prohibited for use in core pipeline services (including the core decision pipeline, authentication, and the context store). These services must exclusively use PostgreSQL 16 and Redis. Any deviation requires a formal ADR.
+41. The team decided to discontinue the use of EventStoreDB and removed event sourcing as an architectural pattern following the migration back to a monorepo.
+42. All internal API routes must adhere to the RFC 7807 error format, consistent with public-facing API routes.
+43. We will use the `text-embedding-3-small` OpenAI model to generate 1536-dimension embeddings. These embeddings will be stored in the `knowledge_chunks` table within PostgreSQL. The HNSW index used for vector search will be configured with `ef_construction=200` and `m=16`.
+44. We decided to use cosine distance for semantic similarity search of text embeddings with pgvector HNSW for deduplication.
+45. Implemented Redis semantic caching for LLM embedding calls. The cache key is a hash of the input text, model, and provider. The cache entries have a Time-To-Live (TTL) of 1 hour.
+46. The Revenue squad now has exclusive ownership of the billing module and Stripe integration, requiring their explicit approval for all pull requests affecting these areas.
+47. Use standard SCSS in a separate navbar.scss file for the new navigation component.
+48. The team will use iPhones to perform mobile calls.
