@@ -288,6 +288,14 @@ Aider should follow all of these conventions when making changes.
 
 ## Deduplication
 
+### Restrict record deduplication to same-type comparisons and update thresholds
+
+**Convention:** Deduplication will now only occur between decisions of the same type. The threshold for same-type deduplication is lowered from 0.15 to 0.12.
+
+**Why:** Calibration analysis of 847 labeled examples indicates that cross-type deduplication is invalid and 0.12 is the optimal threshold for same-type matching to ensure accurate dedup behavior.
+
+**Relevant files:** `findSimilarActiveWithScores`, `findSimilarByTypes`
+
 ### Set similarity threshold for decision deduplication to 0.15 cosine distance
 
 **Convention:** Maintain the current cosine distance threshold of < 0.15 as the similarity floor for identifying deduplication candidates.
@@ -437,16 +445,6 @@ Aider should follow all of these conventions when making changes.
 ### Cancellation of RFC 78 implementation
 
 **Convention:** The team has officially cancelled the usage and implementation of RFC 78.
-
-**Why:** The conversation indicates a strategic shift away from the previously proposed RFC 78, implying it is no longer aligned with current requirements or priorities.
-
-## Rfc7812
-
-### Adopt RFC7812 for theme data JSON validation
-
-**Convention:** Use RFC7812 as the specification for validating all JSON data synced by the server related to theme configurations.
-
-**Why:** RFC7812 provides a standardized approach for schema validation, ensuring consistency and reliability across synced theme data.
 
 
 <!-- decispher: output truncated to context budget -->
