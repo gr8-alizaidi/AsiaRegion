@@ -227,6 +227,18 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 - ~~Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting).~~ — This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.
 - ~~Consolidate to a single LLM provider for all pipeline steps.~~ — This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.
 
+### Trigger dashboard onboarding redirect after Slack OAuth completion
+
+- **Severity:** MEDIUM
+- **Rule:** Implement a redirect to the dashboard onboarding flow immediately after the Slack OAuth callback is successfully completed to ensure the integration record is created.
+- **Rationale:** Directing users to the onboarding flow upon OAuth completion captures the integration state before the bot begins receiving event messages, preventing orphaned bot installations without corresponding database records.
+- **Scope:** services/slack/oauth_callback.js, services/onboarding/dashboard_redirect.js
+- **Tags:** slack, onboarding, oauth, backend
+
+**Alternatives considered (rejected):**
+- ~~DM the user the onboarding link when the bot joins~~ — The team determined that handling the event on the OAuth callback side is more reliable and ensures the flow is completed immediately after the installation.
+- ~~Use team_join event to trigger onboarding~~ — The team identified that team_join events are specific to individual users joining a workspace and are not suitable for the initial workspace-level integration onboarding.
+
 ### Send onboarding link via Slack DM upon app installation
 
 - **Severity:** MEDIUM
@@ -323,21 +335,5 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 - **Tags:** pgvector, postgresql, embeddings, vector-search
 
 **Alternatives considered (rejected):**
-- ~~L2 distance~~ — It is sensitive to embedding magnitude and demonstrated poorer recall compared to cosine distance for our data.
-
-### Use MongoDB Atlas for analytics event ingestion
-
-- **Severity:** MEDIUM
-- **Rule:** MongoDB is strictly prohibited for use in core pipeline services (including the core decision pipeline, authentication, and the context store). These services must exclusively use PostgreSQL 16 and Redis. Any deviation requires a formal ADR.
-- **Rationale:** To maintain architectural integrity and prevent fragmentation in the core tech stack. Previous attempts to introduce MongoDB for event queues nearly caused instability, highlighting the need for a hard, enforceable constraint.
-- **Scope:** analytics/storage, infrastructure/database-policy
-- **Tags:** mongodb, postgresql, analytics, infrastructure
-
-**Alternatives considered (rejected):**
-- ~~PostgreSQL partitioned tables~~ — The team expressed concern that it may struggle with the required write throughput of 50k events per second.
-
-### Abandoning EventStoreDB for monorepo event handling
-
-- **Severity:** MEDIUM
 
 <!-- decispher: output truncated to context budget -->
