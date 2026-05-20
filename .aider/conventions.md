@@ -278,6 +278,16 @@ Aider should follow all of these conventions when making changes.
 
 **Relevant files:** `packages/api/src/routes/internal/`
 
+## Performance
+
+### Configure LLM classification batch size and concurrency for Pro mode
+
+**Convention:** Set LLM_CLASSIFY_BATCH_SIZE_PRO to 10 and maintain LLM_CLASSIFY_CONCURRENCY at 5 for the pro mode classification process.
+
+**Why:** Increasing the batch size to 10 improves throughput to address latency issues, while keeping the batch size at 10 (instead of 15) prevents a loss in model precision for candidates later in the list. Concurrency is kept at 5 to balance processing load.
+
+**Relevant files:** `decision-fusion-queue`
+
 ## Slack
 
 ### Trigger dashboard onboarding redirect after Slack OAuth completion
