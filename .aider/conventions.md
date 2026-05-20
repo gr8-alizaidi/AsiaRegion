@@ -176,6 +176,14 @@ Aider should follow all of these conventions when making changes.
 
 **Relevant files:** `api/responses`, `api/error-handling`
 
+### Increase web API rate limit for premium users to 500 req/min
+
+**Convention:** Increased the web API rate limit to 500 requests per minute for premium tier users.
+
+**Why:** Internal testing confirmed that existing system latency remains within acceptable thresholds and the database is capable of handling the increased load.
+
+**Relevant files:** `middleware/rate-limit-config.js`
+
 ## Billing
 
 ### Use long-running containers for billing service instead of serverless functions
@@ -435,16 +443,6 @@ Aider should follow all of these conventions when making changes.
 ### Standardize on TypeScript and camelCase JSON for backend services
 
 **Convention:** Adopt TypeScript as the mandatory language for all new backend services and enforce a strict convention where all API endpoints must return camelCase JSON.
-
-**Why:** TypeScript provides necessary type safety to reduce runtime errors in backend services, and a consistent camelCase JSON format ensures predictability for frontend consumption and API consistency.
-
-**Relevant files:** `/src/backend/`
-
-## Rfc
-
-### Cancellation of RFC 78 implementation
-
-**Convention:** The team has officially cancelled the usage and implementation of RFC 78.
 
 
 <!-- decispher: output truncated to context budget -->
