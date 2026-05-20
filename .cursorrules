@@ -29,6 +29,10 @@
   Rationale: To maintain system reliability and avoid task failure when individual LLM providers hit rate limits, a hierarchical fallback mechanism ensures work is diverted to alternative models before resorting to the Dead Letter Queue (DLQ) after retries.
   Files: src/llm/client_factory.py, src/llm/fallback_logic.py
 
+- Implement a 'captureIntent' field in the pipeline context where 'explicit' intent (manual dashboard entry or @decispher command) bypasses the minConfidence threshold, while 'passive' intent remains subject to it.
+  Rationale: Explicit user commands indicate a deliberate intent to capture data, overriding the need for confidence filtering which is primarily intended for passive/automated collection.
+  Files: app/workers/process_comment_worker.rb, app/services/pipeline_context.rb
+
 ## Umbraco
 
 - The team will use the Umbraco CMS platform to build each component of the frontend website.
