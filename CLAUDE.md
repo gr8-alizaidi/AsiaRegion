@@ -132,6 +132,12 @@ Violating these decisions requires explicit approval.
 - **Do NOT:** Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting). (This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.)
 - **Do NOT:** Consolidate to a single LLM provider for all pipeline steps. (This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.)
 
+### Bypass minConfidence check for manual source type in analyzer (MEDIUM)
+- **Decision:** Manual captures with sourceType='manual' will bypass the minConfidence check entirely by adding an explicit guard in the detection step where shouldRun returns true by default for manual types.
+- **Rationale:** Manual content is explicitly created by the user, making confidence scoring irrelevant compared to automated conversational or code sources.
+- **Affected files:** `src/analyzer/detection.ts`
+- **Do NOT:** Add a unique threshold for manual sources (Confidence is irrelevant for content intentionally created by a human.)
+
 ### Establish stale archival notification process for decision units (MEDIUM)
 - **Decision:** Implement a notification process where owners receive a Slack message 7 days before the archival cutoff. This involves adding a 'stale_warning' type to the NotificationService, querying for decisions with a last_reviewed_at timestamp between 83 and 84 days ago, and triggering a notification job. Viewing a decision on the dashboard does not reset the review timestamp; only an explicit approve, reject, or mark_active action will.
 - **Rationale:** Ensures stakeholders are informed before data archival without creating a loop where passive dashboard activity prevents legitimate cleanup of stale data.
@@ -191,10 +197,5 @@ Violating these decisions requires explicit approval.
 
 ### Migrate Indian payment processing from Stripe to Paddle (MEDIUM)
 - **Decision:** The team will migrate all Indian payment processing operations from Stripe to Paddle.
-- **Rationale:** Stripe is no longer a viable or legal option for payment processing in India due to government-imposed bans, making a migration to a supported alternative like Paddle necessary for continuity.
-- **Affected files:** `src/billing/payment_processor.ts`, `src/config/payments.json`
-
-### Standardize on TypeScript and camelCase JSON for backend services (MEDIUM)
-- **Decision:** Adopt TypeScript as the mandatory language for all new backend services and enforce a strict convention where all API endpoints must return camelCase JSON.
 
 <!-- decispher: output truncated to context budget -->
