@@ -1,12 +1,12 @@
 {
   "$schema": "https://decispher.dev/schemas/context-rules/v1.json",
   "specVersion": "1.0.0",
-  "generatedAt": "2026-05-20T14:15:50.560Z",
+  "generatedAt": "2026-05-20T14:19:29.469Z",
   "companyId": "1489dcdc-ef7f-4cc5-b0cb-b453efa059f4",
   "meta": {
-    "totalRules": 51,
+    "totalRules": 52,
     "rulesByType": {
-      "decision": 38,
+      "decision": 39,
       "convention": 4,
       "constraint": 2,
       "rationale": 1,
@@ -17,7 +17,7 @@
     "rulesBySeverity": {
       "CRITICAL": 1,
       "HIGH": 22,
-      "MEDIUM": 26,
+      "MEDIUM": 27,
       "LOW": 2
     },
     "generator": "decispher-ai-blocker@1.0.0"
