@@ -227,6 +227,17 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 - ~~Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting).~~ — This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.
 - ~~Consolidate to a single LLM provider for all pipeline steps.~~ — This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.
 
+### Establish stale archival notification process for decision units
+
+- **Severity:** MEDIUM
+- **Rule:** Implement a notification process where owners receive a Slack message 7 days before the archival cutoff. This involves adding a 'stale_warning' type to the NotificationService, querying for decisions with a last_reviewed_at timestamp between 83 and 84 days ago, and triggering a notification job. Viewing a decision on the dashboard does not reset the review timestamp; only an explicit approve, reject, or mark_active action will.
+- **Rationale:** Ensures stakeholders are informed before data archival without creating a loop where passive dashboard activity prevents legitimate cleanup of stale data.
+- **Scope:** services/NotificationService.js, jobs/ArchiveNotificationJob.js, controllers/DecisionController.js
+- **Tags:** notification, archival, backend, automation
+
+**Alternatives considered (rejected):**
+- ~~Reset last_reviewed_at on dashboard view~~ — Viewing the dashboard does not constitute a formal review; doing so would prevent the archival of truly stale decisions.
+
 ### Automate stale decision archiving via ContextLifecycleWorker
 
 - **Severity:** MEDIUM
@@ -313,19 +324,5 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 - **Tags:** frontend, credits, user-experience, api-design
 
 **Alternatives considered (rejected):**
-- ~~Backend fail-closed check~~ — The current Redis architecture is fail-open for performance reasons; changing it would involve complex architectural changes to handle transaction locking and potential performance degradation.
-- ~~Surface 402 error in UI~~ — Displaying a 402 error after the user has already submitted the request is a poor user experience compared to preventing the request entirely via a dashboard warning.
-
-### Migrate Indian payment processing from Stripe to Paddle
-
-- **Severity:** MEDIUM
-- **Rule:** The team will migrate all Indian payment processing operations from Stripe to Paddle.
-- **Rationale:** Stripe is no longer a viable or legal option for payment processing in India due to government-imposed bans, making a migration to a supported alternative like Paddle necessary for continuity.
-- **Scope:** src/billing/payment_processor.ts, src/config/payments.json
-- **Tags:** payments, stripe, paddle, infrastructure, compliance
-
-### Standardize on TypeScript and camelCase JSON for backend services
-
-- **Severity:** MEDIUM
 
 <!-- decispher: output truncated to context budget -->
