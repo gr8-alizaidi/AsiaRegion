@@ -278,6 +278,16 @@ Aider should follow all of these conventions when making changes.
 
 **Relevant files:** `packages/api/src/routes/internal/`
 
+## PassiveDetector
+
+### Increase detection confidence threshold for PassiveDetector in saver mode
+
+**Convention:** The team will tune the Gemini-2.5-flash prompt for PassiveDetector in saver mode to increase the detection confidence floor.
+
+**Why:** The current confidence threshold is allowing low-quality matches (standup messages) to be classified as actionable context units. Tuning the system prompt is the most efficient way to reduce noise without switching the underlying model or building complex per-channel weight features.
+
+**Relevant files:** `src/PassiveDetector/prompt.ts`, `src/PassiveDetector/detection.py`
+
 ## Frontend
 
 ### Implement client-side credit balance check for Ask Knowledge Base
