@@ -90,6 +90,9 @@
 
 ## General Conventions
 
+- **Unify hard conflict review notifications via NotificationService:** Route all hard conflict notifications through the centralized NotificationService using a CONTRADICTS_REVIEW template, replacing the localized implementation in InteractionHandler.
+  *(Routing through the NotificationService ensures consistent notification delivery regardless of the input channel (Slack or GitHub PRs), eliminating the inconsistency where GitHub-sourced conflicts currently lack alert logic.)*
+
 - **Configure LLM classification batch size and concurrency for Pro mode:** Set LLM_CLASSIFY_BATCH_SIZE_PRO to 10 and maintain LLM_CLASSIFY_CONCURRENCY at 5 for the pro mode classification process.
   *(Increasing the batch size to 10 improves throughput to address latency issues, while keeping the batch size at 10 (instead of 15) prevents a loss in model precision for candidates later in the list. Concurrency is kept at 5 to balance processing load.)*
 
