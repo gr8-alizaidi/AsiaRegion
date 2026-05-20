@@ -227,6 +227,17 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 - ~~Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting).~~ — This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.
 - ~~Consolidate to a single LLM provider for all pipeline steps.~~ — This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.
 
+### Unify hard conflict review notifications via NotificationService
+
+- **Severity:** MEDIUM
+- **Rule:** Route all hard conflict notifications through the centralized NotificationService using a CONTRADICTS_REVIEW template, replacing the localized implementation in InteractionHandler.
+- **Rationale:** Routing through the NotificationService ensures consistent notification delivery regardless of the input channel (Slack or GitHub PRs), eliminating the inconsistency where GitHub-sourced conflicts currently lack alert logic.
+- **Scope:** services/InteractionHandler.ts, services/github-notification-queue.ts, services/NotificationService.ts
+- **Tags:** notification-system, backend, refactoring, github-integration, slack-integration
+
+**Alternatives considered (rejected):**
+- ~~Implement an equivalent postContradictReviewDm method in the github-notification-queue worker~~ — This would result in fragmented notification logic across multiple services, increasing maintenance overhead and the likelihood of future inconsistencies.
+
 ### Configure LLM classification batch size and concurrency for Pro mode
 
 - **Severity:** MEDIUM
@@ -320,18 +331,5 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 
 - **Severity:** MEDIUM
 - **Rule:** All new vector indexes must be created using the HNSW algorithm. Existing IVFFlat indexes (specifically in the llm_cache table) are to be migrated to HNSW in Sprint 16.
-- **Rationale:** HNSW is the current architectural standard for vector indexing. The previous rejection of the migration to HNSW was due to operational risks in production, not a lack of performance or technical suitability of HNSW.
-- **Scope:** db/schema/vector_indexes, db/migrations/sprint_16/migrate_llm_cache_to_hnsw
-- **Tags:** vector-search, postgresql, hnsw, architecture, database
-
-**Alternatives considered (rejected):**
-- ~~IVFFlat~~ — The team has standardized on HNSW for new indexes to maintain architectural consistency, despite potential performance profiles for specific query patterns.
-
-### Establish authoritative RFC 7807 error format convention
-
-- **Severity:** MEDIUM
-- **Rule:** Adopt the HIGH severity specification as the authoritative version for the RFC 7807 error format, which includes fields: type, title, status, detail, and instance.
-- **Rationale:** The team identified that two existing conventions were redundant. Designating the HIGH severity entry as canonical while allowing the fusion engine to merge duplicate references ensures consistency across documentation and API implementations.
-- **Scope:** packages/api/src/plugins/error-handler.ts
 
 <!-- decispher: output truncated to context budget -->
