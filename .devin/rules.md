@@ -227,6 +227,17 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 - ~~Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting).~~ — This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.
 - ~~Consolidate to a single LLM provider for all pipeline steps.~~ — This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.
 
+### Configure LLM classification batch size and concurrency for Pro mode
+
+- **Severity:** MEDIUM
+- **Rule:** Set LLM_CLASSIFY_BATCH_SIZE_PRO to 10 and maintain LLM_CLASSIFY_CONCURRENCY at 5 for the pro mode classification process.
+- **Rationale:** Increasing the batch size to 10 improves throughput to address latency issues, while keeping the batch size at 10 (instead of 15) prevents a loss in model precision for candidates later in the list. Concurrency is kept at 5 to balance processing load.
+- **Scope:** decision-fusion-queue
+- **Tags:** performance, llm, infrastructure, batch-processing
+
+**Alternatives considered (rejected):**
+- ~~Batch size 15 and concurrency 3~~ — The larger batch size of 15 risked decreasing the model's precision on candidate evaluation.
+
 ### Trigger dashboard onboarding redirect after Slack OAuth completion
 
 - **Severity:** MEDIUM
@@ -322,18 +333,5 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 - **Rule:** Adopt the HIGH severity specification as the authoritative version for the RFC 7807 error format, which includes fields: type, title, status, detail, and instance.
 - **Rationale:** The team identified that two existing conventions were redundant. Designating the HIGH severity entry as canonical while allowing the fusion engine to merge duplicate references ensures consistency across documentation and API implementations.
 - **Scope:** packages/api/src/plugins/error-handler.ts
-- **Tags:** rfc-7807, api-design, error-handling, decispher
-
-**Alternatives considered (rejected):**
-- ~~MEDIUM severity specification~~ — The HIGH severity version was explicitly selected as the authoritative and canonical standard.
-
-### Use cosine distance for pgvector similarity searches
-
-- **Severity:** MEDIUM
-- **Rule:** We have standardized on cosine distance (using the <=> operator in pgvector) for all similarity search operations.
-- **Rationale:** Cosine distance provides significantly better recall (12% improvement) on normalized text embeddings compared to L2 distance. Furthermore, L2 distance is overly sensitive to embedding magnitude, making it less reliable for our specific use case.
-- **Tags:** pgvector, postgresql, embeddings, vector-search
-
-**Alternatives considered (rejected):**
 
 <!-- decispher: output truncated to context budget -->
