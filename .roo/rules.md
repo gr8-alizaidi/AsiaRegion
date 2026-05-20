@@ -90,6 +90,9 @@
 
 ## General Conventions
 
+- **Automate stale decision archiving via ContextLifecycleWorker:** Implement a ContextLifecycleWorker job that triggers the existing archiveStalePendingReview function based on decisions not reviewed in over 90 days, controlled by the STALE_ARCHIVE_ENABLED environment variable.
+  *(Automating the process reduces operational overhead, and using an environment flag allows for safe testing in staging before production rollout.)*
+
 - **Use fusion-eval harness for linkThreshold tuning:** The team will refrain from manually adjusting DEFAULT_FUSION_PARAMS.linkThreshold and instead utilize the existing precision/recall harness in packages/fusion-eval to empirically evaluate changes before deployment.
   *(Blindly changing global thresholds can negatively impact system accuracy. Validating threshold adjustments through the dedicated fusion-eval harness ensures that changes to the linkage logic do not reduce recall for valid links.)*
 
