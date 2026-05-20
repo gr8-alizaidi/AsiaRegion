@@ -132,6 +132,12 @@ Violating these decisions requires explicit approval.
 - **Do NOT:** Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting). (This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.)
 - **Do NOT:** Consolidate to a single LLM provider for all pipeline steps. (This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.)
 
+### Configure LLM classification batch size and concurrency for Pro mode (MEDIUM)
+- **Decision:** Set LLM_CLASSIFY_BATCH_SIZE_PRO to 10 and maintain LLM_CLASSIFY_CONCURRENCY at 5 for the pro mode classification process.
+- **Rationale:** Increasing the batch size to 10 improves throughput to address latency issues, while keeping the batch size at 10 (instead of 15) prevents a loss in model precision for candidates later in the list. Concurrency is kept at 5 to balance processing load.
+- **Affected files:** `decision-fusion-queue`
+- **Do NOT:** Batch size 15 and concurrency 3 (The larger batch size of 15 risked decreasing the model's precision on candidate evaluation.)
+
 ### Trigger dashboard onboarding redirect after Slack OAuth completion (MEDIUM)
 - **Decision:** Implement a redirect to the dashboard onboarding flow immediately after the Slack OAuth callback is successfully completed to ensure the integration record is created.
 - **Rationale:** Directing users to the onboarding flow upon OAuth completion captures the integration state before the bot begins receiving event messages, preventing orphaned bot installations without corresponding database records.
@@ -197,12 +203,5 @@ Violating these decisions requires explicit approval.
 
 ### Use MongoDB Atlas for analytics event ingestion (MEDIUM)
 - **Decision:** MongoDB is strictly prohibited for use in core pipeline services (including the core decision pipeline, authentication, and the context store). These services must exclusively use PostgreSQL 16 and Redis. Any deviation requires a formal ADR.
-- **Rationale:** To maintain architectural integrity and prevent fragmentation in the core tech stack. Previous attempts to introduce MongoDB for event queues nearly caused instability, highlighting the need for a hard, enforceable constraint.
-- **Affected files:** `analytics/storage`, `infrastructure/database-policy`
-- **Do NOT:** PostgreSQL partitioned tables (The team expressed concern that it may struggle with the required write throughput of 50k events per second.)
-
-### Abandoning EventStoreDB for monorepo event handling (MEDIUM)
-- **Decision:** The team decided to discontinue the use of EventStoreDB and removed event sourcing as an architectural pattern following the migration back to a monorepo.
-- **Rationale:** The complexity of maintaining three separate runbooks for EventStoreDB operations outweighed the benefits of its auditability features for the current team size and system scale.
 
 <!-- decispher: output truncated to context budget -->
