@@ -1,7 +1,7 @@
 {
   "$schema": "https://decispher.dev/schemas/context-rules/v1.json",
   "specVersion": "1.0.0",
-  "generatedAt": "2026-05-20T05:37:55.507Z",
+  "generatedAt": "2026-05-20T05:39:50.825Z",
   "companyId": "1489dcdc-ef7f-4cc5-b0cb-b453efa059f4",
   "meta": {
     "totalRules": 39,
@@ -123,9 +123,17 @@
         }
       ],
       "supersededBy": null,
-      "enforcement": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "src/llm/providers/registry.ts",
+          "src/llm/providers/guarded_registry.ts"
+        ],
+        "exemptPatterns": []
+      },
       "createdAt": "2026-05-20T05:35:10.820Z",
-      "updatedAt": "2026-05-20T05:36:49.927Z",
+      "updatedAt": "2026-05-20T05:39:19.780Z",
       "version": 1,
       "createdBy": "U05F9P78LTG",
       "reviewedBy": "U05F9P78LTG"
@@ -664,14 +672,5 @@
       "alternatives": [
         {
           "option": "Serverless functions",
-          "reasonRejected": "Caused unacceptable latency spikes due to cold starts during traffic peaks."
-        }
-      ],
-      "sources": [
-        {
-          "type": "slack",
-          "confidence": 0.43,
-          "ref": {
-            "priority": "high",
 
 <!-- decispher: output truncated to context budget -->
