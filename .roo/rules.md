@@ -6,9 +6,9 @@
 - **Prohibition of MongoDB in the Tech Stack for Analytics Events:** MongoDB is strictly prohibited from being integrated into the current technology stack, including for analytics events.
   *(There is an active and non-negotiable architectural constraint against MongoDB in the stack due to the critical requirement for ACID compliance across all billing and user data. MongoDB does not satisfy this fundamental requirement.)*
 
-- **Extend Umbraco usage to include data ingestion and processing:** We will extend the use of Umbraco to leverage its CMS functionality alongside its webhook and ingester capabilities to process elastic data, which will then be served to the frontend via a materializer and a dedicated service using GraphQL.
-  *(By utilizing Umbraco's existing webhook and ingester features, we can streamline data flow and minimize the introduction of additional external services for data processing, while maintaining a consistent tech stack.)*
-  Files: src/infrastructure/ingester, src/api/graphql, src/services/materializer
+- **Mandate use of GuardedProviderRegistry for all LLM service calls:** All LLM calls must be made through the GuardedProviderRegistry using either wrapTextProvider or wrapEmbeddingProvider instead of direct SDK calls.
+  *(Using the registry ensures that all calls are tracked for cost accounting and can be dynamically controlled via system-wide kill switches.)*
+  Files: src/llm/providers/registry.ts, src/llm/providers/guarded_registry.ts
 
 - **Use Umbraco CMS for frontend component development:** The team will use the Umbraco CMS platform to build each component of the frontend website.
   *(Umbraco was selected as the designated CMS to standardize the development of frontend components.)*
@@ -89,6 +89,9 @@
   *(This approach allows companies with high context volume (Tier 3+) to pay extra for Claude-Sonnet's accuracy where needed, while companies with tighter budgets can use more cost-effective options like Gemini-Flash for all steps. It also decouples our infrastructure from individual LLM vendor stability and enables independent contract negotiations with different providers (Anthropic, OpenAI, Google).)*
 
 ## General Conventions
+
+- **Migrate Indian payment processing from Stripe to Paddle:** The team will migrate all Indian payment processing operations from Stripe to Paddle.
+  *(Stripe is no longer a viable or legal option for payment processing in India due to government-imposed bans, making a migration to a supported alternative like Paddle necessary for continuity.)*
 
 - **Standardize on TypeScript and camelCase JSON for backend services:** Adopt TypeScript as the mandatory language for all new backend services and enforce a strict convention where all API endpoints must return camelCase JSON.
   *(TypeScript provides necessary type safety to reduce runtime errors in backend services, and a consistent camelCase JSON format ensures predictability for frontend consumption and API consistency.)*
