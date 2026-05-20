@@ -90,6 +90,9 @@
 
 ## General Conventions
 
+- **Implement client-side credit balance check for Ask Knowledge Base:** The team decided to implement a client-side credit balance check in the frontend dashboard before allowing a request to hit the /api/companies/:companyId/mcp/ask-knowledge-base endpoint.
+  *(The existing Redis pre-check in the backend is fail-open and only blocks after a SERIALIZABLE transaction confirms insufficient balance. A client-side check provides better user experience by surfacing the warning in the dashboard before the query is attempted, preventing unnecessary 402 errors.)*
+
 - **Migrate Indian payment processing from Stripe to Paddle:** The team will migrate all Indian payment processing operations from Stripe to Paddle.
   *(Stripe is no longer a viable or legal option for payment processing in India due to government-imposed bans, making a migration to a supported alternative like Paddle necessary for continuity.)*
 
