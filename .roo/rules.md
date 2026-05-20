@@ -90,6 +90,9 @@
 
 ## General Conventions
 
+- **Establish stale archival notification process for decision units:** Implement a notification process where owners receive a Slack message 7 days before the archival cutoff. This involves adding a 'stale_warning' type to the NotificationService, querying for decisions with a last_reviewed_at timestamp between 83 and 84 days ago, and triggering a notification job. Viewing a decision on the dashboard does not reset the review timestamp; only an explicit approve, reject, or mark_active action will.
+  *(Ensures stakeholders are informed before data archival without creating a loop where passive dashboard activity prevents legitimate cleanup of stale data.)*
+
 - **Automate stale decision archiving via ContextLifecycleWorker:** Implement a ContextLifecycleWorker job that triggers the existing archiveStalePendingReview function based on decisions not reviewed in over 90 days, controlled by the STALE_ARCHIVE_ENABLED environment variable.
   *(Automating the process reduces operational overhead, and using an environment flag allows for safe testing in staging before production rollout.)*
 
