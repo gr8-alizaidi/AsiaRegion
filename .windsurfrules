@@ -96,6 +96,10 @@ Cascade MUST respect these rules when generating or modifying code.
 
 ## [MEDIUM]
 
+- Increased the web API rate limit to 500 requests per minute for premium tier users.
+  Reason: Internal testing confirmed that existing system latency remains within acceptable thresholds and the database is capable of handling the increased load.
+  Files: middleware/rate-limit-config.js
+
 - Deduplication will now only occur between decisions of the same type. The threshold for same-type deduplication is lowered from 0.15 to 0.12.
   Reason: Calibration analysis of 847 labeled examples indicates that cross-type deduplication is invalid and 0.12 is the optimal threshold for same-type matching to ensure accurate dedup behavior.
   Files: findSimilarActiveWithScores, findSimilarByTypes
