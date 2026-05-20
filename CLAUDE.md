@@ -132,6 +132,11 @@ Violating these decisions requires explicit approval.
 - **Do NOT:** Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting). (This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.)
 - **Do NOT:** Consolidate to a single LLM provider for all pipeline steps. (This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.)
 
+### Increase web API rate limit for premium users to 500 req/min (MEDIUM)
+- **Decision:** Increased the web API rate limit to 500 requests per minute for premium tier users.
+- **Rationale:** Internal testing confirmed that existing system latency remains within acceptable thresholds and the database is capable of handling the increased load.
+- **Affected files:** `middleware/rate-limit-config.js`
+
 ### Restrict record deduplication to same-type comparisons and update thresholds (MEDIUM)
 - **Decision:** Deduplication will now only occur between decisions of the same type. The threshold for same-type deduplication is lowered from 0.15 to 0.12.
 - **Rationale:** Calibration analysis of 847 labeled examples indicates that cross-type deduplication is invalid and 0.12 is the optimal threshold for same-type matching to ensure accurate dedup behavior.
@@ -199,7 +204,5 @@ Violating these decisions requires explicit approval.
 
 ### Trigger dashboard onboarding redirect after Slack OAuth completion (MEDIUM)
 - **Decision:** Implement a redirect to the dashboard onboarding flow immediately after the Slack OAuth callback is successfully completed to ensure the integration record is created.
-- **Rationale:** Directing users to the onboarding flow upon OAuth completion captures the integration state before the bot begins receiving event messages, preventing orphaned bot installations without corresponding database records.
-- **Affected files:** `services/slack/oauth_callback.js`, `services/onboarding/dashboard_redirect.js`
 
 <!-- decispher: output truncated to context budget -->
