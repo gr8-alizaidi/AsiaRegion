@@ -278,6 +278,16 @@ Aider should follow all of these conventions when making changes.
 
 **Relevant files:** `packages/api/src/routes/internal/`
 
+## Backend
+
+### Bypass minConfidence check for manual source type in analyzer
+
+**Convention:** Manual captures with sourceType='manual' will bypass the minConfidence check entirely by adding an explicit guard in the detection step where shouldRun returns true by default for manual types.
+
+**Why:** Manual content is explicitly created by the user, making confidence scoring irrelevant compared to automated conversational or code sources.
+
+**Relevant files:** `src/analyzer/detection.ts`
+
 ## Notification
 
 ### Establish stale archival notification process for decision units
@@ -435,18 +445,6 @@ Aider should follow all of these conventions when making changes.
 ### Use cosine distance over L2 for semantic text embedding similarity with pgvector HNSW
 
 **Convention:** We decided to use cosine distance for semantic similarity search of text embeddings with pgvector HNSW for deduplication.
-
-**Why:** Cosine distance is invariant to vector magnitude, meaning it only considers the direction of vectors. This property is precisely what is desired for semantic similarity of text embeddings, as it allows for accurate comparison of semantic meaning regardless of variations in embedding vector norms. L2 (Euclidean) distance, on the other hand, would incorrectly penalize vectors with different magnitudes, even if they share the same semantic direction.
-
-## Event-sourcing
-
-### Abandoning EventStoreDB for monorepo event handling
-
-**Convention:** The team decided to discontinue the use of EventStoreDB and removed event sourcing as an architectural pattern following the migration back to a monorepo.
-
-**Why:** The complexity of maintaining three separate runbooks for EventStoreDB operations outweighed the benefits of its auditability features for the current team size and system scale.
-
-## Vector-database
 
 
 <!-- decispher: output truncated to context budget -->
