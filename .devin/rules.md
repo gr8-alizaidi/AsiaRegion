@@ -227,6 +227,17 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 - ~~Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting).~~ — This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.
 - ~~Consolidate to a single LLM provider for all pipeline steps.~~ — This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.
 
+### Bypass minConfidence check for manual source type in analyzer
+
+- **Severity:** MEDIUM
+- **Rule:** Manual captures with sourceType='manual' will bypass the minConfidence check entirely by adding an explicit guard in the detection step where shouldRun returns true by default for manual types.
+- **Rationale:** Manual content is explicitly created by the user, making confidence scoring irrelevant compared to automated conversational or code sources.
+- **Scope:** src/analyzer/detection.ts
+- **Tags:** backend, analyzer, data-quality
+
+**Alternatives considered (rejected):**
+- ~~Add a unique threshold for manual sources~~ — Confidence is irrelevant for content intentionally created by a human.
+
 ### Establish stale archival notification process for decision units
 
 - **Severity:** MEDIUM
@@ -318,11 +329,5 @@ Devin MUST follow all rules below. Do not deviate without explicit instruction.
 ### Implement client-side credit balance check for Ask Knowledge Base
 
 - **Severity:** MEDIUM
-- **Rule:** The team decided to implement a client-side credit balance check in the frontend dashboard before allowing a request to hit the /api/companies/:companyId/mcp/ask-knowledge-base endpoint.
-- **Rationale:** The existing Redis pre-check in the backend is fail-open and only blocks after a SERIALIZABLE transaction confirms insufficient balance. A client-side check provides better user experience by surfacing the warning in the dashboard before the query is attempted, preventing unnecessary 402 errors.
-- **Scope:** /api/companies/:companyId/mcp/ask-knowledge-base, src/components/dashboard/CreditsPanel.tsx, src/hooks/useCreditBalance.ts
-- **Tags:** frontend, credits, user-experience, api-design
-
-**Alternatives considered (rejected):**
 
 <!-- decispher: output truncated to context budget -->
