@@ -90,6 +90,9 @@
 
 ## General Conventions
 
+- **Set similarity threshold for decision deduplication to 0.15 cosine distance:** Maintain the current cosine distance threshold of < 0.15 as the similarity floor for identifying deduplication candidates.
+  *(A strict threshold is intentionally chosen to prioritize preventing false positives (blocking legitimate new decisions) over false negatives (missing potential duplicates), with plans to refine the threshold once 500+ labeled examples are collected.)*
+
 - **Implement server-side session tracking for MCP keys using Redis:** Track sessions via a server-side generated session_id stored in Redis with a 30-minute rolling TTL, instead of relying on inactivity gap computation. Include the session_id as a foreign key in the mcp_logs table to allow accurate deduplication of discovery costs.
   *(Server-side generation is safer than relying on client-side headers as agents are inconsistent. Using a Redis-backed TTL ensures that sessions are grouped correctly despite agent re-initialization patterns, providing more accurate cost tracking and session lifecycle management.)*
 
