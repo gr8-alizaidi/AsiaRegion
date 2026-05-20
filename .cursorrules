@@ -139,6 +139,12 @@
   Rationale: Inconsistent error formats, specifically plain strings from internal routes, prevent AI tools from reliably parsing and analyzing errors, leading to broken analysis workflows.
   Files: packages/api/src/routes/internal/
 
+## Automation
+
+- Implement a ContextLifecycleWorker job that triggers the existing archiveStalePendingReview function based on decisions not reviewed in over 90 days, controlled by the STALE_ARCHIVE_ENABLED environment variable.
+  Rationale: Automating the process reduces operational overhead, and using an environment flag allows for safe testing in staging before production rollout.
+  Files: src/workers/ContextLifecycleWorker.ts, src/services/ApprovalService.ts
+
 ## Context-linker
 
 - The team will refrain from manually adjusting DEFAULT_FUSION_PARAMS.linkThreshold and instead utilize the existing precision/recall harness in packages/fusion-eval to empirically evaluate changes before deployment.
