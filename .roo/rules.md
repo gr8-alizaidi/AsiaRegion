@@ -90,6 +90,9 @@
 
 ## General Conventions
 
+- **Implement server-side session tracking for MCP keys using Redis:** Track sessions via a server-side generated session_id stored in Redis with a 30-minute rolling TTL, instead of relying on inactivity gap computation. Include the session_id as a foreign key in the mcp_logs table to allow accurate deduplication of discovery costs.
+  *(Server-side generation is safer than relying on client-side headers as agents are inconsistent. Using a Redis-backed TTL ensures that sessions are grouped correctly despite agent re-initialization patterns, providing more accurate cost tracking and session lifecycle management.)*
+
 - **Use 30-minute inactivity window for MCP session detection:** Define a new MCP session as any gap of 30 minutes or more between tool calls on mcp_logs per API key.
   *(The 30-minute window serves as a known, intentional approximation to define session boundaries for cost calculation, acknowledging that very slow agents may trigger multiple sessions.)*
 
