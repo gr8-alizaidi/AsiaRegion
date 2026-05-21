@@ -1,37 +1,31 @@
 # CLAUDE.md
 
-<!-- decispher:ids=393329ba-9640-498c-89f1-46c1324aaeff,08702be0-9097-4015-89a9-6f3307cdd76c,0948e434-dd93-4077-a9fc-b5a3daa13cc6,e8a1dec8-3524-4365-a291-fba0b55b57a4,9f213a97-eb01-49b8-aa57-76b0a2358c10,b5692ce3-058f-4fff-b37c-f3a14d89d277,260c4141-6041-4f13-9314-cecfe7698bc1,02e6acff-0e2b-4caf-969d-be906d20eedc,e9097831-0c7b-43f1-895a-b115dd36c20b,bd1748c1-766b-4f12-9819-536593b3c5ed,d01a8dd8-f37c-406d-8050-d98eaab82da0,08631b5a-a39c-4766-b840-beb3a13fde5e,ac87f0e5-a048-4197-a533-31b2a71ea5a8,add28e0b-7a4c-4b40-9679-0d488565bb4b,81145171-98f5-43da-b922-9c76d78741b5,3213c504-c4a3-4364-bc9f-3e3213242b7a,465c1e1a-bb9e-4b3f-ade4-dc7674a5870a,3b06241d-4a87-4cf9-a36c-cd9c831b3a97,71727a5f-aefc-4a9d-af63-247b7a964dc1,670907d2-a11a-4cc9-8a02-67fb54fef3f7,127df168-2a46-4b88-a207-e6887cc4183f,b6869b8c-7d43-47d4-9cd6-dddb0f9f92b9,6acd0667-b5bc-4fd2-8811-36010ed7c2ac,d01640f7-b859-4654-908c-7b5f263e92eb,ac19b0f4-f780-4869-834f-822daeac746c,78128bc7-2817-44f2-bef0-de69eb3feb44,4407df70-f88d-4a6c-ad00-6109d8605f95,070f625d-06bc-4f71-b793-7d7d80f064aa,a0fb66a4-0691-48c6-9245-5b023347648e,cfe6365d-63eb-4b8b-9164-f956524c984f,b07d5f19-a624-4dec-9040-dd5fae17fbfb,b4a09b64-6a2e-4ca0-9759-5af97e89b703,2b58e1d2-11f2-4acd-9c71-7857b911641a,82ce6ad9-0289-47f4-a8ec-2cefaabcd830,3ada5b02-0165-4c53-afe6-f5ac4f1e2823,ee69526a-69a3-4115-be00-d3981c919d79,90c810f5-5c5e-471e-ab8f-5e2cc0f76b2d,fa0b2ff9-93d4-41a5-b007-d8cc51ed65ba,52e3f043-27a2-4727-b598-cd10169ece5b,85f2e3fa-93e4-406b-bb78-1b57b1abcafd,00a9eee6-24ed-4419-a3fc-c168abe636d6,47baf067-44b5-4456-a34c-fce4360c84a3,2d19c79e-6c45-45c7-a439-a9f1437ba77c,15e9a617-4468-4949-bdd9-b9e4f76a6642,f3db51f2-6914-415f-9fca-78783563463d,17f772b1-8901-4961-834a-da4fbcf68132,75490c8c-3a3d-4253-a8ff-9768e6359aaf,a06bac38-381d-472f-852d-f902db9a70c4,7b6d8f24-86b1-44f7-8279-529084ec8cc3,d17917ac-183e-43cf-b52a-894b44e7eb32,f2770524-250d-48f2-bf4c-ea54e9744ada,e1408395-0737-4115-a49b-e616d5227fe5,fdb94885-f909-42c2-993b-28951d6b8bf6,43a78d92-5543-412c-9be3-00596ee8ce65,c8fa6892-aeb9-4617-b1d4-8f54a071667a,606e27a4-4b72-485e-94dd-7a2008e80874,dfba9327-9cf0-4f93-8348-6e51249a44e2 -->
+## CRITICAL: Architectural Constraints & Core Infrastructure
+<!-- decispher:ids=393329ba-9640-498c-89f1-46c1324aaeff,81145171-98f5-43da-b922-9c76d78741b5,a06bac38-381d-472f-852d-f902db9a70c4,add28e0b-7a4c-4b40-9679-0d488565bb4b -->
+- **MongoDB Prohibition**: Strictly prohibited in the stack due to lack of ACID compliance. Core pipeline, authentication, and context store must use PostgreSQL 16 and Redis.
+- **Primary Datastore**: Standardize on PostgreSQL with `pgvector` and HNSW indexes for primary storage and vector search.
+- **Orchestration**: Migrate from AWS ECS to AWS EKS for native HPA and multi-AZ failover capabilities.
+- **Infrastructure Scope**: Transition Azure Functions to full-scale backend services.
+- **Billing Service**: Use long-running containers (avoid serverless/cold starts).
 
-### CRITICAL: Core Infrastructure & Compliance
-* **Prohibited Tech:** MongoDB is strictly banned for core application data due to ACID requirements. Use PostgreSQL 16 + Redis for core services. 
-* **Analytics Exception:** MongoDB Atlas is permitted *only* for the high-throughput analytics event pipeline (50k+ writes/sec).
-* **LLM Governance:** All LLM calls must route through `GuardedProviderRegistry` (wrapTextProvider/wrapEmbeddingProvider) for cost/kill-switch control.
-* **Storage Standard:** PostgreSQL + `pgvector` (HNSW indexing) is the primary store.
-* **Orchestration:** Migrate AWS ECS to EKS for autoscaling/failover.
-* **Architecture:** Maintain monorepo; defer microservices. Use decision-guardian in PR pipeline.
+## HIGH: LLM & Integration Standards
+<!-- decispher:ids=08702be0-9097-4015-89a9-6f3307cdd76c,ac87f0e5-a048-4197-a533-31b2a71ea5a8,3b06241d-4a87-4cf9-a36c-cd9c831b3a97,b6869b8c-7d43-47d4-9cd6-dddb0f9f92b9,6acd0667-b5bc-4fd2-8811-36010ed7c2ac -->
+- **LLM Registration**: All calls must route via `GuardedProviderRegistry` (`wrapTextProvider`, `wrapEmbeddingProvider`) for cost/kill-switch control.
+- **Multi-Provider Strategy**: Implement abstraction per pipeline step (detection, extraction, enrichment, formatting) with per-company 'effort mode' overrides (Saver, Balanced, Pro, Super) using configured model combinations.
+- **Fallback Hierarchy**: Extraction (Anthropic → DeepSeek → OpenAI); Detection (Google → OpenAI → DeepSeek).
 
-### HIGH: Service Migrations & Standards
-* **Chat:** Migrate from Stream Chat to in-house solution.
-* **Email:** Migrate to Zoho; block legacy SMTP routing.
-* **SNMP:** Migrate from 3GPP to ITSI RFC.
-* **Mapping:** Replace Shipsy with in-house event system.
-* **Billing:** Use long-running containers (not serverless) to prevent latency spikes. Centralize ownership under Revenue Squad.
-* **Error Handling:** Standardize all APIs (internal/public) on RFC 7807 (`type`, `title`, `status`, `detail`, `instance`). Abandon RFC 78.
+## HIGH: Operational & Security Standards
+<!-- decispher:ids=260c4141-6041-4f13-9314-cecfe7698bc1,02e6acff-0e2b-4caf-969d-be906d20eedc,b5692ce3-058f-4fff-b37c-f3a14d89d277,e9097831-0c7b-43f1-895a-b115dd36c20b,d01a8dd8-f37c-406d-8050-d98eaab82da0,127df168-2a46-4b88-a207-e6887cc4183f,17f772b1-8901-4961-834a-da4fbcf68132,d17917ac-183e-43cf-b52a-894b44e7eb32,670907d2-a11a-4cc9-8a02-67fb54fef3f7 -->
+- **API Error Format**: Enforce RFC 7807 (type, title, status, detail, instance) globally.
+- **Authentication**: 5-minute token expiry. Reporting workers use hardcoded shared secret tokens (bypass mTLS for performance).
+- **Compliance**: Migrate SNMP to ITSI RFC; Migrate Email to Zoho.
+- **Governance**: Integrate `decision-guardian` into PR pipeline.
 
-### MEDIUM: LLM & Data Strategy
-* **Pipeline:** Use multi-provider abstraction with 'effort mode' overrides.
-    * Saver: `gemini-flash` (all steps)
-    * Balanced: `gemini-flash` (det), `claude-haiku` (ext), `gpt-4o-mini` (fmt)
-    * Pro: `gemini-flash` (det), `claude-sonnet` (ext), `gpt-4o-mini` (fmt)
-    * Super: `gemini-flash` (det), `claude-opus` (ext), `claude-sonnet` (fmt)
-* **Similarity:** Use HNSW for all vector indexes (`ef_construction=200`, `m=16`). Standardize on Cosine Distance for `pgvector`.
-* **Caching:** Enable Redis semantic cache (1-hour TTL) for embeddings.
-* **Auth:** 5-minute token expiry. Shared secret header for reporting worker (bypass mTLS).
-* **Session Tracking:** Use Redis-backed `session_id` (30-min rolling TTL). Include `agent_type` enum in logs.
-* **Deduplication:** Threshold 0.15; same-type only; use `fusion-eval` for tuning.
-* **Infrastructure:** AWS migration trigger at 30 paying customers (Q3 2026). Migrate Indian payments to Paddle.
-
-### LOW: UI & Miscellaneous
-* **Frontend:** Use Umbraco CMS for components.
-* **Styling:** Use `navbar.scss` for navigation components (avoid Tailwind for complex hovers).
-* **Communication:** Standardize on iPhones.
+## MEDIUM/LOW: Services & Implementation Details
+<!-- decispher:ids=e8a1dec8-3524-4365-a291-fba0b55b57a4,bd1748c1-766b-4f12-9819-536593b3c5ed,dfba9327-9cf0-4f93-8348-6e51249a44e2,0948e434-dd93-4077-a9fc-b5a3daa13cc6,08631b5a-a39c-4766-b840-beb3a13fde5e,71727a5f-aefc-4a9d-af63-247b7a964dc1,d01640f7-b859-4654-908c-7b5f263e92eb,ac19b0f4-f780-4869-834f-822daeac746c,78128bc7-2817-44f2-bef0-de69eb3feb44,4407df70-f88d-4a6c-ad00-6109d8605f95,070f625d-06bc-4f71-b793-7d7d80f064aa,a0fb66a4-0691-48c6-9245-5b023347648e,cfe6365d-63eb-4b8b-9164-f956524c984f,b07d5f19-a624-4dec-9040-dd5fae17fbfb,b4a09b64-6a2e-4ca0-9759-5af97e89b703,2b58e1d2-11f2-4acd-9c71-7857b911641a,82ce6ad9-0289-47f4-a8ec-2cefaabcd830,3ada5b02-0165-4c53-afe6-f5ac4f1e2823,ee69526a-69a3-4115-be00-d3981c919d79,90c810f5-5c5e-471e-ab8f-5e2cc0f76b2d,fa0b2ff9-93d4-41a5-b007-d8cc51ed65ba,52e3f043-27a2-4727-b598-cd10169ece5b,85f2e3fa-93e4-406b-bb78-1b57b1abcafd,00a9eee6-24ed-4419-a3fc-c168abe636d6,47baf067-44b5-4456-a34c-fce4360c84a3,2d19c79e-6c45-45c7-a439-a9f1437ba77c,15e9a617-4468-4949-bdd9-b9e4f76a6642,f3db51f2-6914-415f-9fca-78783563463d,75490c8c-3a3d-4253-a8ff-9768e6359aaf,7b6d8f24-86b1-44f7-8279-529084ec8cc3,f2770524-250d-48f2-bf4c-ea54e9744ada,e1408395-0737-4115-a49b-e616d5227fe5,fdb94885-f909-42c2-993b-28951d6b8bf6,43a78d92-5543-412c-9be3-00596ee8ce65,c8fa6892-aeb9-4617-b1d4-8f54a071667a,606e27a4-4b72-485e-94dd-7a2008e80874 -->
+- **Chat/Mapping**: Build in-house.
+- **Frontend**: Standardize on Umbraco.
+- **Database/Storage**: Use HNSW for all vector indexes. Use Cosine distance for `pgvector` similarity searches.
+- **Deduplication**: Deduplicate only within same-type categories; threshold < 0.12.
+- **Session Handling**: Track MCP via Redis session_id (30m TTL).
+- **Billing**: Revenue squad owns module. Migrate Indian processing to Paddle.
