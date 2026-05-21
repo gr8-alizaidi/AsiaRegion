@@ -1,52 +1,43 @@
 {
-  "Prohibition_of_MongoDB": {
+  "Prohibition of MongoDB": {
     "decisions": [
       {
         "id": "393329ba-9640-498c-89f1-46c1324aaeff",
-        "instruction": "Strictly prohibit MongoDB in the stack. ACID compliance for billing/user data is mandatory; MongoDB is non-compliant."
+        "instruction": "Strictly prohibit MongoDB in the stack. ACID compliance for billing/user data is non-negotiable; PostgreSQL/Redis are the only permitted stores.",
+        "severity": "CRITICAL"
       },
       {
         "id": "a06bac38-381d-472f-852d-f902db9a70c4",
-        "instruction": "Use PostgreSQL 16 and Redis for all core services (decision pipeline, auth, context store). Deviations require formal ADR."
-      },
-      {
-        "id": "3213c504-c4a3-4364-bc9f-3e3213242b7a, 465c1e1a-bb9e-4b3f-ade4-dc7674a5870a",
-        "instruction": "Provision MongoDB Atlas only for analytics event ingestion where throughput requirements exceed PostgreSQL capabilities."
+        "instruction": "Core pipeline, auth, and context store MUST exclusively use PostgreSQL 16 and Redis. MongoDB Atlas is permitted ONLY for high-throughput analytics ingestion.",
+        "severity": "MEDIUM"
       }
     ],
     "affectedFiles": [
-      "services/analytics-webhook-handler",
-      "infrastructure/database-clusters",
-      "packages/api/src/analytics/",
       "analytics/storage",
       "infrastructure/database-policy"
     ]
   },
-  "Infrastructure_and_Architecture": {
+  "Infrastructure & Backend": {
     "decisions": [
       {
         "id": "add28e0b-7a4c-4b40-9679-0d488565bb4b",
-        "instruction": "Migrate from AWS ECS to AWS EKS for container orchestration to enable HPA and multi-AZ/region failover."
-      },
-      {
-        "id": "71727a5f-aefc-4a9d-af63-247b7a964dc1",
-        "instruction": "Delay AWS ECS migration until 30 paying customers reached. Q3 2026 deadline persists."
+        "instruction": "Migrate from AWS ECS to AWS EKS for container orchestration.",
+        "severity": "HIGH"
       },
       {
         "id": "9f213a97-eb01-49b8-aa57-76b0a2358c10",
-        "instruction": "Use Azure Functions as a full-scale backend service platform for general business logic."
+        "instruction": "Transition Azure Functions to full-scale backend service platform.",
+        "severity": "HIGH"
       },
       {
         "id": "08631b5a-a39c-4766-b840-beb3a13fde5e",
-        "instruction": "Use long-running containers for billing service to eliminate serverless cold-start latency."
+        "instruction": "Use long-running containers for billing services; forbid serverless to avoid latency spikes.",
+        "severity": "HIGH"
       },
       {
-        "id": "670907d2-a11a-4cc9-8a02-67fb54fef3f7",
-        "instruction": "Enforce architectural compliance via decision-guardian in PR pipelines."
-      },
-      {
-        "id": "7b6d8f24-86b1-44f7-8279-529084ec8cc3",
-        "instruction": "Abandon EventStoreDB; remove event sourcing pattern."
+        "id": "47baf067-44b5-4456-a34c-fce4360c84a3",
+        "instruction": "Mandate TypeScript for all new backend services; enforce camelCase JSON for all API responses.",
+        "severity": "MEDIUM"
       }
     ],
     "affectedFiles": [
@@ -58,246 +49,108 @@
       "packages/api/src/routes/credits.ts",
       "packages/decision-store/src/repositories/credit-repository.ts",
       "packages/common/src/types/credits.ts",
-      "services/billing"
+      "services/billing",
+      "src/backend/"
     ]
   },
-  "LLM_Strategy": {
+  "LLM & AI Integration": {
     "decisions": [
       {
         "id": "08702be0-9097-4015-89a9-6f3307cdd76c",
-        "instruction": "Mandate GuardedProviderRegistry (wrapTextProvider / wrapEmbeddingProvider) for all LLM calls to enable cost tracking and kill-switches."
+        "instruction": "Force all LLM calls through GuardedProviderRegistry (wrapTextProvider/wrapEmbeddingProvider) for cost tracking/kill switches.",
+        "severity": "HIGH"
       },
       {
-        "id": "6acd0667-b5bc-4fd2-8811-36010ed7c2ac, 3b06241d-4a87-4cf9-a36c-cd9c831b3a97, b6869b8c-7d43-47d4-9cd6-dddb0f9f92b9",
-        "instruction": "Implement multi-provider abstraction with per-company 'effort mode' overrides: Saver (gemini-flash), Balanced (gemini-flash/haiku/gpt-4o-mini), Pro (gemini-flash/sonnet/gpt-4o-mini), Super (gemini-flash/opus/sonnet)."
+        "id": "6acd0667-b5bc-4fd2-8811-36010ed7c2ac",
+        "instruction": "Implement multi-provider abstraction with per-company 'effort mode' overrides via env vars.",
+        "severity": "HIGH"
+      },
+      {
+        "id": "b6869b8c-7d43-47d4-9cd6-dddb0f9f92b9",
+        "instruction": "Use standardized model combinations: Saver (gemini-flash), Balanced (gemini-flash/haiku/gpt-4o-mini), Pro (gemini-flash/sonnet/gpt-4o-mini), Super (gemini-flash/opus/sonnet).",
+        "severity": "HIGH"
       },
       {
         "id": "ac87f0e5-a048-4197-a533-31b2a71ea5a8",
-        "instruction": "Configure fallback: Extraction (Anthropic -> DeepSeek -> OpenAI); Detection (Google -> OpenAI -> DeepSeek)."
-      },
-      {
-        "id": "90c810f5-5c5e-471e-ab8f-5e2cc0f76b2d",
-        "instruction": "Pro-mode classification: Batch size 10, concurrency 5."
-      },
-      {
-        "id": "fdb94885-f909-42c2-993b-28951d6b8bf6",
-        "instruction": "Enable Redis semantic caching for embeddings (1-hour TTL)."
+        "instruction": "Use explicit fallback orderings: Extraction (Anthropic → DeepSeek → OpenAI), Detection (Google → OpenAI → DeepSeek).",
+        "severity": "HIGH"
       }
     ],
     "affectedFiles": [
       "src/llm/providers/registry.ts",
       "src/llm/providers/guarded_registry.ts",
-      "src/llm/client_factory.py",
-      "src/llm/fallback_logic.py",
       "packages/analyzer/",
-      "decision-fusion-queue"
+      "src/llm/client_factory.py",
+      "src/llm/fallback_logic.py"
     ]
   },
-  "API_and_Data_Standards": {
+  "Data Storage & Retrieval": {
     "decisions": [
       {
-        "id": "127df168-2a46-4b88-a207-e6887cc4183f, d01a8dd8-f37c-406d-8050-d98eaab82da0, 17f772b1-8901-4961-834a-da4fbcf68132, d17917ac-183e-43cf-b52a-894b44e7eb32",
-        "instruction": "Standardize all API error responses to RFC 7807 (type, title, status, detail, instance). Discontinue non-compliant formats."
+        "id": "81145171-98f5-43da-b922-9c76d78741b5",
+        "instruction": "Standardize on PostgreSQL with pgvector and HNSW indexes for primary storage/vector search.",
+        "severity": "HIGH"
       },
       {
-        "id": "47baf067-44b5-4456-a34c-fce4360c84a3",
-        "instruction": "Mandate TypeScript for new backend services; enforce camelCase JSON."
+        "id": "75490c8c-3a3d-4253-a8ff-9768e6359aaf",
+        "instruction": "Standardize on cosine distance (operator <=>) for all similarity searches.",
+        "severity": "MEDIUM"
       },
       {
-        "id": "15e9a617-4468-4949-bdd9-b9e4f76a6642",
-        "instruction": "Validate theme JSON via RFC7812."
-      },
-      {
-        "id": "2d19c79e-6c45-45c7-a439-a9f1437ba77c",
-        "instruction": "Cancel RFC 78 implementation."
-      }
-    ],
-    "affectedFiles": [
-      "auth endpoint",
-      "cursorrules",
-      "api/responses",
-      "api/error-handling",
-      "packages/api/src/plugins/error-handler.ts",
-      "packages/api/src/routes/internal/",
-      "src/backend/",
-      "src/sync/theme-validation.js"
-    ]
-  },
-  "Storage_and_Vector": {
-    "decisions": [
-      {
-        "id": "81145171-98f5-43da-b922-9c76d78741b5, f3db51f2-6914-415f-9fca-78783563463d, f2770524-250d-48f2-bf4c-ea54e9744ada",
-        "instruction": "Standardize on PostgreSQL + pgvector + HNSW. Config: ef_construction=200, m=16. Model: text-embedding-3-small (1536-dim)."
-      },
-      {
-        "id": "75490c8c-3a3d-4253-a8ff-9768e6359aaf, e1408395-0737-4115-a49b-e616d5227fe5",
-        "instruction": "Use cosine distance (<=>) for all similarity searches."
+        "id": "f3db51f2-6914-415f-9fca-78783563463d",
+        "instruction": "All new vector indexes must use HNSW. Migrate existing IVFFlat indexes to HNSW.",
+        "severity": "MEDIUM"
       }
     ],
     "affectedFiles": [
       "db/schema/vector_indexes",
-      "db/migrations/sprint_16/migrate_llm_cache_to_hnsw",
-      "packages/decision-store/src/schema.ts"
+      "db/migrations/sprint_16/migrate_llm_cache_to_hnsw"
     ]
   },
-  "Services_and_Integrations": {
+  "API & Security": {
     "decisions": [
       {
-        "id": "e8a1dec8-3524-4365-a291-fba0b55b57a4",
-        "instruction": "Migrate from Stream Chat to in-house chat solution."
+        "id": "d01a8dd8-f37c-406d-8050-d98eaab82da0",
+        "instruction": "Abandon RFC 7807 for error responses.",
+        "severity": "HIGH"
       },
       {
-        "id": "bd1748c1-766b-4f12-9819-536593b3c5ed",
-        "instruction": "Migrate from Shipsy to in-house mapping event system."
+        "id": "127df168-2a46-4b88-a207-e6887cc4183f",
+        "instruction": "Enforce RFC 7807 error format (type, title, status, detail, instance) for all APIs.",
+        "severity": "HIGH"
       },
-      {
-        "id": "e9097831-0c7b-43f1-895a-b115dd36c20b",
-        "instruction": "Migrate mail to Zoho; block legacy SMTP traffic."
-      },
-      {
-        "id": "b5692ce3-058f-4fff-b37c-f3a14d89d277",
-        "instruction": "Migrate SNMP from 3GPP to ITSI RFC."
-      },
-      {
-        "id": "dfba9327-9cf0-4f93-8348-6e51249a44e2",
-        "instruction": "Migrate Indian payments from Stripe to Paddle."
-      },
-      {
-        "id": "0948e434-dd93-4077-a9fc-b5a3daa13cc6",
-        "instruction": "Use Umbraco CMS for frontend component standardization."
-      }
-    ],
-    "affectedFiles": [
-      "src/chat/provider",
-      "src/services/chat",
-      "services/shipping-integration",
-      "infrastructure/event-bus",
-      "infrastructure/mail",
-      "services/smtp",
-      "config/email_routing",
-      "src/ss7-stack/backend",
-      "src/billing/payment_processor.ts",
-      "src/config/payments.json"
-    ]
-  },
-  "Security_and_Session": {
-    "decisions": [
       {
         "id": "02e6acff-0e2b-4caf-969d-be906d20eedc",
-        "instruction": "Enforce 5-minute token expiry for auth service."
+        "instruction": "Strict 5-minute token expiry for auth service.",
+        "severity": "HIGH"
       },
       {
         "id": "260c4141-6041-4f13-9314-cecfe7698bc1",
-        "instruction": "Use hardcoded shared secret in HTTP headers for reporting workers (bypass mTLS)."
-      },
-      {
-        "id": "a0fb66a4-0691-48c6-9245-5b023347648e, d01640f7-b859-4654-908c-7b5f263e92eb",
-        "instruction": "Track sessions via Redis (30-minute rolling TTL). Record 'agent_type' (enum) in Redis and mcp_logs."
-      },
-      {
-        "id": "cfe6365d-63eb-4b8b-9164-f956524c984f",
-        "instruction": "Define MCP sessions as 30-minute inactivity gaps."
-      },
-      {
-        "id": "78128bc7-2817-44f2-bef0-de69eb3feb44",
-        "instruction": "Set web dashboard session timeout to 4 hours."
+        "instruction": "Use hardcoded shared secret tokens for reporting worker auth (bypass mTLS).",
+        "severity": "HIGH"
       }
     ],
     "affectedFiles": [
+      "api/responses",
+      "api/error-handling",
+      "auth endpoint",
+      "cursorrules",
       "services/auth-service",
       "src/reporting-worker/api-client.ts",
-      "src/api/auth/middleware.ts",
-      "mcp_logs",
-      "SessionDetector",
-      "mcp_key_handler",
-      "session_management",
-      "web/config/session.js"
+      "src/api/auth/middleware.ts"
     ]
   },
-  "Lifecycle_and_Operations": {
+  "Migrate Indian payment": {
     "decisions": [
       {
-        "id": "2b58e1d2-11f2-4acd-9c71-7857b911641a, 82ce6ad9-0289-47f4-a8ec-2cefaabcd830",
-        "instruction": "Automate stale decision archiving (90 days) via ContextLifecycleWorker. Notify owners 7 days prior."
-      },
-      {
-        "id": "ac19b0f4-f780-4869-834f-822daeac746c",
-        "instruction": "Limit enterprise tier to 2000 req/min; use isolated infrastructure pool."
-      },
-      {
-        "id": "43a78d92-5543-412c-9be3-00596ee8ce65",
-        "instruction": "Revenue squad owns billing/Stripe module; PRs require their approval."
-      },
-      {
-        "id": "4407df70-f88d-4a6c-ad00-6109d8605f95, 070f625d-06bc-4f71-b793-7d7d80f064aa, 3ada5b02-0165-4c53-afe6-f5ac4f1e2823",
-        "instruction": "Deduplicate only same-type decisions. Threshold: 0.12 (cosine distance). Use fusion-eval harness for tuning."
-      },
-      {
-        "id": "b07d5f19-a624-4dec-9040-dd5fae17fbfb, b4a09b64-6a2e-4ca0-9759-5af97e89b703, 85f2e3fa-93e4-406b-bb78-1b57b1abcafd",
-        "instruction": "Bypass minConfidence for 'explicit' capture and 'manual' sourceType. Increase threshold for PassiveDetector in Saver mode."
-      },
-      {
-        "id": "fa0b2ff9-93d4-41a5-b007-d8cc51ed65ba, 52e3f043-27a2-4727-b598-cd10169ece5b",
-        "instruction": "DM onboarding links on app_installed. Redirect to dashboard post-OAuth."
-      },
-      {
-        "id": "00a9eee6-24ed-4419-a3fc-c168abe636d6",
-        "instruction": "Perform client-side credit balance check in frontend before calling Ask Knowledge Base API."
-      },
-      {
-        "id": "ee69526a-69a3-4115-be00-d3981c919d79",
-        "instruction": "Centralize conflict notifications in NotificationService."
+        "id": "dfba9327-9cf0-4f93-8348-6e51249a44e2",
+        "instruction": "Migrate Indian payment processing from Stripe to Paddle.",
+        "severity": "MEDIUM"
       }
     ],
     "affectedFiles": [
-      "services/NotificationService.js",
-      "jobs/ArchiveNotificationJob.js",
-      "controllers/DecisionController.js",
-      "src/workers/ContextLifecycleWorker.ts",
-      "src/services/ApprovalService.ts",
-      "middleware/rate-limit-config.js",
-      "rate-limiter/config.ts",
-      "infrastructure/gateway/limits.yaml",
-      "packages/api/src/billing/",
-      "src/modules/billing/",
-      "src/integrations/stripe/",
-      "findSimilarActiveWithScores",
-      "findSimilarByTypes",
-      "linker_calibration_events",
-      "dedup_logic",
-      "packages/fusion-eval",
-      "src/context-linker/params.ts",
-      "app/workers/process_comment_worker.rb",
-      "app/services/pipeline_context.rb",
-      "src/analyzer/detection.ts",
-      "src/PassiveDetector/prompt.ts",
-      "src/PassiveDetector/detection.py",
-      "services/slack/oauth_callback.js",
-      "services/onboarding/dashboard_redirect.js",
-      "src/integrations/slack/events/app_installed.ts",
-      "src/dashboard/oauth/callback.ts",
-      "/api/companies/:companyId/mcp/ask-knowledge-base",
-      "src/components/dashboard/CreditsPanel.tsx",
-      "src/hooks/useCreditBalance.ts",
-      "services/InteractionHandler.ts",
-      "services/github-notification-queue.ts",
-      "services/NotificationService.ts"
-    ]
-  },
-  "Low_Priority": {
-    "decisions": [
-      {
-        "id": "c8fa6892-aeb9-4617-b1d4-8f54a071667a",
-        "instruction": "Use separate navbar.scss for navigation styling."
-      },
-      {
-        "id": "606e27a4-4b72-485e-94dd-7a2008e80874",
-        "instruction": "Standardize on iPhones for mobile calls."
-      }
-    ],
-    "affectedFiles": [
-      "navbar.scss",
-      "navbar.tsx"
+      "src/billing/payment_processor.ts",
+      "src/config/payments.json"
     ]
   }
 }
