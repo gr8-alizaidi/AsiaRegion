@@ -1,6 +1,6 @@
 {
   "schema": "decispher-context-map/v1",
-  "generatedAt": "2026-05-22T22:45:18.371Z",
+  "generatedAt": "2026-05-22T23:03:01.418Z",
   "project": {
     "id": "8530496c-bfc3-4f4c-a724-4c6e27949fc0",
     "name": "testing phase 1"
@@ -42,9 +42,9 @@
       "id": "ai-evaluation",
       "label": "Ai Evaluation",
       "description": "Ai Evaluation — Ai domain.",
-      "unitCount": 3,
+      "unitCount": 2,
       "spineUnitCount": 0,
-      "expansionUnitCount": 3,
+      "expansionUnitCount": 2,
       "tokensInStub": 0,
       "stubPath": ".decispher/topics/ai-evaluation.md",
       "mcpTool": "decispher.get_context_for_topic"
@@ -240,9 +240,9 @@
       "id": "embeddings",
       "label": "Embeddings",
       "description": "Embeddings — Ai domain.",
-      "unitCount": 6,
+      "unitCount": 5,
       "spineUnitCount": 0,
-      "expansionUnitCount": 6,
+      "expansionUnitCount": 5,
       "tokensInStub": 0,
       "stubPath": ".decispher/topics/embeddings.md",
       "mcpTool": "decispher.get_context_for_topic"
