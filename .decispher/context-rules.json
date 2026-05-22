@@ -1,7 +1,7 @@
 {
   "$schema": "https://decispher.dev/schemas/context-rules/v1.json",
   "specVersion": "2.0.0",
-  "generatedAt": "2026-05-22T21:38:34.729Z",
+  "generatedAt": "2026-05-22T23:03:01.418Z",
   "companyId": "1489dcdc-ef7f-4cc5-b0cb-b453efa059f4",
   "projectId": "8530496c-bfc3-4f4c-a724-4c6e27949fc0",
   "meta": {
@@ -1207,6 +1207,33 @@
       "mcpFetch": "decispher.get_decision({ decisionId: \"4407df70-f88d-4a6c-ad00-6109d8605f95\" })"
     },
     {
+      "id": "3c8a6838-7873-4ce1-826d-b292952db8ba",
+      "type": "decision",
+      "title": "Scope same-type deduplication filter to analyzer pipeline only",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "linker_calibration_events",
+        "dedup_logic",
+        "analyzer/dedup.py",
+        "knowledge-graph/edge-detection.py",
+        "services/similarity-engine.py"
+      ],
+      "tags": [
+        "deduplication",
+        "machine-learning",
+        "embeddings",
+        "cosine-similarity",
+        "knowledge-graph",
+        "backend",
+        "fusion:pending_review",
+        "fusion:forked"
+      ],
+      "supersededBy": null,
+      "enforcement": null,
+      "mcpFetch": "decispher.get_decision({ decisionId: \"3c8a6838-7873-4ce1-826d-b292952db8ba\" })"
+    },
+    {
       "id": "52e3f043-27a2-4727-b598-cd10169ece5b",
       "type": "decision",
       "title": "Send onboarding link via Slack DM upon app installation",
@@ -1234,34 +1261,6 @@
         "exemptPatterns": []
       },
       "mcpFetch": "decispher.get_decision({ decisionId: \"52e3f043-27a2-4727-b598-cd10169ece5b\" })"
-    },
-    {
-      "id": "070f625d-06bc-4f71-b793-7d7d80f064aa",
-      "type": "decision",
-      "title": "Set similarity threshold for decision deduplication to 0.15 cosine distance",
-      "severity": "MEDIUM",
-      "status": "active",
-      "affectedFiles": [
-        "linker_calibration_events",
-        "dedup_logic"
-      ],
-      "tags": [
-        "deduplication",
-        "machine-learning",
-        "embeddings",
-        "cosine-similarity"
-      ],
-      "supersededBy": "4407df70-f88d-4a6c-ad00-6109d8605f95",
-      "enforcement": {
-        "blockOnViolation": false,
-        "requiresExplicitOverride": false,
-        "filePatterns": [
-          "linker_calibration_events",
-          "dedup_logic"
-        ],
-        "exemptPatterns": []
-      },
-      "mcpFetch": "decispher.get_decision({ decisionId: \"070f625d-06bc-4f71-b793-7d7d80f064aa\" })"
     },
     {
       "id": "f3db51f2-6914-415f-9fca-78783563463d",

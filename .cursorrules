@@ -4,6 +4,7 @@
 # Then fetch the topic: decispher.get_context_for_topic({ topic: "<topic>" })
 # Do NOT write code before completing the above steps.
 
+- **Prohibition of MongoDB in the Tech Stack for Analytics Events** (CRITICAL) — MongoDB is strictly prohibited from being integrated into the current technology stack, including for analytics events.
 
 # Topics — load on demand:
 - ai-agents (Ai Agents) -> decispher.get_context_for_topic({ topic: "ai-agents" })

@@ -1861,6 +1861,34 @@
 
 ---
 
+<!-- DECISION-3C8A6838 -->
+## Decision: Scope same-type deduplication filter to analyzer pipeline only
+
+**Status**: Active  
+**Date**: 2026-05-22  
+**Severity**: Warning
+
+**Files**:
+- `linker_calibration_events`
+- `dedup_logic`
+- `analyzer/dedup.py`
+- `knowledge-graph/edge-detection.py`
+- `services/similarity-engine.py`
+
+### Context
+
+**Problem:** Near-identical decisions are being incorrectly allowed through the deduplication process.
+
+**Decision:** The same-type deduplication filter will be strictly scoped to the analyzer pipeline for duplicate storage prevention. The knowledge graph edge detection will operate independently, allowing cross-type similarity calculations with its own distinct thresholds.
+
+**Rationale:** Deduplication and relationship discovery serve different business purposes; deduplication requires strict same-type identity, while the knowledge graph relies on cross-type relationships to function correctly. Separating their logic allows for fine-tuned thresholds and prevents unintended side effects.
+
+**Alternatives Considered:**
+- **Lowering the similarity threshold (e.g., to 0.18)**: The current threshold is intentionally strict to avoid false positives and maintain a high bar for what constitutes a duplicate decision.
+- **Apply same-type filter globally to the similarity service**: It prevents the knowledge graph from detecting legitimate cross-type relationships.
+
+---
+
 <!-- DECISION-52E3F043 -->
 ## Decision: Send onboarding link via Slack DM upon app installation
 
@@ -1902,50 +1930,6 @@
 
 **Alternatives Considered:**
 - **Handle team_join event**: The team_join event triggers for new users joining a workspace, not for the initial app installation, making it unsuitable for driving workspace-level onboarding.
-
----
-
-<!-- DECISION-070F625D -->
-## Decision: Set similarity threshold for decision deduplication to 0.15 cosine distance
-
-**Status**: Active  
-**Date**: 2026-05-20  
-**Severity**: Warning
-
-**Files**:
-- `linker_calibration_events`
-- `dedup_logic`
-
-**Rules**:
-```json
-{
-  "conditions": [
-    {
-      "type": "file",
-      "pattern": "{linker_calibration_events,dedup_logic}",
-      "content_rules": [
-        {
-          "mode": "regex",
-          "start": 0,
-          "pattern": "threshold\\s*[:=]\\s*(0\\.(1[6-9]|[2-9]\\d))"
-        }
-      ]
-    }
-  ],
-  "match_mode": "all"
-}
-```
-
-### Context
-
-**Problem:** Near-identical decisions are being incorrectly allowed through the deduplication process.
-
-**Decision:** Maintain the current cosine distance threshold of < 0.15 as the similarity floor for identifying deduplication candidates.
-
-**Rationale:** A strict threshold is intentionally chosen to prioritize preventing false positives (blocking legitimate new decisions) over false negatives (missing potential duplicates), with plans to refine the threshold once 500+ labeled examples are collected.
-
-**Alternatives Considered:**
-- **Lowering the similarity threshold (e.g., to 0.18)**: The current threshold is intentionally strict to avoid false positives and maintain a high bar for what constitutes a duplicate decision.
 
 ---
 
