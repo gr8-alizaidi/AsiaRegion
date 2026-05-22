@@ -19,7 +19,7 @@ constraints. Skipping it risks violating active rules.
 
 ## Always apply
 
-_No always-apply rules yet — fetch via MCP when working on a topic._
+- **Prohibition of MongoDB in the Tech Stack for Analytics Events** (CRITICAL) — MongoDB is strictly prohibited from being integrated into the current technology stack, including for analytics events.
 
 ## When working on a topic
 
