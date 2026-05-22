@@ -17,7 +17,7 @@ These are CRITICAL invariants. Every AI agent loading this project should treat 
 |-------|-------|------:|
 | `ai-agents` | Ai Agents | 3 |
 | `ai-data` | Ai Data | 2 |
-| `ai-evaluation` | Ai Evaluation | 3 |
+| `ai-evaluation` | Ai Evaluation | 2 |
 | `ai-inference` | Ai Inference | 9 |
 | `analytics` | Analytics | 3 |
 | `api-versioning` | Api Versioning | 3 |
@@ -35,7 +35,7 @@ These are CRITICAL invariants. Every AI agent loading this project should treat 
 | `deployment` | Deployment | 5 |
 | `documentation` | Documentation | 1 |
 | `email` | Email | 1 |
-| `embeddings` | Embeddings | 6 |
+| `embeddings` | Embeddings | 5 |
 | `error-handling` | Error Handling | 3 |
 | `event-driven` | Event Driven | 1 |
 | `event-sourcing` | Event Sourcing | 1 |
@@ -64,12 +64,12 @@ These are CRITICAL invariants. Every AI agent loading this project should treat 
 
 ## Recent changes
 
+- 2026-05-22 · Scope same-type deduplication filter to analyzer pipeline only
 - 2026-05-21 · Limit premium user request rate to 200 req/min
 - 2026-05-21 · Include agent_type in Redis sessions and logs
 - 2026-05-21 · Establish 2000 req/min request limit for enterprise tier
 - 2026-05-20 · Increase web dashboard session timeout to 4 hours
 - 2026-05-20 · Restrict record deduplication to same-type comparisons and update thresholds
-- 2026-05-20 · Set similarity threshold for decision deduplication to 0.15 cosine distance
 - 2026-05-20 · Implement server-side session tracking for MCP keys using Redis
 - 2026-05-20 · Use 30-minute inactivity window for MCP session detection
 - 2026-05-20 · Bypass confidence threshold for explicit capture intents
@@ -81,4 +81,4 @@ Call `decispher.list_topics()` for the live topic list (may differ from this fil
 
 Call `decispher.search_decisions({ query: "your question" })` to search across all context.
 
-**1 unit not yet assigned to a topic** — see `.decispher/unmapped-context.md`.
+**2 units not yet assigned to a topic** — see `.decispher/unmapped-context.md`.
