@@ -1,6 +1,6 @@
 {
   "schema": "decispher-context-map/v1",
-  "generatedAt": "2026-05-22T21:47:28.306Z",
+  "generatedAt": "2026-05-22T22:45:18.371Z",
   "project": {
     "id": "8530496c-bfc3-4f4c-a724-4c6e27949fc0",
     "name": "testing phase 1"
@@ -8,7 +8,13 @@
   "company": {
     "id": "1489dcdc-ef7f-4cc5-b0cb-b453efa059f4"
   },
-  "spine": [],
+  "spine": [
+    {
+      "id": "393329ba-9640-498c-89f1-46c1324aaeff",
+      "title": "Prohibition of MongoDB in the Tech Stack for Analytics Events",
+      "severity": "CRITICAL"
+    }
+  ],
   "topics": [
     {
       "id": "ai-agents",
@@ -59,9 +65,9 @@
       "label": "Analytics",
       "description": "Analytics — Analytics domain.",
       "unitCount": 3,
-      "spineUnitCount": 0,
-      "expansionUnitCount": 3,
-      "tokensInStub": 0,
+      "spineUnitCount": 1,
+      "expansionUnitCount": 2,
+      "tokensInStub": 45,
       "stubPath": ".decispher/topics/analytics.md",
       "mcpTool": "decispher.get_context_for_topic"
     },
@@ -158,9 +164,9 @@
       "label": "Compliance",
       "description": "Compliance — Security domain.",
       "unitCount": 2,
-      "spineUnitCount": 0,
-      "expansionUnitCount": 2,
-      "tokensInStub": 0,
+      "spineUnitCount": 1,
+      "expansionUnitCount": 1,
+      "tokensInStub": 45,
       "stubPath": ".decispher/topics/compliance.md",
       "mcpTool": "decispher.get_context_for_topic"
     },
@@ -477,9 +483,9 @@
       "label": "Mongodb",
       "description": "Mongodb (Database Document).",
       "unitCount": 4,
-      "spineUnitCount": 0,
-      "expansionUnitCount": 4,
-      "tokensInStub": 0,
+      "spineUnitCount": 1,
+      "expansionUnitCount": 3,
+      "tokensInStub": 45,
       "stubPath": ".decispher/topics/tech-mongodb.md",
       "mcpTool": "decispher.get_context_for_topic"
     },
