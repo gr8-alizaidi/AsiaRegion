@@ -1,157 +1,1557 @@
 {
-  "Prohibition of MongoDB": {
-    "decisions": [
-      {
-        "id": "393329ba-9640-498c-89f1-46c1324aaeff",
-        "instruction": "Strictly prohibit MongoDB in the stack. ACID compliance for billing/user data is non-negotiable; PostgreSQL/Redis are the only permitted stores.",
-        "severity": "CRITICAL"
-      },
-      {
-        "id": "a06bac38-381d-472f-852d-f902db9a70c4",
-        "instruction": "Core pipeline, auth, and context store MUST exclusively use PostgreSQL 16 and Redis. MongoDB Atlas is permitted ONLY for high-throughput analytics ingestion.",
-        "severity": "MEDIUM"
-      }
-    ],
-    "affectedFiles": [
-      "analytics/storage",
-      "infrastructure/database-policy"
-    ]
+  "$schema": "https://decispher.dev/schemas/context-rules/v1.json",
+  "specVersion": "2.0.0",
+  "generatedAt": "2026-05-22T21:38:34.729Z",
+  "companyId": "1489dcdc-ef7f-4cc5-b0cb-b453efa059f4",
+  "projectId": "8530496c-bfc3-4f4c-a724-4c6e27949fc0",
+  "meta": {
+    "totalRules": 58,
+    "rulesByType": {
+      "decision": 45,
+      "convention": 4,
+      "constraint": 2,
+      "rationale": 1,
+      "ownership": 2,
+      "history": 1,
+      "plan": 3
+    },
+    "rulesBySeverity": {
+      "CRITICAL": 1,
+      "HIGH": 23,
+      "MEDIUM": 32,
+      "LOW": 2
+    },
+    "generator": "decispher-context-map@1.0.0"
   },
-  "Infrastructure & Backend": {
-    "decisions": [
-      {
-        "id": "add28e0b-7a4c-4b40-9679-0d488565bb4b",
-        "instruction": "Migrate from AWS ECS to AWS EKS for container orchestration.",
-        "severity": "HIGH"
-      },
-      {
-        "id": "9f213a97-eb01-49b8-aa57-76b0a2358c10",
-        "instruction": "Transition Azure Functions to full-scale backend service platform.",
-        "severity": "HIGH"
-      },
-      {
-        "id": "08631b5a-a39c-4766-b840-beb3a13fde5e",
-        "instruction": "Use long-running containers for billing services; forbid serverless to avoid latency spikes.",
-        "severity": "HIGH"
-      },
-      {
-        "id": "47baf067-44b5-4456-a34c-fce4360c84a3",
-        "instruction": "Mandate TypeScript for all new backend services; enforce camelCase JSON for all API responses.",
-        "severity": "MEDIUM"
-      }
-    ],
-    "affectedFiles": [
-      "infrastructure/terraform",
-      "infrastructure/k8s",
-      "infrastructure/payment-service",
-      "backend/payments",
-      "infrastructure/azure-functions",
-      "packages/api/src/routes/credits.ts",
-      "packages/decision-store/src/repositories/credit-repository.ts",
-      "packages/common/src/types/credits.ts",
-      "services/billing",
-      "src/backend/"
-    ]
+  "mcp": {
+    "instruction": "Enforcement manifest only — rule titles, severities, and file patterns. It does NOT contain the rationale, alternatives, or full body of any rule, and it may be stale relative to the live knowledge base. Do NOT treat this file as sufficient context. Before writing or reviewing code that touches a listed file pattern, call the MCP tool named in that rule's `mcpFetch` field to load the authoritative, up-to-date context. MCP is the source of truth.",
+    "tools": {
+      "getDecision": "decispher.get_decision({ decisionId })",
+      "getContextForTopic": "decispher.get_context_for_topic({ topic })",
+      "listTopics": "decispher.list_topics()"
+    }
   },
-  "LLM & AI Integration": {
-    "decisions": [
-      {
-        "id": "08702be0-9097-4015-89a9-6f3307cdd76c",
-        "instruction": "Force all LLM calls through GuardedProviderRegistry (wrapTextProvider/wrapEmbeddingProvider) for cost tracking/kill switches.",
-        "severity": "HIGH"
+  "rules": [
+    {
+      "id": "393329ba-9640-498c-89f1-46c1324aaeff",
+      "type": "constraint",
+      "title": "Prohibition of MongoDB in the Tech Stack for Analytics Events",
+      "severity": "CRITICAL",
+      "status": "active",
+      "affectedFiles": [],
+      "tags": [
+        "mongodb",
+        "database",
+        "analytics",
+        "acid compliance",
+        "constraint",
+        "architecture"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [],
+        "exemptPatterns": []
       },
-      {
-        "id": "6acd0667-b5bc-4fd2-8811-36010ed7c2ac",
-        "instruction": "Implement multi-provider abstraction with per-company 'effort mode' overrides via env vars.",
-        "severity": "HIGH"
+      "mcpFetch": "decispher.get_decision({ decisionId: \"393329ba-9640-498c-89f1-46c1324aaeff\" })"
+    },
+    {
+      "id": "d01a8dd8-f37c-406d-8050-d98eaab82da0",
+      "type": "decision",
+      "title": "Abandon RFC 7807 for error responses",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [
+        "api/responses",
+        "api/error-handling"
+      ],
+      "tags": [
+        "api",
+        "rfc7807",
+        "standards",
+        "backend"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "api/responses",
+          "api/error-handling"
+        ],
+        "exemptPatterns": []
       },
-      {
-        "id": "b6869b8c-7d43-47d4-9cd6-dddb0f9f92b9",
-        "instruction": "Use standardized model combinations: Saver (gemini-flash), Balanced (gemini-flash/haiku/gpt-4o-mini), Pro (gemini-flash/sonnet/gpt-4o-mini), Super (gemini-flash/opus/sonnet).",
-        "severity": "HIGH"
+      "mcpFetch": "decispher.get_decision({ decisionId: \"d01a8dd8-f37c-406d-8050-d98eaab82da0\" })"
+    },
+    {
+      "id": "670907d2-a11a-4cc9-8a02-67fb54fef3f7",
+      "type": "decision",
+      "title": "Defer Microservices Adoption, Maintain Monorepo Architecture",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [],
+      "tags": [
+        "architecture",
+        "microservices",
+        "monorepo",
+        "team-size",
+        "deployment"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [],
+        "exemptPatterns": []
       },
-      {
-        "id": "ac87f0e5-a048-4197-a533-31b2a71ea5a8",
-        "instruction": "Use explicit fallback orderings: Extraction (Anthropic → DeepSeek → OpenAI), Detection (Google → OpenAI → DeepSeek).",
-        "severity": "HIGH"
-      }
-    ],
-    "affectedFiles": [
-      "src/llm/providers/registry.ts",
-      "src/llm/providers/guarded_registry.ts",
-      "packages/analyzer/",
-      "src/llm/client_factory.py",
-      "src/llm/fallback_logic.py"
-    ]
-  },
-  "Data Storage & Retrieval": {
-    "decisions": [
-      {
-        "id": "81145171-98f5-43da-b922-9c76d78741b5",
-        "instruction": "Standardize on PostgreSQL with pgvector and HNSW indexes for primary storage/vector search.",
-        "severity": "HIGH"
+      "mcpFetch": "decispher.get_decision({ decisionId: \"670907d2-a11a-4cc9-8a02-67fb54fef3f7\" })"
+    },
+    {
+      "id": "b6869b8c-7d43-47d4-9cd6-dddb0f9f92b9",
+      "type": "decision",
+      "title": "Define LLM Model Combinations for Saver, Balanced, Pro, and Super Effort Modes",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [],
+      "tags": [
+        "LLM",
+        "model-selection",
+        "multi-provider",
+        "cost-optimization",
+        "pricing-tiers",
+        "gemini-flash",
+        "claude-haiku",
+        "gpt-4o-mini",
+        "claude-sonnet",
+        "claude-opus"
+      ],
+      "supersededBy": null,
+      "enforcement": null,
+      "mcpFetch": "decispher.get_decision({ decisionId: \"b6869b8c-7d43-47d4-9cd6-dddb0f9f92b9\" })"
+    },
+    {
+      "id": "ac87f0e5-a048-4197-a533-31b2a71ea5a8",
+      "type": "decision",
+      "title": "Define Model Fallback Ordering Strategy for API Rate Limits",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [
+        "src/llm/client_factory.py",
+        "src/llm/fallback_logic.py"
+      ],
+      "tags": [
+        "llm",
+        "reliability",
+        "rate-limiting",
+        "architecture"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "src/llm/client_factory.py",
+          "src/llm/fallback_logic.py"
+        ],
+        "exemptPatterns": []
       },
-      {
-        "id": "75490c8c-3a3d-4253-a8ff-9768e6359aaf",
-        "instruction": "Standardize on cosine distance (operator <=>) for all similarity searches.",
-        "severity": "MEDIUM"
+      "mcpFetch": "decispher.get_decision({ decisionId: \"ac87f0e5-a048-4197-a533-31b2a71ea5a8\" })"
+    },
+    {
+      "id": "02e6acff-0e2b-4caf-969d-be906d20eedc",
+      "type": "rationale",
+      "title": "Enforce 5-minute token expiry for authentication service",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [
+        "services/auth-service"
+      ],
+      "tags": [
+        "authentication",
+        "security",
+        "compliance",
+        "backend"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "services/auth-service"
+        ],
+        "exemptPatterns": []
       },
-      {
-        "id": "f3db51f2-6914-415f-9fca-78783563463d",
-        "instruction": "All new vector indexes must use HNSW. Migrate existing IVFFlat indexes to HNSW.",
-        "severity": "MEDIUM"
-      }
-    ],
-    "affectedFiles": [
-      "db/schema/vector_indexes",
-      "db/migrations/sprint_16/migrate_llm_cache_to_hnsw"
-    ]
-  },
-  "API & Security": {
-    "decisions": [
-      {
-        "id": "d01a8dd8-f37c-406d-8050-d98eaab82da0",
-        "instruction": "Abandon RFC 7807 for error responses.",
-        "severity": "HIGH"
+      "mcpFetch": "decispher.get_decision({ decisionId: \"02e6acff-0e2b-4caf-969d-be906d20eedc\" })"
+    },
+    {
+      "id": "9f213a97-eb01-49b8-aa57-76b0a2358c10",
+      "type": "decision",
+      "title": "Expansion of Azure Functions to full backend services",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [
+        "infrastructure/payment-service",
+        "backend/payments",
+        "infrastructure/azure-functions"
+      ],
+      "tags": [
+        "azure",
+        "cloud-hosting",
+        "backend",
+        "payments"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "infrastructure/payment-service",
+          "backend/payments",
+          "infrastructure/azure-functions"
+        ],
+        "exemptPatterns": []
       },
-      {
-        "id": "127df168-2a46-4b88-a207-e6887cc4183f",
-        "instruction": "Enforce RFC 7807 error format (type, title, status, detail, instance) for all APIs.",
-        "severity": "HIGH"
+      "mcpFetch": "decispher.get_decision({ decisionId: \"9f213a97-eb01-49b8-aa57-76b0a2358c10\" })"
+    },
+    {
+      "id": "6acd0667-b5bc-4fd2-8811-36010ed7c2ac",
+      "type": "decision",
+      "title": "Implement Multi-Provider LLM Abstraction for Pipeline Steps with Per-Company Overrides",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [],
+      "tags": [
+        "LLM",
+        "AI",
+        "architecture",
+        "multi-provider",
+        "cost-management",
+        "pipeline",
+        "vendor-strategy"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [],
+        "exemptPatterns": []
       },
-      {
-        "id": "02e6acff-0e2b-4caf-969d-be906d20eedc",
-        "instruction": "Strict 5-minute token expiry for auth service.",
-        "severity": "HIGH"
+      "mcpFetch": "decispher.get_decision({ decisionId: \"6acd0667-b5bc-4fd2-8811-36010ed7c2ac\" })"
+    },
+    {
+      "id": "2e467570-0b85-476d-8d89-4477d49012f5",
+      "type": "decision",
+      "title": "Limit premium user request rate to 200 req/min",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [
+        "infrastructure/rate-limits.config",
+        "services/api-gateway/configs/premium-tier.json"
+      ],
+      "tags": [
+        "infrastructure",
+        "rate-limiting",
+        "scalability",
+        "performance",
+        "fusion:pending_review",
+        "fusion:supersedes"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "infrastructure/rate-limits.config",
+          "services/api-gateway/configs/premium-tier.json"
+        ],
+        "exemptPatterns": []
       },
-      {
-        "id": "260c4141-6041-4f13-9314-cecfe7698bc1",
-        "instruction": "Use hardcoded shared secret tokens for reporting worker auth (bypass mTLS).",
-        "severity": "HIGH"
-      }
-    ],
-    "affectedFiles": [
-      "api/responses",
-      "api/error-handling",
-      "auth endpoint",
-      "cursorrules",
-      "services/auth-service",
-      "src/reporting-worker/api-client.ts",
-      "src/api/auth/middleware.ts"
-    ]
-  },
-  "Migrate Indian payment": {
-    "decisions": [
-      {
-        "id": "dfba9327-9cf0-4f93-8348-6e51249a44e2",
-        "instruction": "Migrate Indian payment processing from Stripe to Paddle.",
-        "severity": "MEDIUM"
-      }
-    ],
-    "affectedFiles": [
-      "src/billing/payment_processor.ts",
-      "src/config/payments.json"
-    ]
-  }
+      "mcpFetch": "decispher.get_decision({ decisionId: \"2e467570-0b85-476d-8d89-4477d49012f5\" })"
+    },
+    {
+      "id": "3b06241d-4a87-4cf9-a36c-cd9c831b3a97",
+      "type": "decision",
+      "title": "LLM Provider Strategy by Pipeline Step and Effort Mode",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [
+        "packages/analyzer/"
+      ],
+      "tags": [
+        "LLM",
+        "AI",
+        "provider strategy",
+        "architecture",
+        "environment variables"
+      ],
+      "supersededBy": null,
+      "enforcement": null,
+      "mcpFetch": "decispher.get_decision({ decisionId: \"3b06241d-4a87-4cf9-a36c-cd9c831b3a97\" })"
+    },
+    {
+      "id": "08702be0-9097-4015-89a9-6f3307cdd76c",
+      "type": "constraint",
+      "title": "Mandate use of GuardedProviderRegistry for all LLM service calls",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [
+        "src/llm/providers/registry.ts",
+        "src/llm/providers/guarded_registry.ts"
+      ],
+      "tags": [
+        "llm",
+        "infrastructure",
+        "governance",
+        "cost-management"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "src/llm/providers/registry.ts",
+          "src/llm/providers/guarded_registry.ts"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"08702be0-9097-4015-89a9-6f3307cdd76c\" })"
+    },
+    {
+      "id": "e9097831-0c7b-43f1-895a-b115dd36c20b",
+      "type": "decision",
+      "title": "Migrate email service to Zoho and update SMTP infrastructure",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [
+        "infrastructure/mail",
+        "services/smtp",
+        "config/email_routing"
+      ],
+      "tags": [
+        "email",
+        "infrastructure",
+        "zoho",
+        "smtp",
+        "migration"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "infrastructure/mail",
+          "services/smtp",
+          "config/email_routing"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"e9097831-0c7b-43f1-895a-b115dd36c20b\" })"
+    },
+    {
+      "id": "bd1748c1-766b-4f12-9819-536593b3c5ed",
+      "type": "decision",
+      "title": "Migrate from Shipsy to in-house mapping event system",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [
+        "services/shipping-integration",
+        "infrastructure/event-bus"
+      ],
+      "tags": [
+        "infrastructure",
+        "scalability",
+        "backend",
+        "migration"
+      ],
+      "supersededBy": null,
+      "enforcement": null,
+      "mcpFetch": "decispher.get_decision({ decisionId: \"bd1748c1-766b-4f12-9819-536593b3c5ed\" })"
+    },
+    {
+      "id": "e8a1dec8-3524-4365-a291-fba0b55b57a4",
+      "type": "decision",
+      "title": "Migrate from Stream Chat provider to in-house chat implementation",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [
+        "src/chat/provider",
+        "src/services/chat"
+      ],
+      "tags": [
+        "infrastructure",
+        "backend",
+        "chat",
+        "migration"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "src/chat/provider",
+          "src/services/chat"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"e8a1dec8-3524-4365-a291-fba0b55b57a4\" })"
+    },
+    {
+      "id": "add28e0b-7a4c-4b40-9679-0d488565bb4b",
+      "type": "decision",
+      "title": "Migrate infrastructure orchestration from AWS ECS to AWS EKS",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [
+        "infrastructure/terraform",
+        "infrastructure/k8s"
+      ],
+      "tags": [
+        "aws",
+        "eks",
+        "ecs",
+        "kubernetes",
+        "infrastructure",
+        "migration"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "infrastructure/terraform",
+          "infrastructure/k8s"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"add28e0b-7a4c-4b40-9679-0d488565bb4b\" })"
+    },
+    {
+      "id": "b5692ce3-058f-4fff-b37c-f3a14d89d277",
+      "type": "decision",
+      "title": "Migrate SNMP development from 3GPP to ITSI RFC",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [
+        "src/ss7-stack/backend"
+      ],
+      "tags": [
+        "ss7",
+        "backend",
+        "protocols",
+        "itsi",
+        "3gpp"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "src/ss7-stack/backend"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"b5692ce3-058f-4fff-b37c-f3a14d89d277\" })"
+    },
+    {
+      "id": "71727a5f-aefc-4a9d-af63-247b7a964dc1",
+      "type": "plan",
+      "title": "Plan to Migrate Application Infrastructure from Railway to AWS ECS",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [],
+      "tags": [
+        "migration",
+        "infrastructure",
+        "aws",
+        "ecs",
+        "railway",
+        "cost",
+        "vpc"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"71727a5f-aefc-4a9d-af63-247b7a964dc1\" })"
+    },
+    {
+      "id": "127df168-2a46-4b88-a207-e6887cc4183f",
+      "type": "convention",
+      "title": "Standardize API Error Responses to RFC 7807",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [
+        "auth endpoint",
+        "cursorrules",
+        "All API error handling implementations"
+      ],
+      "tags": [
+        "API",
+        "error handling",
+        "RFC 7807",
+        "standardization"
+      ],
+      "supersededBy": null,
+      "enforcement": null,
+      "mcpFetch": "decispher.get_decision({ decisionId: \"127df168-2a46-4b88-a207-e6887cc4183f\" })"
+    },
+    {
+      "id": "81145171-98f5-43da-b922-9c76d78741b5",
+      "type": "decision",
+      "title": "Standardize on PostgreSQL with pgvector for primary storage and vector search",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [],
+      "tags": [
+        "postgresql",
+        "pgvector",
+        "database",
+        "infrastructure",
+        "vector-search"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"81145171-98f5-43da-b922-9c76d78741b5\" })"
+    },
+    {
+      "id": "08631b5a-a39c-4766-b840-beb3a13fde5e",
+      "type": "ownership",
+      "title": "Use long-running containers for billing service instead of serverless functions",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [
+        "packages/api/src/routes/credits.ts",
+        "packages/decision-store/src/repositories/credit-repository.ts",
+        "packages/common/src/types/credits.ts",
+        "services/billing"
+      ],
+      "tags": [
+        "billing",
+        "ownership",
+        "credits",
+        "compliance"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "packages/api/src/routes/credits.ts",
+          "packages/decision-store/src/repositories/credit-repository.ts",
+          "packages/common/src/types/credits.ts",
+          "services/billing"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"08631b5a-a39c-4766-b840-beb3a13fde5e\" })"
+    },
+    {
+      "id": "3213c504-c4a3-4364-bc9f-3e3213242b7a",
+      "type": "decision",
+      "title": "Use MongoDB Atlas for schemaless analytics webhook storage",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [
+        "services/analytics-webhook-handler",
+        "infrastructure/database-clusters"
+      ],
+      "tags": [
+        "mongodb",
+        "postgresql",
+        "analytics",
+        "database",
+        "infrastructure",
+        "fusion:contradicts"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "services/analytics-webhook-handler",
+          "infrastructure/database-clusters"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"3213c504-c4a3-4364-bc9f-3e3213242b7a\" })"
+    },
+    {
+      "id": "465c1e1a-bb9e-4b3f-ade4-dc7674a5870a",
+      "type": "decision",
+      "title": "Use MongoDB for Analytics Events Pipeline",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [
+        "packages/api/src/analytics/"
+      ],
+      "tags": [
+        "mongodb",
+        "analytics",
+        "database",
+        "pipeline",
+        "backend",
+        "fusion:contradicts"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "packages/api/src/analytics/"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"465c1e1a-bb9e-4b3f-ade4-dc7674a5870a\" })"
+    },
+    {
+      "id": "260c4141-6041-4f13-9314-cecfe7698bc1",
+      "type": "decision",
+      "title": "Use shared secret token authentication for reporting worker communication",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [
+        "src/reporting-worker/api-client.ts",
+        "src/api/auth/middleware.ts"
+      ],
+      "tags": [
+        "security",
+        "authentication",
+        "reporting-service",
+        "mtls",
+        "api"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "src/reporting-worker/api-client.ts",
+          "src/api/auth/middleware.ts"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"260c4141-6041-4f13-9314-cecfe7698bc1\" })"
+    },
+    {
+      "id": "0948e434-dd93-4077-a9fc-b5a3daa13cc6",
+      "type": "decision",
+      "title": "Use Umbraco CMS for frontend component development",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [],
+      "tags": [
+        "umbraco",
+        "cms",
+        "frontend",
+        "architecture"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"0948e434-dd93-4077-a9fc-b5a3daa13cc6\" })"
+    },
+    {
+      "id": "7b6d8f24-86b1-44f7-8279-529084ec8cc3",
+      "type": "history",
+      "title": "Abandoning EventStoreDB for monorepo event handling",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [],
+      "tags": [
+        "event-sourcing",
+        "eventstoredb",
+        "monorepo",
+        "architecture",
+        "infrastructure"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"7b6d8f24-86b1-44f7-8279-529084ec8cc3\" })"
+    },
+    {
+      "id": "15e9a617-4468-4949-bdd9-b9e4f76a6642",
+      "type": "decision",
+      "title": "Adopt RFC7812 for theme data JSON validation",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "src/sync/theme-validation.js"
+      ],
+      "tags": [
+        "rfc7812",
+        "json",
+        "validation",
+        "theme",
+        "sync"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "src/sync/theme-validation.js"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"15e9a617-4468-4949-bdd9-b9e4f76a6642\" })"
+    },
+    {
+      "id": "82ce6ad9-0289-47f4-a8ec-2cefaabcd830",
+      "type": "plan",
+      "title": "Automate stale decision archiving via ContextLifecycleWorker",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "src/workers/ContextLifecycleWorker.ts",
+        "src/services/ApprovalService.ts"
+      ],
+      "tags": [
+        "automation",
+        "backend",
+        "archiving",
+        "job-scheduling"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "src/workers/ContextLifecycleWorker.ts",
+          "src/services/ApprovalService.ts"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"82ce6ad9-0289-47f4-a8ec-2cefaabcd830\" })"
+    },
+    {
+      "id": "b07d5f19-a624-4dec-9040-dd5fae17fbfb",
+      "type": "decision",
+      "title": "Bypass confidence threshold for explicit capture intents",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "app/workers/process_comment_worker.rb",
+        "app/services/pipeline_context.rb"
+      ],
+      "tags": [
+        "llm",
+        "threshold",
+        "pipeline",
+        "backend"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "app/workers/process_comment_worker.rb",
+          "app/services/pipeline_context.rb"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"b07d5f19-a624-4dec-9040-dd5fae17fbfb\" })"
+    },
+    {
+      "id": "b4a09b64-6a2e-4ca0-9759-5af97e89b703",
+      "type": "decision",
+      "title": "Bypass minConfidence check for manual source type in analyzer",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "src/analyzer/detection.ts"
+      ],
+      "tags": [
+        "backend",
+        "analyzer",
+        "data-quality"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "src/analyzer/detection.ts"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"b4a09b64-6a2e-4ca0-9759-5af97e89b703\" })"
+    },
+    {
+      "id": "2d19c79e-6c45-45c7-a439-a9f1437ba77c",
+      "type": "decision",
+      "title": "Cancellation of RFC 78 implementation",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [],
+      "tags": [
+        "rfc",
+        "architecture",
+        "process"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"2d19c79e-6c45-45c7-a439-a9f1437ba77c\" })"
+    },
+    {
+      "id": "90c810f5-5c5e-471e-ab8f-5e2cc0f76b2d",
+      "type": "decision",
+      "title": "Configure LLM classification batch size and concurrency for Pro mode",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "decision-fusion-queue"
+      ],
+      "tags": [
+        "performance",
+        "llm",
+        "infrastructure",
+        "batch-processing"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "decision-fusion-queue"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"90c810f5-5c5e-471e-ab8f-5e2cc0f76b2d\" })"
+    },
+    {
+      "id": "d17917ac-183e-43cf-b52a-894b44e7eb32",
+      "type": "convention",
+      "title": "Enforce RFC 7807 for Internal API Error Formats",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "packages/api/src/routes/internal/"
+      ],
+      "tags": [
+        "API",
+        "error handling",
+        "RFC 7807",
+        "internal API",
+        "convention"
+      ],
+      "supersededBy": null,
+      "enforcement": null,
+      "mcpFetch": "decispher.get_decision({ decisionId: \"d17917ac-183e-43cf-b52a-894b44e7eb32\" })"
+    },
+    {
+      "id": "ac19b0f4-f780-4869-834f-822daeac746c",
+      "type": "decision",
+      "title": "Establish 2000 req/min request limit for enterprise tier",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "middleware/rate-limit-config.js",
+        "rate-limiter/config.ts",
+        "infrastructure/gateway/limits.yaml"
+      ],
+      "tags": [
+        "api",
+        "rate-limiting",
+        "backend",
+        "performance",
+        "enterprise",
+        "infrastructure",
+        "fusion:pending_review",
+        "fusion:forked"
+      ],
+      "supersededBy": null,
+      "enforcement": null,
+      "mcpFetch": "decispher.get_decision({ decisionId: \"ac19b0f4-f780-4869-834f-822daeac746c\" })"
+    },
+    {
+      "id": "17f772b1-8901-4961-834a-da4fbcf68132",
+      "type": "convention",
+      "title": "Establish authoritative RFC 7807 error format convention",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "packages/api/src/plugins/error-handler.ts"
+      ],
+      "tags": [
+        "rfc-7807",
+        "api-design",
+        "error-handling",
+        "decispher"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "packages/api/src/plugins/error-handler.ts"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"17f772b1-8901-4961-834a-da4fbcf68132\" })"
+    },
+    {
+      "id": "43a78d92-5543-412c-9be3-00596ee8ce65",
+      "type": "ownership",
+      "title": "Establish Revenue squad ownership of billing and Stripe integration",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "packages/api/src/billing/",
+        "src/modules/billing/",
+        "src/integrations/stripe/"
+      ],
+      "tags": [
+        "billing",
+        "ownership",
+        "team"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "packages/api/src/billing/",
+          "src/modules/billing/",
+          "src/integrations/stripe/"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"43a78d92-5543-412c-9be3-00596ee8ce65\" })"
+    },
+    {
+      "id": "2b58e1d2-11f2-4acd-9c71-7857b911641a",
+      "type": "decision",
+      "title": "Establish stale archival notification process for decision units",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "services/NotificationService.js",
+        "jobs/ArchiveNotificationJob.js",
+        "controllers/DecisionController.js"
+      ],
+      "tags": [
+        "notification",
+        "archival",
+        "backend",
+        "automation"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "services/NotificationService.js",
+          "jobs/ArchiveNotificationJob.js",
+          "controllers/DecisionController.js"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"2b58e1d2-11f2-4acd-9c71-7857b911641a\" })"
+    },
+    {
+      "id": "00a9eee6-24ed-4419-a3fc-c168abe636d6",
+      "type": "decision",
+      "title": "Implement client-side credit balance check for Ask Knowledge Base",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "/api/companies/:companyId/mcp/ask-knowledge-base",
+        "src/components/dashboard/CreditsPanel.tsx",
+        "src/hooks/useCreditBalance.ts"
+      ],
+      "tags": [
+        "frontend",
+        "credits",
+        "user-experience",
+        "api-design"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "/api/companies/:companyId/mcp/ask-knowledge-base",
+          "src/components/dashboard/CreditsPanel.tsx",
+          "src/hooks/useCreditBalance.ts"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"00a9eee6-24ed-4419-a3fc-c168abe636d6\" })"
+    },
+    {
+      "id": "fdb94885-f909-42c2-993b-28951d6b8bf6",
+      "type": "decision",
+      "title": "Implement Redis Semantic Caching for LLM Embedding Calls",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [],
+      "tags": [
+        "redis",
+        "caching",
+        "llm",
+        "embeddings",
+        "performance",
+        "optimization"
+      ],
+      "supersededBy": null,
+      "enforcement": null,
+      "mcpFetch": "decispher.get_decision({ decisionId: \"fdb94885-f909-42c2-993b-28951d6b8bf6\" })"
+    },
+    {
+      "id": "a0fb66a4-0691-48c6-9245-5b023347648e",
+      "type": "decision",
+      "title": "Implement server-side session tracking for MCP keys using Redis",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "mcp_logs",
+        "SessionDetector",
+        "mcp_key_handler"
+      ],
+      "tags": [
+        "mcp",
+        "redis",
+        "session-management",
+        "backend",
+        "cost-optimization"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "mcp_logs",
+          "SessionDetector",
+          "mcp_key_handler"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"a0fb66a4-0691-48c6-9245-5b023347648e\" })"
+    },
+    {
+      "id": "f2770524-250d-48f2-bf4c-ea54e9744ada",
+      "type": "decision",
+      "title": "Implementation details for text embeddings in PostgreSQL using OpenAI's text-embedding-3-small and HNSW indexing",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "packages/decision-store/src/schema.ts"
+      ],
+      "tags": [
+        "vector-database",
+        "embeddings",
+        "PostgreSQL",
+        "HNSW",
+        "OpenAI",
+        "text-embedding-3-small"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "packages/decision-store/src/schema.ts"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"f2770524-250d-48f2-bf4c-ea54e9744ada\" })"
+    },
+    {
+      "id": "d01640f7-b859-4654-908c-7b5f263e92eb",
+      "type": "decision",
+      "title": "Include agent_type in Redis sessions and logs",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "session_management",
+        "mcp_logs"
+      ],
+      "tags": [
+        "redis",
+        "logging",
+        "analytics",
+        "session-tracking",
+        "fusion:pending_review"
+      ],
+      "supersededBy": null,
+      "enforcement": null,
+      "mcpFetch": "decispher.get_decision({ decisionId: \"d01640f7-b859-4654-908c-7b5f263e92eb\" })"
+    },
+    {
+      "id": "85f2e3fa-93e4-406b-bb78-1b57b1abcafd",
+      "type": "decision",
+      "title": "Increase detection confidence threshold for PassiveDetector in saver mode",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "src/PassiveDetector/prompt.ts",
+        "src/PassiveDetector/detection.py"
+      ],
+      "tags": [
+        "PassiveDetector",
+        "Gemini",
+        "AI",
+        "configuration",
+        "filtering"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "src/PassiveDetector/prompt.ts",
+          "src/PassiveDetector/detection.py"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"85f2e3fa-93e4-406b-bb78-1b57b1abcafd\" })"
+    },
+    {
+      "id": "78128bc7-2817-44f2-bef0-de69eb3feb44",
+      "type": "decision",
+      "title": "Increase web dashboard session timeout to 4 hours",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "web/config/session.js"
+      ],
+      "tags": [
+        "web",
+        "security",
+        "authentication",
+        "dashboard",
+        "fusion:contradicts"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "web/config/session.js"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"78128bc7-2817-44f2-bef0-de69eb3feb44\" })"
+    },
+    {
+      "id": "dfba9327-9cf0-4f93-8348-6e51249a44e2",
+      "type": "plan",
+      "title": "Migrate Indian payment processing from Stripe to Paddle",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "src/billing/payment_processor.ts",
+        "src/config/payments.json"
+      ],
+      "tags": [
+        "payments",
+        "stripe",
+        "paddle",
+        "infrastructure",
+        "compliance"
+      ],
+      "supersededBy": null,
+      "enforcement": null,
+      "mcpFetch": "decispher.get_decision({ decisionId: \"dfba9327-9cf0-4f93-8348-6e51249a44e2\" })"
+    },
+    {
+      "id": "4407df70-f88d-4a6c-ad00-6109d8605f95",
+      "type": "decision",
+      "title": "Restrict record deduplication to same-type comparisons and update thresholds",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "findSimilarActiveWithScores",
+        "findSimilarByTypes"
+      ],
+      "tags": [
+        "deduplication",
+        "threshold",
+        "backend",
+        "algorithm",
+        "fusion:contradicts"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "findSimilarActiveWithScores",
+          "findSimilarByTypes"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"4407df70-f88d-4a6c-ad00-6109d8605f95\" })"
+    },
+    {
+      "id": "52e3f043-27a2-4727-b598-cd10169ece5b",
+      "type": "decision",
+      "title": "Send onboarding link via Slack DM upon app installation",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "src/integrations/slack/events/app_installed.ts",
+        "src/dashboard/oauth/callback.ts"
+      ],
+      "tags": [
+        "slack",
+        "onboarding",
+        "oauth",
+        "backend",
+        "error-handling"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "src/integrations/slack/events/app_installed.ts",
+          "src/dashboard/oauth/callback.ts"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"52e3f043-27a2-4727-b598-cd10169ece5b\" })"
+    },
+    {
+      "id": "070f625d-06bc-4f71-b793-7d7d80f064aa",
+      "type": "decision",
+      "title": "Set similarity threshold for decision deduplication to 0.15 cosine distance",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "linker_calibration_events",
+        "dedup_logic"
+      ],
+      "tags": [
+        "deduplication",
+        "machine-learning",
+        "embeddings",
+        "cosine-similarity"
+      ],
+      "supersededBy": "4407df70-f88d-4a6c-ad00-6109d8605f95",
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "linker_calibration_events",
+          "dedup_logic"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"070f625d-06bc-4f71-b793-7d7d80f064aa\" })"
+    },
+    {
+      "id": "f3db51f2-6914-415f-9fca-78783563463d",
+      "type": "decision",
+      "title": "Standardize on HNSW for new vector indexes",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "db/schema/vector_indexes",
+        "db/migrations/sprint_16/migrate_llm_cache_to_hnsw"
+      ],
+      "tags": [
+        "vector-search",
+        "postgresql",
+        "hnsw",
+        "architecture",
+        "database"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "db/schema/vector_indexes",
+          "db/migrations/sprint_16/migrate_llm_cache_to_hnsw"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"f3db51f2-6914-415f-9fca-78783563463d\" })"
+    },
+    {
+      "id": "47baf067-44b5-4456-a34c-fce4360c84a3",
+      "type": "convention",
+      "title": "Standardize on TypeScript and camelCase JSON for backend services",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "/src/backend/"
+      ],
+      "tags": [
+        "typescript",
+        "api",
+        "backend",
+        "json",
+        "coding-standards"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "/src/backend/"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"47baf067-44b5-4456-a34c-fce4360c84a3\" })"
+    },
+    {
+      "id": "fa0b2ff9-93d4-41a5-b007-d8cc51ed65ba",
+      "type": "decision",
+      "title": "Trigger dashboard onboarding redirect after Slack OAuth completion",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "services/slack/oauth_callback.js",
+        "services/onboarding/dashboard_redirect.js"
+      ],
+      "tags": [
+        "slack",
+        "onboarding",
+        "oauth",
+        "backend"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "services/slack/oauth_callback.js",
+          "services/onboarding/dashboard_redirect.js"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"fa0b2ff9-93d4-41a5-b007-d8cc51ed65ba\" })"
+    },
+    {
+      "id": "ee69526a-69a3-4115-be00-d3981c919d79",
+      "type": "decision",
+      "title": "Unify hard conflict review notifications via NotificationService",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "services/InteractionHandler.ts",
+        "services/github-notification-queue.ts",
+        "services/NotificationService.ts"
+      ],
+      "tags": [
+        "notification-system",
+        "backend",
+        "refactoring",
+        "github-integration",
+        "slack-integration"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "services/InteractionHandler.ts",
+          "services/github-notification-queue.ts",
+          "services/NotificationService.ts"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"ee69526a-69a3-4115-be00-d3981c919d79\" })"
+    },
+    {
+      "id": "cfe6365d-63eb-4b8b-9164-f956524c984f",
+      "type": "decision",
+      "title": "Use 30-minute inactivity window for MCP session detection",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "ADR-033",
+        "SessionDetector"
+      ],
+      "tags": [
+        "mcp",
+        "token-savings",
+        "session-detection"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "ADR-033",
+          "SessionDetector"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"cfe6365d-63eb-4b8b-9164-f956524c984f\" })"
+    },
+    {
+      "id": "75490c8c-3a3d-4253-a8ff-9768e6359aaf",
+      "type": "decision",
+      "title": "Use cosine distance for pgvector similarity searches",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [],
+      "tags": [
+        "pgvector",
+        "postgresql",
+        "embeddings",
+        "vector-search"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"75490c8c-3a3d-4253-a8ff-9768e6359aaf\" })"
+    },
+    {
+      "id": "e1408395-0737-4115-a49b-e616d5227fe5",
+      "type": "decision",
+      "title": "Use cosine distance over L2 for semantic text embedding similarity with pgvector HNSW",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [],
+      "tags": [
+        "pgvector",
+        "HNSW",
+        "embeddings",
+        "semantic search",
+        "cosine distance",
+        "L2 distance",
+        "deduplication"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"e1408395-0737-4115-a49b-e616d5227fe5\" })"
+    },
+    {
+      "id": "3ada5b02-0165-4c53-afe6-f5ac4f1e2823",
+      "type": "decision",
+      "title": "Use fusion-eval harness for linkThreshold tuning",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "packages/fusion-eval",
+        "src/context-linker/params.ts"
+      ],
+      "tags": [
+        "context-linker",
+        "fusion-eval",
+        "search",
+        "configuration"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "packages/fusion-eval",
+          "src/context-linker/params.ts"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"3ada5b02-0165-4c53-afe6-f5ac4f1e2823\" })"
+    },
+    {
+      "id": "a06bac38-381d-472f-852d-f902db9a70c4",
+      "type": "decision",
+      "title": "Use MongoDB Atlas for analytics event ingestion",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "analytics/storage",
+        "infrastructure/database-policy"
+      ],
+      "tags": [
+        "mongodb",
+        "postgresql",
+        "analytics",
+        "infrastructure"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "analytics/storage",
+          "infrastructure/database-policy"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"a06bac38-381d-472f-852d-f902db9a70c4\" })"
+    },
+    {
+      "id": "606e27a4-4b72-485e-94dd-7a2008e80874",
+      "type": "decision",
+      "title": "Standardization on iPhones for mobile communication",
+      "severity": "LOW",
+      "status": "active",
+      "affectedFiles": [],
+      "tags": [
+        "mobile",
+        "iphone",
+        "communication"
+      ],
+      "supersededBy": null,
+      "enforcement": null,
+      "mcpFetch": "decispher.get_decision({ decisionId: \"606e27a4-4b72-485e-94dd-7a2008e80874\" })"
+    },
+    {
+      "id": "c8fa6892-aeb9-4617-b1d4-8f54a071667a",
+      "type": "decision",
+      "title": "Use separate SCSS file for navigation component styling",
+      "severity": "LOW",
+      "status": "active",
+      "affectedFiles": [
+        "navbar.scss",
+        "navbar.tsx"
+      ],
+      "tags": [
+        "css",
+        "scss",
+        "tailwind",
+        "frontend",
+        "ui"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "navbar.scss",
+          "navbar.tsx"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"c8fa6892-aeb9-4617-b1d4-8f54a071667a\" })"
+    }
+  ]
 }
-<!-- decispher:ids=393329ba-9640-498c-89f1-46c1324aaeff,08702be0-9097-4015-89a9-6f3307cdd76c,0948e434-dd93-4077-a9fc-b5a3daa13cc6,e8a1dec8-3524-4365-a291-fba0b55b57a4,9f213a97-eb01-49b8-aa57-76b0a2358c10,b5692ce3-058f-4fff-b37c-f3a14d89d277,260c4141-6041-4f13-9314-cecfe7698bc1,02e6acff-0e2b-4caf-969d-be906d20eedc,e9097831-0c7b-43f1-895a-b115dd36c20b,bd1748c1-766b-4f12-9819-536593b3c5ed,d01a8dd8-f37c-406d-8050-d98eaab82da0,08631b5a-a39c-4766-b840-beb3a13fde5e,ac87f0e5-a048-4197-a533-31b2a71ea5a8,add28e0b-7a4c-4b40-9679-0d488565bb4b,81145171-98f5-43da-b922-9c76d78741b5,3213c504-c4a3-4364-bc9f-3e3213242b7a,465c1e1a-bb9e-4b3f-ade4-dc7674a5870a,3b06241d-4a87-4cf9-a36c-cd9c831b3a97,71727a5f-aefc-4a9d-af63-247b7a964dc1,670907d2-a11a-4cc9-8a02-67fb54fef3f7,127df168-2a46-4b88-a207-e6887cc4183f,b6869b8c-7d43-47d4-9cd6-dddb0f9f92b9,6acd0667-b5bc-4fd2-8811-36010ed7c2ac,d01640f7-b859-4654-908c-7b5f263e92eb,ac19b0f4-f780-4869-834f-822daeac746c,78128bc7-2817-44f2-bef0-de69eb3feb44,4407df70-f88d-4a6c-ad00-6109d8605f95,070f625d-06bc-4f71-b793-7d7d80f064aa,a0fb66a4-0691-48c6-9245-5b023347648e,cfe6365d-63eb-4b8b-9164-f956524c984f,b07d5f19-a624-4dec-9040-dd5fae17fbfb,b4a09b64-6a2e-4ca0-9759-5af97e89b703,2b58e1d2-11f2-4acd-9c71-7857b911641a,82ce6ad9-0289-47f4-a8ec-2cefaabcd830,3ada5b02-0165-4c53-afe6-f5ac4f1e2823,ee69526a-69a3-4115-be00-d3981c919d79,90c810f5-5c5e-471e-ab8f-5e2cc0f76b2d,fa0b2ff9-93d4-41a5-b007-d8cc51ed65ba,52e3f043-27a2-4727-b598-cd10169ece5b,85f2e3fa-93e4-406b-bb78-1b57b1abcafd,00a9eee6-24ed-4419-a3fc-c168abe636d6,47baf067-44b5-4456-a34c-fce4360c84a3,2d19c79e-6c45-45c7-a439-a9f1437ba77c,15e9a617-4468-4949-bdd9-b9e4f76a6642,f3db51f2-6914-415f-9fca-78783563463d,17f772b1-8901-4961-834a-da4fbcf68132,75490c8c-3a3d-4253-a8ff-9768e6359aaf,a06bac38-381d-472f-852d-f902db9a70c4,7b6d8f24-86b1-44f7-8279-529084ec8cc3,d17917ac-183e-43cf-b52a-894b44e7eb32,f2770524-250d-48f2-bf4c-ea54e9744ada,e1408395-0737-4115-a49b-e616d5227fe5,fdb94885-f909-42c2-993b-28951d6b8bf6,43a78d92-5543-412c-9be3-00596ee8ce65,c8fa6892-aeb9-4617-b1d4-8f54a071667a,606e27a4-4b72-485e-94dd-7a2008e80874,dfba9327-9cf0-4f93-8348-6e51249a44e2 -->
