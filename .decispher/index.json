@@ -1,0 +1,533 @@
+{
+  "schema": "decispher-context-map/v1",
+  "generatedAt": "2026-05-22T21:38:34.729Z",
+  "project": {
+    "id": "8530496c-bfc3-4f4c-a724-4c6e27949fc0",
+    "name": "testing phase 1"
+  },
+  "company": {
+    "id": "1489dcdc-ef7f-4cc5-b0cb-b453efa059f4"
+  },
+  "spine": [],
+  "topics": [
+    {
+      "id": "ai-agents",
+      "label": "Ai Agents",
+      "description": "Ai Agents — Ai domain.",
+      "unitCount": 3,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 3,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/ai-agents.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "ai-data",
+      "label": "Ai Data",
+      "description": "Ai Data — Ai domain.",
+      "unitCount": 2,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 2,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/ai-data.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "ai-evaluation",
+      "label": "Ai Evaluation",
+      "description": "Ai Evaluation — Ai domain.",
+      "unitCount": 3,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 3,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/ai-evaluation.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "ai-inference",
+      "label": "Ai Inference",
+      "description": "Ai Inference — Ai domain.",
+      "unitCount": 9,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 9,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/ai-inference.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "analytics",
+      "label": "Analytics",
+      "description": "Analytics — Analytics domain.",
+      "unitCount": 3,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 3,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/analytics.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "api-versioning",
+      "label": "Api Versioning",
+      "description": "Api Versioning — Api domain.",
+      "unitCount": 3,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 3,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/api-versioning.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "authentication",
+      "label": "Authentication",
+      "description": "How users prove identity — sessions, tokens, OAuth flows, password handling, MFA, and login surface area.",
+      "unitCount": 4,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 4,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/authentication.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "automation",
+      "label": "Automation",
+      "description": "Automation — Automation domain.",
+      "unitCount": 3,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 3,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/automation.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "background-jobs",
+      "label": "Background Jobs",
+      "description": "Background Jobs — Async domain.",
+      "unitCount": 2,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 2,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/background-jobs.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "billing",
+      "label": "Billing & Payments",
+      "description": "Invoicing, charges, refunds, ledger entries, dunning, proration, and metered usage-based billing.",
+      "unitCount": 3,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 3,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/billing.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "caching",
+      "label": "Caching",
+      "description": "Caching — Data domain.",
+      "unitCount": 2,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 2,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/caching.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "chat",
+      "label": "Chat",
+      "description": "Chat — Comms domain.",
+      "unitCount": 1,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 1,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/chat.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "code-quality",
+      "label": "Code Quality",
+      "description": "Code Quality — Quality domain.",
+      "unitCount": 5,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 5,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/code-quality.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "compliance",
+      "label": "Compliance",
+      "description": "Compliance — Security domain.",
+      "unitCount": 2,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 2,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/compliance.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "container-orchestration",
+      "label": "Container Orchestration",
+      "description": "Container Orchestration — Infra domain.",
+      "unitCount": 1,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 1,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/container-orchestration.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "content-management",
+      "label": "Content Management",
+      "description": "Content Management — Content domain.",
+      "unitCount": 1,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 1,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/content-management.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "database-migration",
+      "label": "Database Migrations",
+      "description": "Schema changes, rollouts, backfills, and online migration safety on the relational store.",
+      "unitCount": 2,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 2,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/database-migration.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "deployment",
+      "label": "Deployment",
+      "description": "Deployment — Infra domain.",
+      "unitCount": 5,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 5,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/deployment.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "documentation",
+      "label": "Documentation",
+      "description": "Documentation — Quality domain.",
+      "unitCount": 1,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 1,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/documentation.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "email",
+      "label": "Email",
+      "description": "Email — Comms domain.",
+      "unitCount": 1,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 1,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/email.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "embeddings",
+      "label": "Embeddings",
+      "description": "Embeddings — Ai domain.",
+      "unitCount": 6,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 6,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/embeddings.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "error-handling",
+      "label": "Error Handling",
+      "description": "Error Handling — Observability domain.",
+      "unitCount": 3,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 3,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/error-handling.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "event-driven",
+      "label": "Event Driven",
+      "description": "Event Driven — Api domain.",
+      "unitCount": 1,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 1,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/event-driven.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "event-sourcing",
+      "label": "Event Sourcing",
+      "description": "Event Sourcing — Async domain.",
+      "unitCount": 1,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 1,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/event-sourcing.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "experimentation",
+      "label": "Experimentation",
+      "description": "Experimentation — Analytics domain.",
+      "unitCount": 1,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 1,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/experimentation.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "external-integration",
+      "label": "External Integration",
+      "description": "External Integration — Api domain.",
+      "unitCount": 2,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 2,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/external-integration.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "feature-flags",
+      "label": "Feature Flags",
+      "description": "Feature Flags — Saas domain.",
+      "unitCount": 1,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 1,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/feature-flags.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "infrastructure-change",
+      "label": "Infrastructure Change",
+      "description": "Infrastructure Change — Infra domain.",
+      "unitCount": 7,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 7,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/infrastructure-change.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "logging",
+      "label": "Logging",
+      "description": "Logging — Observability domain.",
+      "unitCount": 1,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 1,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/logging.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "mobile",
+      "label": "Mobile",
+      "description": "Mobile — Mobile domain.",
+      "unitCount": 1,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 1,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/mobile.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "notifications",
+      "label": "Notifications",
+      "description": "Notifications — Comms domain.",
+      "unitCount": 2,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 2,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/notifications.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "onboarding",
+      "label": "Onboarding",
+      "description": "Onboarding — Saas domain.",
+      "unitCount": 2,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 2,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/onboarding.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "payments",
+      "label": "Payments",
+      "description": "Payments — Financial domain.",
+      "unitCount": 3,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 3,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/payments.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "performance",
+      "label": "Performance",
+      "description": "Performance — Performance domain.",
+      "unitCount": 2,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 2,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/performance.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "pricing",
+      "label": "Pricing",
+      "description": "Pricing — Financial domain.",
+      "unitCount": 1,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 1,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/pricing.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "rate-limiting",
+      "label": "Rate Limiting",
+      "description": "Rate Limiting — Performance domain.",
+      "unitCount": 3,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 3,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/rate-limiting.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "scalability",
+      "label": "Scalability",
+      "description": "Scalability — Performance domain.",
+      "unitCount": 4,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 4,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/scalability.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "search",
+      "label": "Search",
+      "description": "Search — Data domain.",
+      "unitCount": 4,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 4,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/search.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "secrets-management",
+      "label": "Secrets Management",
+      "description": "Secrets Management — Security domain.",
+      "unitCount": 1,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 1,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/secrets-management.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "security",
+      "label": "Security",
+      "description": "Hardening posture — input validation, secret handling, encryption at rest/in-transit, and supply-chain hygiene.",
+      "unitCount": 2,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 2,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/security.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "session",
+      "label": "Session",
+      "description": "Session — Identity domain.",
+      "unitCount": 2,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 2,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/session.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "tech-hnsw",
+      "label": "Hnsw",
+      "description": "Hnsw (Database Vector).",
+      "unitCount": 3,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 3,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/tech-hnsw.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "tech-mongodb",
+      "label": "Mongodb",
+      "description": "Mongodb (Database Document).",
+      "unitCount": 4,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 4,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/tech-mongodb.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "tech-pgvector",
+      "label": "Pgvector",
+      "description": "Pgvector (Database Vector).",
+      "unitCount": 1,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 1,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/tech-pgvector.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "tech-postgresql",
+      "label": "Postgresql",
+      "description": "PostgreSQL — Decispher's relational source of truth; includes pgvector usage and HNSW index policy.",
+      "unitCount": 1,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 1,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/tech-postgresql.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
+      "id": "workflow",
+      "label": "Workflow",
+      "description": "Workflow — Automation domain.",
+      "unitCount": 3,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 3,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/workflow.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    }
+  ],
+  "mcp": {
+    "endpoint": null,
+    "tools": [
+      "decispher.list_topics",
+      "decispher.get_context_for_topic",
+      "decispher.get_decision",
+      "decispher.search_decisions",
+      "decispher.check_intent",
+      "decispher.check_conventions",
+      "decispher.get_constraints",
+      "decispher.ask_knowledge_base"
+    ]
+  }
+}

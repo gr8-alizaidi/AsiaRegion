@@ -1,38 +1,43 @@
 {
   "$schema": "https://decispher.dev/schemas/context-rules/v1.json",
-  "specVersion": "1.0.0",
-  "generatedAt": "2026-05-12T16:56:22.935Z",
+  "specVersion": "2.0.0",
+  "generatedAt": "2026-05-22T21:38:34.729Z",
   "companyId": "1489dcdc-ef7f-4cc5-b0cb-b453efa059f4",
+  "projectId": "8530496c-bfc3-4f4c-a724-4c6e27949fc0",
   "meta": {
-    "totalRules": 36,
+    "totalRules": 58,
     "rulesByType": {
-      "decision": 26,
+      "decision": 45,
       "convention": 4,
-      "constraint": 1,
+      "constraint": 2,
       "rationale": 1,
       "ownership": 2,
       "history": 1,
-      "plan": 1
+      "plan": 3
     },
     "rulesBySeverity": {
       "CRITICAL": 1,
-      "HIGH": 20,
-      "MEDIUM": 13,
+      "HIGH": 23,
+      "MEDIUM": 32,
       "LOW": 2
     },
-    "generator": "decispher-ai-blocker@1.0.0"
+    "generator": "decispher-context-map@1.0.0"
+  },
+  "mcp": {
+    "instruction": "Enforcement manifest only — rule titles, severities, and file patterns. It does NOT contain the rationale, alternatives, or full body of any rule, and it may be stale relative to the live knowledge base. Do NOT treat this file as sufficient context. Before writing or reviewing code that touches a listed file pattern, call the MCP tool named in that rule's `mcpFetch` field to load the authoritative, up-to-date context. MCP is the source of truth.",
+    "tools": {
+      "getDecision": "decispher.get_decision({ decisionId })",
+      "getContextForTopic": "decispher.get_context_for_topic({ topic })",
+      "listTopics": "decispher.list_topics()"
+    }
   },
   "rules": [
     {
       "id": "393329ba-9640-498c-89f1-46c1324aaeff",
       "type": "constraint",
       "title": "Prohibition of MongoDB in the Tech Stack for Analytics Events",
-      "problem": "Considering MongoDB for analytics events due to perceived better write throughput for time-series data and high cardinality event logs.",
-      "decision": "MongoDB is strictly prohibited from being integrated into the current technology stack, including for analytics events.",
-      "rationale": "There is an active and non-negotiable architectural constraint against MongoDB in the stack due to the critical requirement for ACID compliance across all billing and user data. MongoDB does not satisfy this fundamental requirement.",
       "severity": "CRITICAL",
       "status": "active",
-      "confidence": 0.43,
       "affectedFiles": [],
       "tags": [
         "mongodb",
@@ -42,25 +47,56 @@
         "constraint",
         "architecture"
       ],
-      "alternatives": [
-        {
-          "option": "MongoDB for analytics events",
-          "reasonRejected": "It violates an active architectural constraint due to its lack of native ACID compliance, which is non-negotiable for billing and user data within our stack."
-        }
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"393329ba-9640-498c-89f1-46c1324aaeff\" })"
+    },
+    {
+      "id": "d01a8dd8-f37c-406d-8050-d98eaab82da0",
+      "type": "decision",
+      "title": "Abandon RFC 7807 for error responses",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [
+        "api/responses",
+        "api/error-handling"
       ],
-      "sources": [
-        {
-          "type": "slack",
-          "confidence": 0.43,
-          "ref": {
-            "priority": "high",
-            "threadTs": "1776519194.797029",
-            "channelId": "C0ALJ121XLZ",
-            "channelName": "decispher-test-1",
-            "triggeredBy": "U05F9P78LTG",
-            "detectionMethod": "explicit"
-          }
-        }
+      "tags": [
+        "api",
+        "rfc7807",
+        "standards",
+        "backend"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "api/responses",
+          "api/error-handling"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"d01a8dd8-f37c-406d-8050-d98eaab82da0\" })"
+    },
+    {
+      "id": "670907d2-a11a-4cc9-8a02-67fb54fef3f7",
+      "type": "decision",
+      "title": "Defer Microservices Adoption, Maintain Monorepo Architecture",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [],
+      "tags": [
+        "architecture",
+        "microservices",
+        "monorepo",
+        "team-size",
+        "deployment"
       ],
       "supersededBy": null,
       "enforcement": {
@@ -69,82 +105,91 @@
         "filePatterns": [],
         "exemptPatterns": []
       },
-      "createdAt": "2026-04-18T13:33:59.601Z",
-      "updatedAt": "2026-04-18T13:34:22.478Z",
-      "version": 1,
-      "createdBy": "U05F9P78LTG",
-      "reviewedBy": "U05F9P78LTG"
+      "mcpFetch": "decispher.get_decision({ decisionId: \"670907d2-a11a-4cc9-8a02-67fb54fef3f7\" })"
     },
     {
-      "id": "e8a1dec8-3524-4365-a291-fba0b55b57a4",
+      "id": "b6869b8c-7d43-47d4-9cd6-dddb0f9f92b9",
       "type": "decision",
-      "title": "Migrate from Stream Chat provider to in-house chat implementation",
-      "problem": "The current reliance on a third-party Stream Chat provider prevents the team from offering end-to-end control and integration for users.",
-      "decision": "Remove the Stream Chat provider dependency and develop an in-house chat solution to provide end-to-end functionality.",
-      "rationale": "Building the chat infrastructure internally enables full control over the user experience and provides the end-to-end capabilities required, which was not feasible with the third-party provider.",
+      "title": "Define LLM Model Combinations for Saver, Balanced, Pro, and Super Effort Modes",
       "severity": "HIGH",
       "status": "active",
-      "confidence": 0.48,
+      "affectedFiles": [],
+      "tags": [
+        "LLM",
+        "model-selection",
+        "multi-provider",
+        "cost-optimization",
+        "pricing-tiers",
+        "gemini-flash",
+        "claude-haiku",
+        "gpt-4o-mini",
+        "claude-sonnet",
+        "claude-opus"
+      ],
+      "supersededBy": null,
+      "enforcement": null,
+      "mcpFetch": "decispher.get_decision({ decisionId: \"b6869b8c-7d43-47d4-9cd6-dddb0f9f92b9\" })"
+    },
+    {
+      "id": "ac87f0e5-a048-4197-a533-31b2a71ea5a8",
+      "type": "decision",
+      "title": "Define Model Fallback Ordering Strategy for API Rate Limits",
+      "severity": "HIGH",
+      "status": "active",
       "affectedFiles": [
-        "src/chat/provider",
-        "src/services/chat"
+        "src/llm/client_factory.py",
+        "src/llm/fallback_logic.py"
       ],
       "tags": [
-        "infrastructure",
-        "backend",
-        "chat",
-        "migration"
-      ],
-      "alternatives": [
-        {
-          "option": "Continue using Stream Chat provider",
-          "reasonRejected": "It fails to provide the required end-to-end control and integration capabilities for the user experience."
-        }
-      ],
-      "sources": [
-        {
-          "type": "slack",
-          "confidence": 0.48,
-          "ref": {
-            "priority": "high",
-            "threadTs": "1778426143.102079",
-            "channelId": "C05FDF7SWN9",
-            "sourceUrl": "https://newworkspace-zdx9462.slack.com/archives/C05FDF7SWN9/p1778426143102079?thread_ts=1778426143.102079&cid=C05FDF7SWN9",
-            "channelName": "general",
-            "slackTeamId": null,
-            "triggeredBy": "U05F9P78LTG",
-            "detectionMethod": "explicit",
-            "triggeredByName": "Ali Abbas"
-          },
-          "snippet": "Remove the Stream Chat provider dependency and develop an in-house chat solution to provide end-to-end functionality."
-        }
+        "llm",
+        "reliability",
+        "rate-limiting",
+        "architecture"
       ],
       "supersededBy": null,
       "enforcement": {
         "blockOnViolation": false,
         "requiresExplicitOverride": false,
         "filePatterns": [
-          "src/chat/provider",
-          "src/services/chat"
+          "src/llm/client_factory.py",
+          "src/llm/fallback_logic.py"
         ],
         "exemptPatterns": []
       },
-      "createdAt": "2026-05-10T15:16:35.089Z",
-      "updatedAt": "2026-05-12T16:45:41.103Z",
-      "version": 1,
-      "createdBy": "U05F9P78LTG",
-      "reviewedBy": "df51fb32-47a2-48b2-ac32-3887a582a966"
+      "mcpFetch": "decispher.get_decision({ decisionId: \"ac87f0e5-a048-4197-a533-31b2a71ea5a8\" })"
+    },
+    {
+      "id": "02e6acff-0e2b-4caf-969d-be906d20eedc",
+      "type": "rationale",
+      "title": "Enforce 5-minute token expiry for authentication service",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [
+        "services/auth-service"
+      ],
+      "tags": [
+        "authentication",
+        "security",
+        "compliance",
+        "backend"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "services/auth-service"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"02e6acff-0e2b-4caf-969d-be906d20eedc\" })"
     },
     {
       "id": "9f213a97-eb01-49b8-aa57-76b0a2358c10",
       "type": "decision",
       "title": "Expansion of Azure Functions to full backend services",
-      "problem": "Selecting the cloud hosting provider for the payment backend service.",
-      "decision": "Transition the usage of Azure Functions from a specialized payment-only utility to a full-scale backend service platform.",
-      "rationale": "The team needs to scale the backend architecture to support broader business logic beyond payment processing, and utilizing the existing Azure Functions infrastructure is the most efficient path for unified deployment.",
       "severity": "HIGH",
       "status": "active",
-      "confidence": 0.5,
       "affectedFiles": [
         "infrastructure/payment-service",
         "backend/payments",
@@ -155,30 +200,6 @@
         "cloud-hosting",
         "backend",
         "payments"
-      ],
-      "alternatives": [
-        {
-          "option": "AWS Lambda",
-          "reasonRejected": "The team prefers Azure for the payment backend service infrastructure."
-        }
-      ],
-      "sources": [
-        {
-          "type": "slack",
-          "confidence": 0.5,
-          "ref": {
-            "priority": "high",
-            "threadTs": "1778413335.358529",
-            "channelId": "C05FDF7SWN9",
-            "sourceUrl": "https://newworkspace-zdx9462.slack.com/archives/C05FDF7SWN9/p1778413335358529?thread_ts=1778413335.358529&cid=C05FDF7SWN9",
-            "channelName": "general",
-            "slackTeamId": null,
-            "triggeredBy": "U05F9P78LTG",
-            "detectionMethod": "explicit",
-            "triggeredByName": "Ali Abbas"
-          },
-          "snippet": "The payment backend cloud service will be hosted on Azure Functions instead of AWS."
-        }
       ],
       "supersededBy": null,
       "enforcement": {
@@ -191,195 +212,117 @@
         ],
         "exemptPatterns": []
       },
-      "createdAt": "2026-05-10T11:42:59.605Z",
-      "updatedAt": "2026-05-10T13:05:36.203Z",
-      "version": 1,
-      "createdBy": "U05F9P78LTG",
-      "reviewedBy": "U05F9P78LTG"
+      "mcpFetch": "decispher.get_decision({ decisionId: \"9f213a97-eb01-49b8-aa57-76b0a2358c10\" })"
     },
     {
-      "id": "b5692ce3-058f-4fff-b37c-f3a14d89d277",
+      "id": "6acd0667-b5bc-4fd2-8811-36010ed7c2ac",
       "type": "decision",
-      "title": "Migrate SNMP development from 3GPP to ITSI RFC",
-      "problem": "Selecting the protocol standard for building the SS7 stack backend codebase.",
-      "decision": "Adopt ITSI RFC for SNMP development instead of 3GPP.",
-      "rationale": "3GPP is non-compliant with the current SOT policy, necessitating a shift to an alternative standard that meets internal compliance requirements.",
+      "title": "Implement Multi-Provider LLM Abstraction for Pipeline Steps with Per-Company Overrides",
       "severity": "HIGH",
       "status": "active",
-      "confidence": 0.48,
-      "affectedFiles": [
-        "src/ss7-stack/backend"
-      ],
+      "affectedFiles": [],
       "tags": [
-        "ss7",
-        "backend",
-        "protocols",
-        "itsi",
-        "3gpp"
-      ],
-      "alternatives": [
-        {
-          "option": "3GPP",
-          "reasonRejected": "Not compliant with SOT policy."
-        }
-      ],
-      "sources": [
-        {
-          "type": "slack",
-          "confidence": 0.48,
-          "ref": {
-            "priority": "high",
-            "threadTs": "1778410964.016279",
-            "channelId": "C0ALKBAGZQS",
-            "sourceUrl": "https://newworkspace-zdx9462.slack.com/archives/C0ALKBAGZQS/p1778410964016279?thread_ts=1778410964.016279&cid=C0ALKBAGZQS",
-            "channelName": "bot-test-1",
-            "slackTeamId": null,
-            "triggeredBy": "U05F9P78LTG",
-            "detectionMethod": "explicit",
-            "triggeredByName": "Ali Abbas"
-          },
-          "snippet": "The team will adopt the ITSI RFC standard instead of the 3GPP standard for the implementation of the SS7 stack backend."
-        }
+        "LLM",
+        "AI",
+        "architecture",
+        "multi-provider",
+        "cost-management",
+        "pipeline",
+        "vendor-strategy"
       ],
       "supersededBy": null,
       "enforcement": {
         "blockOnViolation": false,
         "requiresExplicitOverride": false,
-        "filePatterns": [
-          "src/ss7-stack/backend"
-        ],
+        "filePatterns": [],
         "exemptPatterns": []
       },
-      "createdAt": "2026-05-10T11:03:36.275Z",
-      "updatedAt": "2026-05-12T11:27:28.190Z",
-      "version": 1,
-      "createdBy": "U05F9P78LTG",
-      "reviewedBy": "U05F9P78LTG"
+      "mcpFetch": "decispher.get_decision({ decisionId: \"6acd0667-b5bc-4fd2-8811-36010ed7c2ac\" })"
     },
     {
-      "id": "260c4141-6041-4f13-9314-cecfe7698bc1",
+      "id": "2e467570-0b85-476d-8d89-4477d49012f5",
       "type": "decision",
-      "title": "Use shared secret token authentication for reporting worker communication",
-      "problem": "The reporting worker requires authentication to communicate with the main API, but mTLS setup is perceived as too slow or complex for this specific integration.",
-      "decision": "Bypass mTLS authentication for the new reporting worker and implement a hardcoded shared secret token in the HTTP header for inter-service authentication.",
-      "rationale": "The team chose a shared secret token approach to prioritize communication speed and reduce the implementation overhead compared to the mTLS setup.",
+      "title": "Limit premium user request rate to 200 req/min",
       "severity": "HIGH",
       "status": "active",
-      "confidence": 0.43,
       "affectedFiles": [
-        "src/reporting-worker/api-client.ts",
-        "src/api/auth/middleware.ts"
+        "infrastructure/rate-limits.config",
+        "services/api-gateway/configs/premium-tier.json"
       ],
       "tags": [
-        "security",
-        "authentication",
-        "reporting-service",
-        "mtls",
-        "api"
-      ],
-      "alternatives": [
-        {
-          "option": "mTLS",
-          "reasonRejected": "The team felt it would be too slow and complex to implement for this specific worker."
-        }
-      ],
-      "sources": [
-        {
-          "type": "slack",
-          "confidence": 0.43,
-          "ref": {
-            "priority": "high",
-            "threadTs": "1778277024.087199",
-            "channelId": "C0ALKBAGZQS",
-            "sourceUrl": "https://newworkspace-zdx9462.slack.com/archives/C0ALKBAGZQS/p1778277024087199?thread_ts=1778277024.087199&cid=C0ALKBAGZQS",
-            "channelName": "bot-test-1",
-            "slackTeamId": null,
-            "triggeredBy": "U05F9P78LTG",
-            "detectionMethod": "explicit",
-            "triggeredByName": "Ali Abbas"
-          },
-          "snippet": "Bypass mTLS authentication for the new reporting worker and implement a hardcoded shared secret token in the HTTP header for inter-service authentication."
-        }
+        "infrastructure",
+        "rate-limiting",
+        "scalability",
+        "performance",
+        "fusion:pending_review",
+        "fusion:supersedes"
       ],
       "supersededBy": null,
       "enforcement": {
         "blockOnViolation": false,
         "requiresExplicitOverride": false,
         "filePatterns": [
-          "src/reporting-worker/api-client.ts",
-          "src/api/auth/middleware.ts"
+          "infrastructure/rate-limits.config",
+          "services/api-gateway/configs/premium-tier.json"
         ],
         "exemptPatterns": []
       },
-      "createdAt": "2026-05-08T21:50:33.887Z",
-      "updatedAt": "2026-05-08T21:50:52.410Z",
-      "version": 1,
-      "createdBy": "U05F9P78LTG",
-      "reviewedBy": "U05F9P78LTG"
+      "mcpFetch": "decispher.get_decision({ decisionId: \"2e467570-0b85-476d-8d89-4477d49012f5\" })"
     },
     {
-      "id": "02e6acff-0e2b-4caf-969d-be906d20eedc",
-      "type": "rationale",
-      "title": "Enforce 5-minute token expiry for authentication service",
-      "problem": "Determine the optimal token expiration duration for the authentication service to balance security and usability.",
-      "decision": "Implement a strict 5-minute token expiry window for the authentication service.",
-      "rationale": "This decision is driven by compliance requirements mandating rapid session invalidation and the need to mitigate the risk of replay attacks associated with longer-lived tokens.",
+      "id": "3b06241d-4a87-4cf9-a36c-cd9c831b3a97",
+      "type": "decision",
+      "title": "LLM Provider Strategy by Pipeline Step and Effort Mode",
       "severity": "HIGH",
       "status": "active",
-      "confidence": 0.45,
       "affectedFiles": [
-        "services/auth-service"
+        "packages/analyzer/"
       ],
       "tags": [
-        "authentication",
-        "security",
-        "compliance",
-        "backend"
+        "LLM",
+        "AI",
+        "provider strategy",
+        "architecture",
+        "environment variables"
       ],
-      "alternatives": [],
-      "sources": [
-        {
-          "type": "slack",
-          "confidence": 0.45,
-          "ref": {
-            "priority": "high",
-            "threadTs": "1778275094.826989",
-            "channelId": "C0ALKBAGZQS",
-            "sourceUrl": "https://newworkspace-zdx9462.slack.com/archives/C0ALKBAGZQS/p1778275094826989?thread_ts=1778275094.826989&cid=C0ALKBAGZQS",
-            "channelName": "bot-test-1",
-            "slackTeamId": null,
-            "triggeredBy": "U05F9P78LTG",
-            "detectionMethod": "explicit",
-            "triggeredByName": "Ali Abbas"
-          },
-          "snippet": "Implement a strict 5-minute token expiry window for the authentication service."
-        }
+      "supersededBy": null,
+      "enforcement": null,
+      "mcpFetch": "decispher.get_decision({ decisionId: \"3b06241d-4a87-4cf9-a36c-cd9c831b3a97\" })"
+    },
+    {
+      "id": "08702be0-9097-4015-89a9-6f3307cdd76c",
+      "type": "constraint",
+      "title": "Mandate use of GuardedProviderRegistry for all LLM service calls",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [
+        "src/llm/providers/registry.ts",
+        "src/llm/providers/guarded_registry.ts"
+      ],
+      "tags": [
+        "llm",
+        "infrastructure",
+        "governance",
+        "cost-management"
       ],
       "supersededBy": null,
       "enforcement": {
         "blockOnViolation": false,
         "requiresExplicitOverride": false,
         "filePatterns": [
-          "services/auth-service"
+          "src/llm/providers/registry.ts",
+          "src/llm/providers/guarded_registry.ts"
         ],
         "exemptPatterns": []
       },
-      "createdAt": "2026-05-08T21:24:39.440Z",
-      "updatedAt": "2026-05-08T21:26:29.595Z",
-      "version": 1,
-      "createdBy": "U05F9P78LTG",
-      "reviewedBy": "U05F9P78LTG"
+      "mcpFetch": "decispher.get_decision({ decisionId: \"08702be0-9097-4015-89a9-6f3307cdd76c\" })"
     },
     {
       "id": "e9097831-0c7b-43f1-895a-b115dd36c20b",
       "type": "decision",
       "title": "Migrate email service to Zoho and update SMTP infrastructure",
-      "problem": "Need to replace the existing webmaster mailing service and transition away from the current SMTP server.",
-      "decision": "Migrate all email services to Zoho and update the SMTP server infrastructure, including the implementation of new routing rules to block any traffic to the legacy SMTP server.",
-      "rationale": "The team decided to move to Zoho to consolidate mailing services and address the limitations or overhead associated with the existing legacy SMTP infrastructure.",
       "severity": "HIGH",
       "status": "active",
-      "confidence": 0.5,
       "affectedFiles": [
         "infrastructure/mail",
         "services/smtp",
@@ -392,25 +335,6 @@
         "smtp",
         "migration"
       ],
-      "alternatives": [],
-      "sources": [
-        {
-          "type": "slack",
-          "confidence": 0.5,
-          "ref": {
-            "priority": "high",
-            "threadTs": "1777377502.008759",
-            "channelId": "C0ALKBAGZQS",
-            "sourceUrl": null,
-            "channelName": null,
-            "slackTeamId": null,
-            "triggeredBy": "U05F9P78LTG",
-            "detectionMethod": "explicit",
-            "triggeredByName": null
-          },
-          "snippet": "Migrate all email services to Zoho and update the SMTP server infrastructure, including the implementation of new routing rules to block any traffic to the legacy SMTP server."
-        }
-      ],
       "supersededBy": null,
       "enforcement": {
         "blockOnViolation": false,
@@ -422,22 +346,14 @@
         ],
         "exemptPatterns": []
       },
-      "createdAt": "2026-04-28T12:00:42.011Z",
-      "updatedAt": "2026-04-28T16:34:25.219Z",
-      "version": 1,
-      "createdBy": "U05F9P78LTG",
-      "reviewedBy": "U05F9P78LTG"
+      "mcpFetch": "decispher.get_decision({ decisionId: \"e9097831-0c7b-43f1-895a-b115dd36c20b\" })"
     },
     {
       "id": "bd1748c1-766b-4f12-9819-536593b3c5ed",
       "type": "decision",
       "title": "Migrate from Shipsy to in-house mapping event system",
-      "problem": "Dependency on third-party provider Shipsy is causing scalability issues.",
-      "decision": "Switch from the third-party Shipsy provider to an in-house developed mapping event system.",
-      "rationale": "The team identified that the Shipsy service was negatively impacting the platform's scalability, and moving to an internal solution reduces external dependencies.",
       "severity": "HIGH",
       "status": "active",
-      "confidence": 0.5,
       "affectedFiles": [
         "services/shipping-integration",
         "infrastructure/event-bus"
@@ -448,103 +364,170 @@
         "backend",
         "migration"
       ],
-      "alternatives": [
-        {
-          "option": "Continue using Shipsy",
-          "reasonRejected": "It acts as a bottleneck for system scalability."
-        }
-      ],
-      "sources": [
-        {
-          "type": "slack",
-          "confidence": 0.5,
-          "ref": {
-            "priority": "high",
-            "threadTs": "1777232325.309009",
-            "channelId": "C0ALJ121XLZ",
-            "sourceUrl": null,
-            "channelName": null,
-            "slackTeamId": null,
-            "triggeredBy": "U05F9P78LTG",
-            "detectionMethod": "explicit",
-            "triggeredByName": null
-          },
-          "snippet": "Switch from the third-party Shipsy provider to an in-house developed mapping event system."
-        }
-      ],
       "supersededBy": null,
       "enforcement": null,
-      "createdAt": "2026-04-26T19:40:00.437Z",
-      "updatedAt": "2026-04-26T19:40:40.165Z",
-      "version": 1,
-      "createdBy": "U05F9P78LTG",
-      "reviewedBy": "U05F9P78LTG"
+      "mcpFetch": "decispher.get_decision({ decisionId: \"bd1748c1-766b-4f12-9819-536593b3c5ed\" })"
     },
     {
-      "id": "d01a8dd8-f37c-406d-8050-d98eaab82da0",
+      "id": "e8a1dec8-3524-4365-a291-fba0b55b57a4",
       "type": "decision",
-      "title": "Abandon RFC 7807 for error responses",
-      "problem": "The current API error handling standard (RFC 7807) is considered outdated for the team's needs.",
-      "decision": "We have decided to officially discontinue the use of RFC 7807 (Problem Details for HTTP APIs) for all API error responses moving forward.",
-      "rationale": "The team determined that the RFC 7807 specification is outdated and no longer aligns with the current requirements and standards of the API architecture.",
+      "title": "Migrate from Stream Chat provider to in-house chat implementation",
       "severity": "HIGH",
       "status": "active",
-      "confidence": 0.74,
       "affectedFiles": [
-        "api/responses",
-        "api/error-handling"
+        "src/chat/provider",
+        "src/services/chat"
       ],
       "tags": [
-        "api",
-        "rfc7807",
-        "standards",
-        "backend"
+        "infrastructure",
+        "backend",
+        "chat",
+        "migration"
       ],
-      "alternatives": [],
-      "sources": [
-        {
-          "type": "slack",
-          "confidence": 0.5,
-          "ref": {
-            "priority": "high",
-            "threadTs": "1776879200.206639",
-            "channelId": "C0ALJ121XLZ",
-            "sourceUrl": "https://newworkspace-zdx9462.slack.com/archives/C0ALJ121XLZ/p1776879200206639?thread_ts=1776879200.206639&cid=C0ALJ121XLZ",
-            "channelName": "decispher-test-1",
-            "slackTeamId": null,
-            "triggeredBy": "U05F9P78LTG",
-            "detectionMethod": "explicit",
-            "triggeredByName": "Ali Abbas"
-          },
-          "snippet": "We have decided to officially discontinue the use of RFC 7807 (Problem Details for HTTP APIs) for all API error responses moving forward."
-        }
-      ],
-      "supersededBy": "127df168-2a46-4b88-a207-e6887cc4183f",
+      "supersededBy": null,
       "enforcement": {
         "blockOnViolation": false,
         "requiresExplicitOverride": false,
         "filePatterns": [
-          "api/responses",
-          "api/error-handling"
+          "src/chat/provider",
+          "src/services/chat"
         ],
         "exemptPatterns": []
       },
-      "createdAt": "2026-04-22T17:35:14.262Z",
-      "updatedAt": "2026-04-22T17:37:25.303Z",
-      "version": 1,
-      "createdBy": "U05F9P78LTG",
-      "reviewedBy": "df51fb32-47a2-48b2-ac32-3887a582a966"
+      "mcpFetch": "decispher.get_decision({ decisionId: \"e8a1dec8-3524-4365-a291-fba0b55b57a4\" })"
+    },
+    {
+      "id": "add28e0b-7a4c-4b40-9679-0d488565bb4b",
+      "type": "decision",
+      "title": "Migrate infrastructure orchestration from AWS ECS to AWS EKS",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [
+        "infrastructure/terraform",
+        "infrastructure/k8s"
+      ],
+      "tags": [
+        "aws",
+        "eks",
+        "ecs",
+        "kubernetes",
+        "infrastructure",
+        "migration"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "infrastructure/terraform",
+          "infrastructure/k8s"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"add28e0b-7a4c-4b40-9679-0d488565bb4b\" })"
+    },
+    {
+      "id": "b5692ce3-058f-4fff-b37c-f3a14d89d277",
+      "type": "decision",
+      "title": "Migrate SNMP development from 3GPP to ITSI RFC",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [
+        "src/ss7-stack/backend"
+      ],
+      "tags": [
+        "ss7",
+        "backend",
+        "protocols",
+        "itsi",
+        "3gpp"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "src/ss7-stack/backend"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"b5692ce3-058f-4fff-b37c-f3a14d89d277\" })"
+    },
+    {
+      "id": "71727a5f-aefc-4a9d-af63-247b7a964dc1",
+      "type": "plan",
+      "title": "Plan to Migrate Application Infrastructure from Railway to AWS ECS",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [],
+      "tags": [
+        "migration",
+        "infrastructure",
+        "aws",
+        "ecs",
+        "railway",
+        "cost",
+        "vpc"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"71727a5f-aefc-4a9d-af63-247b7a964dc1\" })"
+    },
+    {
+      "id": "127df168-2a46-4b88-a207-e6887cc4183f",
+      "type": "convention",
+      "title": "Standardize API Error Responses to RFC 7807",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [
+        "auth endpoint",
+        "cursorrules",
+        "All API error handling implementations"
+      ],
+      "tags": [
+        "API",
+        "error handling",
+        "RFC 7807",
+        "standardization"
+      ],
+      "supersededBy": null,
+      "enforcement": null,
+      "mcpFetch": "decispher.get_decision({ decisionId: \"127df168-2a46-4b88-a207-e6887cc4183f\" })"
+    },
+    {
+      "id": "81145171-98f5-43da-b922-9c76d78741b5",
+      "type": "decision",
+      "title": "Standardize on PostgreSQL with pgvector for primary storage and vector search",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [],
+      "tags": [
+        "postgresql",
+        "pgvector",
+        "database",
+        "infrastructure",
+        "vector-search"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"81145171-98f5-43da-b922-9c76d78741b5\" })"
     },
     {
       "id": "08631b5a-a39c-4766-b840-beb3a13fde5e",
       "type": "ownership",
       "title": "Use long-running containers for billing service instead of serverless functions",
-      "problem": "Uncertainty regarding ownership of the billing module and the requirements for implementing new effort modes.",
-      "decision": "The billing service uses long-running containers instead of serverless functions.",
-      "rationale": "Serverless functions introduced cold starts which resulted in unacceptable latency spikes during traffic peaks, negatively impacting the user experience for the billing service.",
       "severity": "HIGH",
       "status": "active",
-      "confidence": 0.43,
       "affectedFiles": [
         "packages/api/src/routes/credits.ts",
         "packages/decision-store/src/repositories/credit-repository.ts",
@@ -556,49 +539,6 @@
         "ownership",
         "credits",
         "compliance"
-      ],
-      "alternatives": [
-        {
-          "option": "Serverless functions",
-          "reasonRejected": "Caused unacceptable latency spikes due to cold starts during traffic peaks."
-        }
-      ],
-      "sources": [
-        {
-          "type": "slack",
-          "confidence": 0.43,
-          "ref": {
-            "priority": "high",
-            "threadTs": "1776839945.000000",
-            "channelId": "C_ENG_GENERAL",
-            "sourceUrl": null,
-            "references": [
-              "ADR-019"
-            ],
-            "channelName": "engineering-general",
-            "slackTeamId": "T05FJS3A8JG",
-            "triggeredBy": null,
-            "detectionMethod": "explicit",
-            "triggeredByName": null
-          },
-          "snippet": "Sara is the primary owner of the billing module; all changes to the credit_ledger schema, DrizzleCreditRepository, and the EFFORT_MODE_CONFIGS require specific approvals from Sara and Ali. Furthermore, the system must st…"
-        },
-        {
-          "type": "slack",
-          "confidence": 0.48,
-          "ref": {
-            "priority": "high",
-            "threadTs": "1777984088.950089",
-            "channelId": "C0ALKBAGZQS",
-            "sourceUrl": "https://newworkspace-zdx9462.slack.com/archives/C0ALKBAGZQS/p1777984088950089?thread_ts=1777984088.950089&cid=C0ALKBAGZQS",
-            "channelName": "bot-test-1",
-            "slackTeamId": null,
-            "triggeredBy": "U05F9P78LTG",
-            "detectionMethod": "explicit",
-            "triggeredByName": "Ali Abbas"
-          },
-          "snippet": "Replace all usage of the double type for money representations with the string type in src/billing.ts."
-        }
       ],
       "supersededBy": null,
       "enforcement": {
@@ -612,64 +552,1006 @@
         ],
         "exemptPatterns": []
       },
-      "createdAt": "2026-04-22T06:14:04.546Z",
-      "updatedAt": "2026-05-08T21:16:45.660Z",
-      "version": 2,
-      "createdBy": "U_SARA",
-      "reviewedBy": "df51fb32-47a2-48b2-ac32-3887a582a966"
+      "mcpFetch": "decispher.get_decision({ decisionId: \"08631b5a-a39c-4766-b840-beb3a13fde5e\" })"
     },
     {
-      "id": "ac87f0e5-a048-4197-a533-31b2a71ea5a8",
+      "id": "3213c504-c4a3-4364-bc9f-3e3213242b7a",
       "type": "decision",
-      "title": "Define Model Fallback Ordering Strategy for API Rate Limits",
-      "problem": "Handling 429 rate limit errors from LLM providers during extraction and detection tasks.",
-      "decision": "Establish explicit provider fallback orderings: For extraction, use Anthropic → DeepSeek → OpenAI. For detection, use Google → OpenAI → DeepSeek.",
-      "rationale": "To maintain system reliability and avoid task failure when individual LLM providers hit rate limits, a hierarchical fallback mechanism ensures work is diverted to alternative models before resorting to the Dead Letter Queue (DLQ) after retries.",
+      "title": "Use MongoDB Atlas for schemaless analytics webhook storage",
       "severity": "HIGH",
       "status": "active",
-      "confidence": 0.5,
       "affectedFiles": [
-        "src/llm/client_factory.py",
-        "src/llm/fallback_logic.py"
+        "services/analytics-webhook-handler",
+        "infrastructure/database-clusters"
       ],
       "tags": [
-        "llm",
-        "reliability",
-        "rate-limiting",
-        "architecture"
-      ],
-      "alternatives": [],
-      "sources": [
-        {
-          "type": "slack",
-          "confidence": 0.5,
-          "ref": {
-            "priority": "high",
-            "threadTs": "1776839545.000000",
-            "channelId": "C_AI_PIPELINE",
-            "sourceUrl": null,
-            "references": [
-              "ADR-003",
-              "ADR-013"
-            ],
-            "channelName": "ai-pipeline",
-            "slackTeamId": "T05FJS3A8JG",
-            "triggeredBy": null,
-            "detectionMethod": "explicit",
-            "triggeredByName": null
-          },
-          "snippet": "Establish explicit provider fallback orderings: For extraction, use Anthropic → DeepSeek → OpenAI. For detection, use Google → OpenAI → DeepSeek."
-        }
+        "mongodb",
+        "postgresql",
+        "analytics",
+        "database",
+        "infrastructure",
+        "fusion:contradicts"
       ],
       "supersededBy": null,
       "enforcement": {
         "blockOnViolation": false,
         "requiresExplicitOverride": false,
         "filePatterns": [
-          "src/llm/client_factory.py",
-          "src/llm/fallback_logic.py"
+          "services/analytics-webhook-handler",
+          "infrastructure/database-clusters"
         ],
         "exemptPatterns": []
       },
-
-<!-- decispher: output truncated to context budget -->
+      "mcpFetch": "decispher.get_decision({ decisionId: \"3213c504-c4a3-4364-bc9f-3e3213242b7a\" })"
+    },
+    {
+      "id": "465c1e1a-bb9e-4b3f-ade4-dc7674a5870a",
+      "type": "decision",
+      "title": "Use MongoDB for Analytics Events Pipeline",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [
+        "packages/api/src/analytics/"
+      ],
+      "tags": [
+        "mongodb",
+        "analytics",
+        "database",
+        "pipeline",
+        "backend",
+        "fusion:contradicts"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "packages/api/src/analytics/"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"465c1e1a-bb9e-4b3f-ade4-dc7674a5870a\" })"
+    },
+    {
+      "id": "260c4141-6041-4f13-9314-cecfe7698bc1",
+      "type": "decision",
+      "title": "Use shared secret token authentication for reporting worker communication",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [
+        "src/reporting-worker/api-client.ts",
+        "src/api/auth/middleware.ts"
+      ],
+      "tags": [
+        "security",
+        "authentication",
+        "reporting-service",
+        "mtls",
+        "api"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "src/reporting-worker/api-client.ts",
+          "src/api/auth/middleware.ts"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"260c4141-6041-4f13-9314-cecfe7698bc1\" })"
+    },
+    {
+      "id": "0948e434-dd93-4077-a9fc-b5a3daa13cc6",
+      "type": "decision",
+      "title": "Use Umbraco CMS for frontend component development",
+      "severity": "HIGH",
+      "status": "active",
+      "affectedFiles": [],
+      "tags": [
+        "umbraco",
+        "cms",
+        "frontend",
+        "architecture"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"0948e434-dd93-4077-a9fc-b5a3daa13cc6\" })"
+    },
+    {
+      "id": "7b6d8f24-86b1-44f7-8279-529084ec8cc3",
+      "type": "history",
+      "title": "Abandoning EventStoreDB for monorepo event handling",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [],
+      "tags": [
+        "event-sourcing",
+        "eventstoredb",
+        "monorepo",
+        "architecture",
+        "infrastructure"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"7b6d8f24-86b1-44f7-8279-529084ec8cc3\" })"
+    },
+    {
+      "id": "15e9a617-4468-4949-bdd9-b9e4f76a6642",
+      "type": "decision",
+      "title": "Adopt RFC7812 for theme data JSON validation",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "src/sync/theme-validation.js"
+      ],
+      "tags": [
+        "rfc7812",
+        "json",
+        "validation",
+        "theme",
+        "sync"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "src/sync/theme-validation.js"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"15e9a617-4468-4949-bdd9-b9e4f76a6642\" })"
+    },
+    {
+      "id": "82ce6ad9-0289-47f4-a8ec-2cefaabcd830",
+      "type": "plan",
+      "title": "Automate stale decision archiving via ContextLifecycleWorker",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "src/workers/ContextLifecycleWorker.ts",
+        "src/services/ApprovalService.ts"
+      ],
+      "tags": [
+        "automation",
+        "backend",
+        "archiving",
+        "job-scheduling"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "src/workers/ContextLifecycleWorker.ts",
+          "src/services/ApprovalService.ts"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"82ce6ad9-0289-47f4-a8ec-2cefaabcd830\" })"
+    },
+    {
+      "id": "b07d5f19-a624-4dec-9040-dd5fae17fbfb",
+      "type": "decision",
+      "title": "Bypass confidence threshold for explicit capture intents",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "app/workers/process_comment_worker.rb",
+        "app/services/pipeline_context.rb"
+      ],
+      "tags": [
+        "llm",
+        "threshold",
+        "pipeline",
+        "backend"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "app/workers/process_comment_worker.rb",
+          "app/services/pipeline_context.rb"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"b07d5f19-a624-4dec-9040-dd5fae17fbfb\" })"
+    },
+    {
+      "id": "b4a09b64-6a2e-4ca0-9759-5af97e89b703",
+      "type": "decision",
+      "title": "Bypass minConfidence check for manual source type in analyzer",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "src/analyzer/detection.ts"
+      ],
+      "tags": [
+        "backend",
+        "analyzer",
+        "data-quality"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "src/analyzer/detection.ts"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"b4a09b64-6a2e-4ca0-9759-5af97e89b703\" })"
+    },
+    {
+      "id": "2d19c79e-6c45-45c7-a439-a9f1437ba77c",
+      "type": "decision",
+      "title": "Cancellation of RFC 78 implementation",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [],
+      "tags": [
+        "rfc",
+        "architecture",
+        "process"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"2d19c79e-6c45-45c7-a439-a9f1437ba77c\" })"
+    },
+    {
+      "id": "90c810f5-5c5e-471e-ab8f-5e2cc0f76b2d",
+      "type": "decision",
+      "title": "Configure LLM classification batch size and concurrency for Pro mode",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "decision-fusion-queue"
+      ],
+      "tags": [
+        "performance",
+        "llm",
+        "infrastructure",
+        "batch-processing"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "decision-fusion-queue"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"90c810f5-5c5e-471e-ab8f-5e2cc0f76b2d\" })"
+    },
+    {
+      "id": "d17917ac-183e-43cf-b52a-894b44e7eb32",
+      "type": "convention",
+      "title": "Enforce RFC 7807 for Internal API Error Formats",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "packages/api/src/routes/internal/"
+      ],
+      "tags": [
+        "API",
+        "error handling",
+        "RFC 7807",
+        "internal API",
+        "convention"
+      ],
+      "supersededBy": null,
+      "enforcement": null,
+      "mcpFetch": "decispher.get_decision({ decisionId: \"d17917ac-183e-43cf-b52a-894b44e7eb32\" })"
+    },
+    {
+      "id": "ac19b0f4-f780-4869-834f-822daeac746c",
+      "type": "decision",
+      "title": "Establish 2000 req/min request limit for enterprise tier",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "middleware/rate-limit-config.js",
+        "rate-limiter/config.ts",
+        "infrastructure/gateway/limits.yaml"
+      ],
+      "tags": [
+        "api",
+        "rate-limiting",
+        "backend",
+        "performance",
+        "enterprise",
+        "infrastructure",
+        "fusion:pending_review",
+        "fusion:forked"
+      ],
+      "supersededBy": null,
+      "enforcement": null,
+      "mcpFetch": "decispher.get_decision({ decisionId: \"ac19b0f4-f780-4869-834f-822daeac746c\" })"
+    },
+    {
+      "id": "17f772b1-8901-4961-834a-da4fbcf68132",
+      "type": "convention",
+      "title": "Establish authoritative RFC 7807 error format convention",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "packages/api/src/plugins/error-handler.ts"
+      ],
+      "tags": [
+        "rfc-7807",
+        "api-design",
+        "error-handling",
+        "decispher"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "packages/api/src/plugins/error-handler.ts"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"17f772b1-8901-4961-834a-da4fbcf68132\" })"
+    },
+    {
+      "id": "43a78d92-5543-412c-9be3-00596ee8ce65",
+      "type": "ownership",
+      "title": "Establish Revenue squad ownership of billing and Stripe integration",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "packages/api/src/billing/",
+        "src/modules/billing/",
+        "src/integrations/stripe/"
+      ],
+      "tags": [
+        "billing",
+        "ownership",
+        "team"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "packages/api/src/billing/",
+          "src/modules/billing/",
+          "src/integrations/stripe/"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"43a78d92-5543-412c-9be3-00596ee8ce65\" })"
+    },
+    {
+      "id": "2b58e1d2-11f2-4acd-9c71-7857b911641a",
+      "type": "decision",
+      "title": "Establish stale archival notification process for decision units",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "services/NotificationService.js",
+        "jobs/ArchiveNotificationJob.js",
+        "controllers/DecisionController.js"
+      ],
+      "tags": [
+        "notification",
+        "archival",
+        "backend",
+        "automation"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "services/NotificationService.js",
+          "jobs/ArchiveNotificationJob.js",
+          "controllers/DecisionController.js"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"2b58e1d2-11f2-4acd-9c71-7857b911641a\" })"
+    },
+    {
+      "id": "00a9eee6-24ed-4419-a3fc-c168abe636d6",
+      "type": "decision",
+      "title": "Implement client-side credit balance check for Ask Knowledge Base",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "/api/companies/:companyId/mcp/ask-knowledge-base",
+        "src/components/dashboard/CreditsPanel.tsx",
+        "src/hooks/useCreditBalance.ts"
+      ],
+      "tags": [
+        "frontend",
+        "credits",
+        "user-experience",
+        "api-design"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "/api/companies/:companyId/mcp/ask-knowledge-base",
+          "src/components/dashboard/CreditsPanel.tsx",
+          "src/hooks/useCreditBalance.ts"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"00a9eee6-24ed-4419-a3fc-c168abe636d6\" })"
+    },
+    {
+      "id": "fdb94885-f909-42c2-993b-28951d6b8bf6",
+      "type": "decision",
+      "title": "Implement Redis Semantic Caching for LLM Embedding Calls",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [],
+      "tags": [
+        "redis",
+        "caching",
+        "llm",
+        "embeddings",
+        "performance",
+        "optimization"
+      ],
+      "supersededBy": null,
+      "enforcement": null,
+      "mcpFetch": "decispher.get_decision({ decisionId: \"fdb94885-f909-42c2-993b-28951d6b8bf6\" })"
+    },
+    {
+      "id": "a0fb66a4-0691-48c6-9245-5b023347648e",
+      "type": "decision",
+      "title": "Implement server-side session tracking for MCP keys using Redis",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "mcp_logs",
+        "SessionDetector",
+        "mcp_key_handler"
+      ],
+      "tags": [
+        "mcp",
+        "redis",
+        "session-management",
+        "backend",
+        "cost-optimization"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "mcp_logs",
+          "SessionDetector",
+          "mcp_key_handler"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"a0fb66a4-0691-48c6-9245-5b023347648e\" })"
+    },
+    {
+      "id": "f2770524-250d-48f2-bf4c-ea54e9744ada",
+      "type": "decision",
+      "title": "Implementation details for text embeddings in PostgreSQL using OpenAI's text-embedding-3-small and HNSW indexing",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "packages/decision-store/src/schema.ts"
+      ],
+      "tags": [
+        "vector-database",
+        "embeddings",
+        "PostgreSQL",
+        "HNSW",
+        "OpenAI",
+        "text-embedding-3-small"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "packages/decision-store/src/schema.ts"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"f2770524-250d-48f2-bf4c-ea54e9744ada\" })"
+    },
+    {
+      "id": "d01640f7-b859-4654-908c-7b5f263e92eb",
+      "type": "decision",
+      "title": "Include agent_type in Redis sessions and logs",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "session_management",
+        "mcp_logs"
+      ],
+      "tags": [
+        "redis",
+        "logging",
+        "analytics",
+        "session-tracking",
+        "fusion:pending_review"
+      ],
+      "supersededBy": null,
+      "enforcement": null,
+      "mcpFetch": "decispher.get_decision({ decisionId: \"d01640f7-b859-4654-908c-7b5f263e92eb\" })"
+    },
+    {
+      "id": "85f2e3fa-93e4-406b-bb78-1b57b1abcafd",
+      "type": "decision",
+      "title": "Increase detection confidence threshold for PassiveDetector in saver mode",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "src/PassiveDetector/prompt.ts",
+        "src/PassiveDetector/detection.py"
+      ],
+      "tags": [
+        "PassiveDetector",
+        "Gemini",
+        "AI",
+        "configuration",
+        "filtering"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "src/PassiveDetector/prompt.ts",
+          "src/PassiveDetector/detection.py"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"85f2e3fa-93e4-406b-bb78-1b57b1abcafd\" })"
+    },
+    {
+      "id": "78128bc7-2817-44f2-bef0-de69eb3feb44",
+      "type": "decision",
+      "title": "Increase web dashboard session timeout to 4 hours",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "web/config/session.js"
+      ],
+      "tags": [
+        "web",
+        "security",
+        "authentication",
+        "dashboard",
+        "fusion:contradicts"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "web/config/session.js"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"78128bc7-2817-44f2-bef0-de69eb3feb44\" })"
+    },
+    {
+      "id": "dfba9327-9cf0-4f93-8348-6e51249a44e2",
+      "type": "plan",
+      "title": "Migrate Indian payment processing from Stripe to Paddle",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "src/billing/payment_processor.ts",
+        "src/config/payments.json"
+      ],
+      "tags": [
+        "payments",
+        "stripe",
+        "paddle",
+        "infrastructure",
+        "compliance"
+      ],
+      "supersededBy": null,
+      "enforcement": null,
+      "mcpFetch": "decispher.get_decision({ decisionId: \"dfba9327-9cf0-4f93-8348-6e51249a44e2\" })"
+    },
+    {
+      "id": "4407df70-f88d-4a6c-ad00-6109d8605f95",
+      "type": "decision",
+      "title": "Restrict record deduplication to same-type comparisons and update thresholds",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "findSimilarActiveWithScores",
+        "findSimilarByTypes"
+      ],
+      "tags": [
+        "deduplication",
+        "threshold",
+        "backend",
+        "algorithm",
+        "fusion:contradicts"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "findSimilarActiveWithScores",
+          "findSimilarByTypes"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"4407df70-f88d-4a6c-ad00-6109d8605f95\" })"
+    },
+    {
+      "id": "52e3f043-27a2-4727-b598-cd10169ece5b",
+      "type": "decision",
+      "title": "Send onboarding link via Slack DM upon app installation",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "src/integrations/slack/events/app_installed.ts",
+        "src/dashboard/oauth/callback.ts"
+      ],
+      "tags": [
+        "slack",
+        "onboarding",
+        "oauth",
+        "backend",
+        "error-handling"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "src/integrations/slack/events/app_installed.ts",
+          "src/dashboard/oauth/callback.ts"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"52e3f043-27a2-4727-b598-cd10169ece5b\" })"
+    },
+    {
+      "id": "070f625d-06bc-4f71-b793-7d7d80f064aa",
+      "type": "decision",
+      "title": "Set similarity threshold for decision deduplication to 0.15 cosine distance",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "linker_calibration_events",
+        "dedup_logic"
+      ],
+      "tags": [
+        "deduplication",
+        "machine-learning",
+        "embeddings",
+        "cosine-similarity"
+      ],
+      "supersededBy": "4407df70-f88d-4a6c-ad00-6109d8605f95",
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "linker_calibration_events",
+          "dedup_logic"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"070f625d-06bc-4f71-b793-7d7d80f064aa\" })"
+    },
+    {
+      "id": "f3db51f2-6914-415f-9fca-78783563463d",
+      "type": "decision",
+      "title": "Standardize on HNSW for new vector indexes",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "db/schema/vector_indexes",
+        "db/migrations/sprint_16/migrate_llm_cache_to_hnsw"
+      ],
+      "tags": [
+        "vector-search",
+        "postgresql",
+        "hnsw",
+        "architecture",
+        "database"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "db/schema/vector_indexes",
+          "db/migrations/sprint_16/migrate_llm_cache_to_hnsw"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"f3db51f2-6914-415f-9fca-78783563463d\" })"
+    },
+    {
+      "id": "47baf067-44b5-4456-a34c-fce4360c84a3",
+      "type": "convention",
+      "title": "Standardize on TypeScript and camelCase JSON for backend services",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "/src/backend/"
+      ],
+      "tags": [
+        "typescript",
+        "api",
+        "backend",
+        "json",
+        "coding-standards"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "/src/backend/"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"47baf067-44b5-4456-a34c-fce4360c84a3\" })"
+    },
+    {
+      "id": "fa0b2ff9-93d4-41a5-b007-d8cc51ed65ba",
+      "type": "decision",
+      "title": "Trigger dashboard onboarding redirect after Slack OAuth completion",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "services/slack/oauth_callback.js",
+        "services/onboarding/dashboard_redirect.js"
+      ],
+      "tags": [
+        "slack",
+        "onboarding",
+        "oauth",
+        "backend"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "services/slack/oauth_callback.js",
+          "services/onboarding/dashboard_redirect.js"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"fa0b2ff9-93d4-41a5-b007-d8cc51ed65ba\" })"
+    },
+    {
+      "id": "ee69526a-69a3-4115-be00-d3981c919d79",
+      "type": "decision",
+      "title": "Unify hard conflict review notifications via NotificationService",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "services/InteractionHandler.ts",
+        "services/github-notification-queue.ts",
+        "services/NotificationService.ts"
+      ],
+      "tags": [
+        "notification-system",
+        "backend",
+        "refactoring",
+        "github-integration",
+        "slack-integration"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "services/InteractionHandler.ts",
+          "services/github-notification-queue.ts",
+          "services/NotificationService.ts"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"ee69526a-69a3-4115-be00-d3981c919d79\" })"
+    },
+    {
+      "id": "cfe6365d-63eb-4b8b-9164-f956524c984f",
+      "type": "decision",
+      "title": "Use 30-minute inactivity window for MCP session detection",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "ADR-033",
+        "SessionDetector"
+      ],
+      "tags": [
+        "mcp",
+        "token-savings",
+        "session-detection"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "ADR-033",
+          "SessionDetector"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"cfe6365d-63eb-4b8b-9164-f956524c984f\" })"
+    },
+    {
+      "id": "75490c8c-3a3d-4253-a8ff-9768e6359aaf",
+      "type": "decision",
+      "title": "Use cosine distance for pgvector similarity searches",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [],
+      "tags": [
+        "pgvector",
+        "postgresql",
+        "embeddings",
+        "vector-search"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"75490c8c-3a3d-4253-a8ff-9768e6359aaf\" })"
+    },
+    {
+      "id": "e1408395-0737-4115-a49b-e616d5227fe5",
+      "type": "decision",
+      "title": "Use cosine distance over L2 for semantic text embedding similarity with pgvector HNSW",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [],
+      "tags": [
+        "pgvector",
+        "HNSW",
+        "embeddings",
+        "semantic search",
+        "cosine distance",
+        "L2 distance",
+        "deduplication"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"e1408395-0737-4115-a49b-e616d5227fe5\" })"
+    },
+    {
+      "id": "3ada5b02-0165-4c53-afe6-f5ac4f1e2823",
+      "type": "decision",
+      "title": "Use fusion-eval harness for linkThreshold tuning",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "packages/fusion-eval",
+        "src/context-linker/params.ts"
+      ],
+      "tags": [
+        "context-linker",
+        "fusion-eval",
+        "search",
+        "configuration"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "packages/fusion-eval",
+          "src/context-linker/params.ts"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"3ada5b02-0165-4c53-afe6-f5ac4f1e2823\" })"
+    },
+    {
+      "id": "a06bac38-381d-472f-852d-f902db9a70c4",
+      "type": "decision",
+      "title": "Use MongoDB Atlas for analytics event ingestion",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [
+        "analytics/storage",
+        "infrastructure/database-policy"
+      ],
+      "tags": [
+        "mongodb",
+        "postgresql",
+        "analytics",
+        "infrastructure"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "analytics/storage",
+          "infrastructure/database-policy"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"a06bac38-381d-472f-852d-f902db9a70c4\" })"
+    },
+    {
+      "id": "606e27a4-4b72-485e-94dd-7a2008e80874",
+      "type": "decision",
+      "title": "Standardization on iPhones for mobile communication",
+      "severity": "LOW",
+      "status": "active",
+      "affectedFiles": [],
+      "tags": [
+        "mobile",
+        "iphone",
+        "communication"
+      ],
+      "supersededBy": null,
+      "enforcement": null,
+      "mcpFetch": "decispher.get_decision({ decisionId: \"606e27a4-4b72-485e-94dd-7a2008e80874\" })"
+    },
+    {
+      "id": "c8fa6892-aeb9-4617-b1d4-8f54a071667a",
+      "type": "decision",
+      "title": "Use separate SCSS file for navigation component styling",
+      "severity": "LOW",
+      "status": "active",
+      "affectedFiles": [
+        "navbar.scss",
+        "navbar.tsx"
+      ],
+      "tags": [
+        "css",
+        "scss",
+        "tailwind",
+        "frontend",
+        "ui"
+      ],
+      "supersededBy": null,
+      "enforcement": {
+        "blockOnViolation": false,
+        "requiresExplicitOverride": false,
+        "filePatterns": [
+          "navbar.scss",
+          "navbar.tsx"
+        ],
+        "exemptPatterns": []
+      },
+      "mcpFetch": "decispher.get_decision({ decisionId: \"c8fa6892-aeb9-4617-b1d4-8f54a071667a\" })"
+    }
+  ]
+}
