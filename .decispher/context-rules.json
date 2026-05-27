@@ -1,16 +1,16 @@
 {
-  "$schema": "https://decispher.dev/schemas/context-rules/v1.json",
+  "$schema": "https://decispher.com/schemas/context-rules/v1.json",
   "specVersion": "2.0.0",
-  "generatedAt": "2026-05-22T23:03:01.418Z",
+  "generatedAt": "2026-05-27T19:40:48.590Z",
   "companyId": "1489dcdc-ef7f-4cc5-b0cb-b453efa059f4",
   "projectId": "8530496c-bfc3-4f4c-a724-4c6e27949fc0",
   "meta": {
-    "totalRules": 58,
+    "totalRules": 59,
     "rulesByType": {
       "decision": 45,
       "convention": 4,
       "constraint": 2,
-      "rationale": 1,
+      "rationale": 2,
       "ownership": 2,
       "history": 1,
       "plan": 3
@@ -18,7 +18,7 @@
     "rulesBySeverity": {
       "CRITICAL": 1,
       "HIGH": 23,
-      "MEDIUM": 32,
+      "MEDIUM": 33,
       "LOW": 2
     },
     "generator": "decispher-context-map@1.0.0"
@@ -1155,6 +1155,21 @@
         "exemptPatterns": []
       },
       "mcpFetch": "decispher.get_decision({ decisionId: \"78128bc7-2817-44f2-bef0-de69eb3feb44\" })"
+    },
+    {
+      "id": "7b5408a4-0e66-455b-a4cc-4fb4f7da0de0",
+      "type": "rationale",
+      "title": "MCP-TEST: Why we use Repository pattern for DB access",
+      "severity": "MEDIUM",
+      "status": "active",
+      "affectedFiles": [],
+      "tags": [
+        "architecture",
+        "testing"
+      ],
+      "supersededBy": null,
+      "enforcement": null,
+      "mcpFetch": "decispher.get_decision({ decisionId: \"7b5408a4-0e66-455b-a4cc-4fb4f7da0de0\" })"
     },
     {
       "id": "dfba9327-9cf0-4f93-8348-6e51249a44e2",
