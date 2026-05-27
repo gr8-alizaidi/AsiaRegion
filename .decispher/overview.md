@@ -44,6 +44,7 @@ These are CRITICAL invariants. Every AI agent loading this project should treat 
 | `feature-flags` | Feature Flags | 1 |
 | `infrastructure-change` | Infrastructure Change | 7 |
 | `logging` | Logging | 1 |
+| `mcp` | MCP (Model Context Protocol) | 1 |
 | `mobile` | Mobile | 1 |
 | `notifications` | Notifications | 2 |
 | `onboarding` | Onboarding | 2 |
@@ -64,6 +65,7 @@ These are CRITICAL invariants. Every AI agent loading this project should treat 
 
 ## Recent changes
 
+- 2026-05-25 · MCP-TEST: Why we use Repository pattern for DB access
 - 2026-05-22 · Scope same-type deduplication filter to analyzer pipeline only
 - 2026-05-21 · Limit premium user request rate to 200 req/min
 - 2026-05-21 · Include agent_type in Redis sessions and logs
@@ -73,7 +75,6 @@ These are CRITICAL invariants. Every AI agent loading this project should treat 
 - 2026-05-20 · Implement server-side session tracking for MCP keys using Redis
 - 2026-05-20 · Use 30-minute inactivity window for MCP session detection
 - 2026-05-20 · Bypass confidence threshold for explicit capture intents
-- 2026-05-20 · Bypass minConfidence check for manual source type in analyzer
 
 ## Need something not here?
 
