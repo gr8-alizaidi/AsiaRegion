@@ -28,14 +28,7 @@
 
 ### Context
 
-**Problem:** Considering MongoDB for analytics events due to perceived better write throughput for time-series data and high cardinality event logs.
-
 **Decision:** MongoDB is strictly prohibited from being integrated into the current technology stack, including for analytics events.
-
-**Rationale:** There is an active and non-negotiable architectural constraint against MongoDB in the stack due to the critical requirement for ACID compliance across all billing and user data. MongoDB does not satisfy this fundamental requirement.
-
-**Alternatives Considered:**
-- **MongoDB for analytics events**: It violates an active architectural constraint due to its lack of native ACID compliance, which is non-negotiable for billing and user data within our stack.
 
 ---
 
@@ -95,11 +88,7 @@
 
 ### Context
 
-**Problem:** The current API error handling standard (RFC 7807) is considered outdated for the team's needs.
-
 **Decision:** We have decided to officially discontinue the use of RFC 7807 (Problem Details for HTTP APIs) for all API error responses moving forward.
-
-**Rationale:** The team determined that the RFC 7807 specification is outdated and no longer aligns with the current requirements and standards of the API architecture.
 
 ---
 
@@ -132,14 +121,7 @@
 
 ### Context
 
-**Problem:** The team considered adopting a microservices architecture for the recorder and analyzer components but faced challenges.
-
 **Decision:** We will integrate decision-guardian into our PR pipeline to enforce and track architectural decisions.
-
-**Rationale:** Automating the verification of architectural decisions during the review process helps maintain consistency and ensures that developers adhere to established guidelines.
-
-**Alternatives Considered:**
-- **Adopt a microservices architecture by splitting recorder and analyzer into separate gRPC services.**: The previous attempt in Phase 1 led to brutal deployment complexity for a 3-person team, consuming 40% of their time debugging inter-service authentication and network failures.
 
 ---
 
@@ -155,11 +137,7 @@
 
 ### Context
 
-**Problem:** We need to lock down exactly which model combination maps to which effort mode.
-
 **Decision:** The specific LLM model combinations for the multi-provider effort modes were finalized: Saver mode uses `gemini-flash` for detection, extraction, and format. Balanced mode uses `gemini-flash` for detection, `claude-haiku` for extraction, and `gpt-4o-mini` for format. Pro mode uses `gemini-flash` for detection, `claude-sonnet` for extraction, and `gpt-4o-mini` for format. Super mode uses `gemini-flash` for detection, `claude-opus` for extraction, and `claude-sonnet` for format.
-
-**Rationale:** The chosen LLM model combinations for each effort mode (Saver, Balanced, Pro, Super) were selected to provide different performance and cost profiles, aligning with the multi-provider strategy. Cost analysis confirmed that the proposed combinations, ranging from ~$0.08/1M tokens for Saver to ~$4.50/1M tokens for Super, ensure fine margins at current credit pricing.
 
 ---
 
@@ -197,11 +175,7 @@
 
 ### Context
 
-**Problem:** Handling 429 rate limit errors from LLM providers during extraction and detection tasks.
-
 **Decision:** Establish explicit provider fallback orderings: For extraction, use Anthropic → DeepSeek → OpenAI. For detection, use Google → OpenAI → DeepSeek.
-
-**Rationale:** To maintain system reliability and avoid task failure when individual LLM providers hit rate limits, a hierarchical fallback mechanism ensures work is diverted to alternative models before resorting to the Dead Letter Queue (DLQ) after retries.
 
 ---
 
@@ -237,11 +211,7 @@
 
 ### Context
 
-**Problem:** Determine the optimal token expiration duration for the authentication service to balance security and usability.
-
 **Decision:** Implement a strict 5-minute token expiry window for the authentication service.
-
-**Rationale:** This decision is driven by compliance requirements mandating rapid session invalidation and the need to mitigate the risk of replay attacks associated with longer-lived tokens.
 
 ---
 
@@ -296,14 +266,7 @@
 
 ### Context
 
-**Problem:** Selecting the cloud hosting provider for the payment backend service.
-
 **Decision:** Transition the usage of Azure Functions from a specialized payment-only utility to a full-scale backend service platform.
-
-**Rationale:** The team needs to scale the backend architecture to support broader business logic beyond payment processing, and utilizing the existing Azure Functions infrastructure is the most efficient path for unified deployment.
-
-**Alternatives Considered:**
-- **AWS Lambda**: The team prefers Azure for the payment backend service infrastructure.
 
 ---
 
@@ -348,15 +311,7 @@
 
 ### Context
 
-**Problem:** The current LLM provider strategy is unmaintainable, using different providers (Gemini-Flash, Claude-Sonnet, GPT-4o-mini) for different pipeline steps, leading to high costs (Claude-Sonnet is 60% of the bill) and inconsistent availability (Sonnet outages).
-
 **Decision:** We will implement a multi-provider abstraction where each pipeline step (detection, extraction, enrichment, formatting) has its own LLM provider configuration via environment variables. At request time, an 'effort mode' can override the provider selection on a per-company basis.
-
-**Rationale:** This approach allows companies with high context volume (Tier 3+) to pay extra for Claude-Sonnet's accuracy where needed, while companies with tighter budgets can use more cost-effective options like Gemini-Flash for all steps. It also decouples our infrastructure from individual LLM vendor stability and enables independent contract negotiations with different providers (Anthropic, OpenAI, Google).
-
-**Alternatives Considered:**
-- **Continue with current fragmented multi-provider setup (Gemini-Flash for detection, Claude-Sonnet for extraction, GPT-4o-mini for formatting).**: This approach is unmaintainable, costly (Claude-Sonnet accounts for 60% of the LLM bill), and suffers from inconsistent provider availability issues.
-- **Consolidate to a single LLM provider for all pipeline steps.**: This would limit flexibility, potentially sacrificing accuracy for high-tier companies or forcing budget-conscious companies to pay for more expensive models than necessary. It would also lead to vendor lock-in and a single point of failure for LLM stability.
 
 ---
 
@@ -393,15 +348,7 @@
 
 ### Context
 
-**Problem:** Infrastructure database saturation occurs at 35 concurrent premium users when the request rate is set to 500 req/min, posing a risk of production instability.
-
 **Decision:** Revert the premium user request rate limit from 500 req/min to 200 req/min until infrastructure improvements, such as scaling the connection pool or adding read replicas, are implemented.
-
-**Rationale:** Load testing confirmed that 500 req/min is unsustainable under concurrent user load with the current infrastructure. Lowering the limit to 200 req/min ensures stability and avoids potential production incidents.
-
-**Alternatives Considered:**
-- **Maintain 500 req/min limit**: Results in database saturation and poses a high risk of production system failure.
-- **Scale connection pool and add read replicas immediately**: Requires infrastructure development effort before the higher limit can be safely supported.
 
 ---
 
@@ -418,8 +365,6 @@
 ### Context
 
 **Decision:** Each LLM pipeline step (detection, extraction, formatting) has its own provider configuration managed via environment variables. An 'effort mode' concept allows overriding these configurations per company at request time, defining specific LLM models for different quality/cost tiers: Saver uses gemini-flash, Balanced mixes gemini-flash, claude-haiku, and gpt-4o-mini, Pro uses claude-sonnet for extraction, and Super uses claude-opus.
-
-**Rationale:** The strategy is designed to provide flexibility and optimization across different pipeline steps and 'effort modes'. By configuring providers per step and allowing overrides based on company effort modes, the system can balance cost, performance, and model quality according to specific requirements, from 'Saver' (likely cost-optimized) to 'Super' (likely highest quality/cost). The multi-provider abstraction facilitates this dynamic selection.
 
 ---
 
@@ -461,11 +406,7 @@
 
 ### Context
 
-**Problem:** Direct SDK calls to LLM providers bypass centralized cost recording and kill switch mechanisms.
-
 **Decision:** All LLM calls must be made through the GuardedProviderRegistry using either wrapTextProvider or wrapEmbeddingProvider instead of direct SDK calls.
-
-**Rationale:** Using the registry ensures that all calls are tracked for cost accounting and can be dynamically controlled via system-wide kill switches.
 
 ---
 
@@ -506,11 +447,7 @@
 
 ### Context
 
-**Problem:** Need to replace the existing webmaster mailing service and transition away from the current SMTP server.
-
 **Decision:** Migrate all email services to Zoho and update the SMTP server infrastructure, including the implementation of new routing rules to block any traffic to the legacy SMTP server.
-
-**Rationale:** The team decided to move to Zoho to consolidate mailing services and address the limitations or overhead associated with the existing legacy SMTP infrastructure.
 
 ---
 
@@ -527,14 +464,7 @@
 
 ### Context
 
-**Problem:** Dependency on third-party provider Shipsy is causing scalability issues.
-
 **Decision:** Switch from the third-party Shipsy provider to an in-house developed mapping event system.
-
-**Rationale:** The team identified that the Shipsy service was negatively impacting the platform's scalability, and moving to an internal solution reduces external dependencies.
-
-**Alternatives Considered:**
-- **Continue using Shipsy**: It acts as a bottleneck for system scalability.
 
 ---
 
@@ -586,14 +516,7 @@
 
 ### Context
 
-**Problem:** The current reliance on a third-party Stream Chat provider prevents the team from offering end-to-end control and integration for users.
-
 **Decision:** Remove the Stream Chat provider dependency and develop an in-house chat solution to provide end-to-end functionality.
-
-**Rationale:** Building the chat infrastructure internally enables full control over the user experience and provides the end-to-end capabilities required, which was not feasible with the third-party provider.
-
-**Alternatives Considered:**
-- **Continue using Stream Chat provider**: It fails to provide the required end-to-end control and integration capabilities for the user experience.
 
 ---
 
@@ -634,15 +557,7 @@
 
 ### Context
 
-**Problem:** AWS ECS lacks built-in support for multi-region failover without complex custom routing and requires additional tooling for advanced scaling capabilities.
-
 **Decision:** The team will migrate from AWS ECS to AWS EKS for container orchestration.
-
-**Rationale:** EKS provides superior orchestration flexibility, including native Horizontal Pod Autoscaler and improved multi-AZ/multi-region failover capabilities, which are necessary for the current scale, outweighing the operational overhead of Kubernetes.
-
-**Alternatives Considered:**
-- **AWS ECS**: Lacks sufficient multi-region failover support and requires custom routing implementations.
-- **Railway**: Retained only as a temporary fallback, deemed insufficient for long-term production orchestration.
 
 ---
 
@@ -680,14 +595,7 @@
 
 ### Context
 
-**Problem:** Selecting the protocol standard for building the SS7 stack backend codebase.
-
 **Decision:** Adopt ITSI RFC for SNMP development instead of 3GPP.
-
-**Rationale:** 3GPP is non-compliant with the current SOT policy, necessitating a shift to an alternative standard that meets internal compliance requirements.
-
-**Alternatives Considered:**
-- **3GPP**: Not compliant with SOT policy.
 
 ---
 
@@ -720,11 +628,7 @@
 
 ### Context
 
-**Problem:** The current hosting platform, Railway, becomes cost-prohibitive at scale (exceeding $500/month) and lacks the VPC isolation capabilities required for enterprise customers.
-
 **Decision:** The trigger metric for initiating the AWS migration has been adjusted from 20 paying customers to 30 paying customers. The Q3 2026 timeline for the migration still holds.
-
-**Rationale:** This adjustment is due to Railway costs being more predictable than initially expected. Additionally, the VPC isolation requirement, which was a significant factor, only applies to enterprise customers, a segment we are targeting at a later stage.
 
 ---
 
@@ -742,11 +646,7 @@
 
 ### Context
 
-**Problem:** Inconsistent API error response formats across different endpoints, with some returning raw message strings.
-
 **Decision:** All API errors must adhere to the RFC 7807 problem details format, including fields such as type, title, status, detail, and instance.
-
-**Rationale:** To ensure consistency across all API endpoints and prevent the generation of non-compliant errors, especially from AI-assisted code.
 
 ---
 
@@ -785,15 +685,7 @@
 
 ### Context
 
-**Problem:** Selecting the primary datastore to handle both standard relational data and vector search requirements efficiently.
-
 **Decision:** Use PostgreSQL with pgvector and HNSW indexes as the standard solution for primary datastore and vector search operations.
-
-**Rationale:** PostgreSQL with pgvector provides the ability to manage both SQL-based relational data and vector search capabilities within a single system, simplifying the architecture compared to managing separate databases.
-
-**Alternatives Considered:**
-- **MongoDB**: The team preferred the relational capabilities of PostgreSQL and the unified support for vector search provided by pgvector.
-- **CockroachDB**: The team decided that PostgreSQL with pgvector was sufficient and preferred over the complexity or features offered by CockroachDB.
 
 ---
 
@@ -833,14 +725,7 @@
 
 ### Context
 
-**Problem:** Uncertainty regarding ownership of the billing module and the requirements for implementing new effort modes.
-
 **Decision:** The billing service uses long-running containers instead of serverless functions.
-
-**Rationale:** Serverless functions introduced cold starts which resulted in unacceptable latency spikes during traffic peaks, negatively impacting the user experience for the billing service.
-
-**Alternatives Considered:**
-- **Serverless functions**: Caused unacceptable latency spikes due to cold starts during traffic peaks.
 
 ---
 
@@ -893,11 +778,6 @@
 
 **Decision:** Use MongoDB Atlas specifically for the analytics event ingestion pipeline, while keeping all other core application data in PostgreSQL.
 
-**Rationale:** MongoDB Atlas provides the necessary horizontal sharding and schemaless structure to handle the required 50k write operations per second, whereas PostgreSQL performance degrades under this load.
-
-**Alternatives Considered:**
-- **PostgreSQL JSONB**: Proved too difficult and inefficient to index effectively for schemaless event data.
-
 ---
 
 <!-- DECISION-465C1E1A -->
@@ -945,14 +825,7 @@
 
 ### Context
 
-**Problem:** PostgreSQL's write throughput is insufficient for high-cardinality analytics event data, failing to meet new scale requirements.
-
 **Decision:** We will use MongoDB for the analytics events pipeline, provisioning a MongoDB Atlas cluster to handle the data.
-
-**Rationale:** MongoDB offers 10x the write throughput compared to PostgreSQL for high-cardinality event data, which is essential to meet the current scale requirements. The previous constraint was established before these new scale demands emerged.
-
-**Alternatives Considered:**
-- **PostgreSQL**: PostgreSQL's write throughput is 10x lower than MongoDB for high-cardinality event data, making it unsuitable for the new scale requirements of the analytics pipeline.
 
 ---
 
@@ -1003,14 +876,7 @@
 
 ### Context
 
-**Problem:** The reporting worker requires authentication to communicate with the main API, but mTLS setup is perceived as too slow or complex for this specific integration.
-
 **Decision:** Bypass mTLS authentication for the new reporting worker and implement a hardcoded shared secret token in the HTTP header for inter-service authentication.
-
-**Rationale:** The team chose a shared secret token approach to prioritize communication speed and reduce the implementation overhead compared to the mTLS setup.
-
-**Alternatives Considered:**
-- **mTLS**: The team felt it would be too slow and complex to implement for this specific worker.
 
 ---
 
@@ -1042,8 +908,6 @@
 ### Context
 
 **Decision:** The team will use the Umbraco CMS platform to build each component of the frontend website.
-
-**Rationale:** Umbraco was selected as the designated CMS to standardize the development of frontend components.
 
 ---
 
@@ -1079,14 +943,7 @@
 
 ### Context
 
-**Problem:** The team was experiencing excessive operational overhead and complexity managing EventStoreDB for event sourcing, which did not provide enough value regarding auditability at their current scale.
-
 **Decision:** The team decided to discontinue the use of EventStoreDB and removed event sourcing as an architectural pattern following the migration back to a monorepo.
-
-**Rationale:** The complexity of maintaining three separate runbooks for EventStoreDB operations outweighed the benefits of its auditability features for the current team size and system scale.
-
-**Alternatives Considered:**
-- **Retaining EventStoreDB for event sourcing**: The operational complexity was too high and not justified by the benefits gained.
 
 ---
 
@@ -1121,8 +978,6 @@
 ### Context
 
 **Decision:** Use RFC7812 as the specification for validating all JSON data synced by the server related to theme configurations.
-
-**Rationale:** RFC7812 provides a standardized approach for schema validation, ensuring consistency and reliability across synced theme data.
 
 ---
 
@@ -1161,11 +1016,7 @@
 
 ### Context
 
-**Problem:** Manual archiving of stale pending_review decisions is inefficient and requires an automated solution.
-
 **Decision:** Implement a ContextLifecycleWorker job that triggers the existing archiveStalePendingReview function based on decisions not reviewed in over 90 days, controlled by the STALE_ARCHIVE_ENABLED environment variable.
-
-**Rationale:** Automating the process reduces operational overhead, and using an environment flag allows for safe testing in staging before production rollout.
 
 ---
 
@@ -1203,11 +1054,7 @@
 
 ### Context
 
-**Problem:** LLM-extracted data via @decispher PR commands was getting rejected by the minConfidence threshold, despite user intent to save the data.
-
 **Decision:** Implement a 'captureIntent' field in the pipeline context where 'explicit' intent (manual dashboard entry or @decispher command) bypasses the minConfidence threshold, while 'passive' intent remains subject to it.
-
-**Rationale:** Explicit user commands indicate a deliberate intent to capture data, overriding the need for confidence filtering which is primarily intended for passive/automated collection.
 
 ---
 
@@ -1243,14 +1090,7 @@
 
 ### Context
 
-**Problem:** The existing minConfidence thresholds were not appropriate for manual captures from the dashboard, as these are human-authored and do not require confidence filtering.
-
 **Decision:** Manual captures with sourceType='manual' will bypass the minConfidence check entirely by adding an explicit guard in the detection step where shouldRun returns true by default for manual types.
-
-**Rationale:** Manual content is explicitly created by the user, making confidence scoring irrelevant compared to automated conversational or code sources.
-
-**Alternatives Considered:**
-- **Add a unique threshold for manual sources**: Confidence is irrelevant for content intentionally created by a human.
 
 ---
 
@@ -1286,11 +1126,7 @@
 
 ### Context
 
-**Problem:** The team decided to move away from the architectural proposal defined in RFC 78.
-
 **Decision:** The team has officially cancelled the usage and implementation of RFC 78.
-
-**Rationale:** The conversation indicates a strategic shift away from the previously proposed RFC 78, implying it is no longer aligned with current requirements or priorities.
 
 ---
 
@@ -1331,14 +1167,7 @@
 
 ### Context
 
-**Problem:** Fusion classification in pro mode is experiencing high latency (8-12 seconds) due to sub-optimal default batching and concurrency settings.
-
 **Decision:** Set LLM_CLASSIFY_BATCH_SIZE_PRO to 10 and maintain LLM_CLASSIFY_CONCURRENCY at 5 for the pro mode classification process.
-
-**Rationale:** Increasing the batch size to 10 improves throughput to address latency issues, while keeping the batch size at 10 (instead of 15) prevents a loss in model precision for candidates later in the list. Concurrency is kept at 5 to balance processing load.
-
-**Alternatives Considered:**
-- **Batch size 15 and concurrency 3**: The larger batch size of 15 risked decreasing the model's precision on candidate evaluation.
 
 ---
 
@@ -1354,11 +1183,7 @@
 
 ### Context
 
-**Problem:** Internal API routes are returning plain strings instead of adhering to the RFC 7807 error format, which breaks AI tools that parse our errors due to inconsistent formats.
-
 **Decision:** All internal API routes must adhere to the RFC 7807 error format, consistent with public-facing API routes.
-
-**Rationale:** Inconsistent error formats, specifically plain strings from internal routes, prevent AI tools from reliably parsing and analyzing errors, leading to broken analysis workflows.
 
 ---
 
@@ -1376,14 +1201,7 @@
 
 ### Context
 
-**Problem:** Current rate limits for premium users are insufficient for their usage needs.
-
 **Decision:** Set a fixed default request limit of 2000 req/min for the enterprise tier, utilizing a separate infrastructure pool to prevent performance degradation for other customers.
-
-**Rationale:** A dedicated pool prevents a single enterprise customer from starving the premium pool. A fixed limit was chosen over per-contract configuration to minimize operational overhead until the customer base grows to at least five enterprise clients.
-
-**Alternatives Considered:**
-- **Per-contract configurable limit**: The overhead is too high until the enterprise customer base reaches at least five clients.
 
 ---
 
@@ -1419,14 +1237,7 @@
 
 ### Context
 
-**Problem:** Duplicate and conflicting conventions regarding RFC 7807 error format severity were documented in the Decispher system.
-
 **Decision:** Adopt the HIGH severity specification as the authoritative version for the RFC 7807 error format, which includes fields: type, title, status, detail, and instance.
-
-**Rationale:** The team identified that two existing conventions were redundant. Designating the HIGH severity entry as canonical while allowing the fusion engine to merge duplicate references ensures consistency across documentation and API implementations.
-
-**Alternatives Considered:**
-- **MEDIUM severity specification**: The HIGH severity version was explicitly selected as the authoritative and canonical standard.
 
 ---
 
@@ -1466,8 +1277,6 @@
 
 **Decision:** The Revenue squad now has exclusive ownership of the billing module and Stripe integration, requiring their explicit approval for all pull requests affecting these areas.
 
-**Rationale:** Centralizing ownership ensures better control, security, and specialized maintenance for critical payment-related infrastructure.
-
 ---
 
 <!-- DECISION-2B58E1D2 -->
@@ -1505,14 +1314,7 @@
 
 ### Context
 
-**Problem:** Currently, decision owners are not notified before their stale context units are archived, and there is no mechanism to warn them of upcoming archival.
-
 **Decision:** Implement a notification process where owners receive a Slack message 7 days before the archival cutoff. This involves adding a 'stale_warning' type to the NotificationService, querying for decisions with a last_reviewed_at timestamp between 83 and 84 days ago, and triggering a notification job. Viewing a decision on the dashboard does not reset the review timestamp; only an explicit approve, reject, or mark_active action will.
-
-**Rationale:** Ensures stakeholders are informed before data archival without creating a loop where passive dashboard activity prevents legitimate cleanup of stale data.
-
-**Alternatives Considered:**
-- **Reset last_reviewed_at on dashboard view**: Viewing the dashboard does not constitute a formal review; doing so would prevent the archival of truly stale decisions.
 
 ---
 
@@ -1552,15 +1354,7 @@
 
 ### Context
 
-**Problem:** Users were experiencing service disruptions when their credit balance was exhausted mid-session because the API block only triggers after the transaction fails (402).
-
 **Decision:** The team decided to implement a client-side credit balance check in the frontend dashboard before allowing a request to hit the /api/companies/:companyId/mcp/ask-knowledge-base endpoint.
-
-**Rationale:** The existing Redis pre-check in the backend is fail-open and only blocks after a SERIALIZABLE transaction confirms insufficient balance. A client-side check provides better user experience by surfacing the warning in the dashboard before the query is attempted, preventing unnecessary 402 errors.
-
-**Alternatives Considered:**
-- **Backend fail-closed check**: The current Redis architecture is fail-open for performance reasons; changing it would involve complex architectural changes to handle transaction locking and potential performance degradation.
-- **Surface 402 error in UI**: Displaying a 402 error after the user has already submitted the request is a poor user experience compared to preventing the request entirely via a dashboard warning.
 
 ---
 
@@ -1576,11 +1370,7 @@
 
 ### Context
 
-**Problem:** Redundant and inefficient LLM embedding calls were occurring.
-
 **Decision:** Implemented Redis semantic caching for LLM embedding calls. The cache key is a hash of the input text, model, and provider. The cache entries have a Time-To-Live (TTL) of 1 hour.
-
-**Rationale:** Redis was a natural extension since it is already in use for BullMQ and session caching. This implementation reduced redundant embedding calls by approximately 40% in tests.
 
 ---
 
@@ -1619,15 +1409,7 @@
 
 ### Context
 
-**Problem:** Frequent agent re-initializations are creating excessive small sessions and causing inflated discovery costs because session detection relies solely on inactivity gaps.
-
 **Decision:** Track sessions via a server-side generated session_id stored in Redis with a 30-minute rolling TTL, instead of relying on inactivity gap computation. Include the session_id as a foreign key in the mcp_logs table to allow accurate deduplication of discovery costs.
-
-**Rationale:** Server-side generation is safer than relying on client-side headers as agents are inconsistent. Using a Redis-backed TTL ensures that sessions are grouped correctly despite agent re-initialization patterns, providing more accurate cost tracking and session lifecycle management.
-
-**Alternatives Considered:**
-- **Agent-provided session_id header**: Agents cannot be trusted to pass stable, consistent session identifiers.
-- **Inactivity gap computation**: Leads to fragmented sessions and inaccurate discovery cost metrics due to agent re-initialization patterns.
 
 ---
 
@@ -1681,8 +1463,6 @@
 
 **Decision:** We will use the `text-embedding-3-small` OpenAI model to generate 1536-dimension embeddings. These embeddings will be stored in the `knowledge_chunks` table within PostgreSQL. The HNSW index used for vector search will be configured with `ef_construction=200` and `m=16`.
 
-**Rationale:** The chosen HNSW parameters (`ef_construction=200` and `m=16`) are set to provide an optimal tradeoff between recall accuracy and search speed. The `text-embedding-3-small` model is selected for generating the text embeddings.
-
 ---
 
 <!-- DECISION-D01640F7 -->
@@ -1698,14 +1478,7 @@
 
 ### Context
 
-**Problem:** Logs currently lack the ability to distinguish between different agents (e.g., Claude Code, Cursor) because the session data does not store the agent identity.
-
 **Decision:** Add an 'agent_type' field to the Redis session hash using a normalized enum (claude_code, cursor, copilot, custom) and write this value to mcp_logs upon session creation.
-
-**Rationale:** Using a normalized enum instead of raw User-Agent strings avoids dealing with excessive variants while enabling accurate breakdown of mcp_logs by agent type in the savings dashboard.
-
-**Alternatives Considered:**
-- **Store raw User-Agent string**: There are too many variants of User-Agent strings, making them difficult to parse and aggregate for analytics.
 
 ---
 
@@ -1743,15 +1516,7 @@
 
 ### Context
 
-**Problem:** PassiveDetector is incorrectly capturing standup messages as context units, leading to false positives.
-
 **Decision:** The team will tune the Gemini-2.5-flash prompt for PassiveDetector in saver mode to increase the detection confidence floor.
-
-**Rationale:** The current confidence threshold is allowing low-quality matches (standup messages) to be classified as actionable context units. Tuning the system prompt is the most efficient way to reduce noise without switching the underlying model or building complex per-channel weight features.
-
-**Alternatives Considered:**
-- **Change the detection model**: Requires an Architectural Decision Record (ADR) and is likely overkill compared to a prompt update.
-- **Implement per-channel weights**: The current infrastructure does not support per-channel configurations.
 
 ---
 
@@ -1785,14 +1550,23 @@
 
 ### Context
 
-**Problem:** Current web dashboard session timeout is too short for users performing long review sessions.
-
 **Decision:** Extend the session timeout period for the web dashboard application to 4 hours.
 
-**Rationale:** Extended sessions improve usability for long review tasks, while maintaining shorter token life for mobile to satisfy security requirements regarding background app behavior.
+---
 
-**Alternatives Considered:**
-- **Extend session timeout for both web and mobile**: Mobile requires shorter session tokens due to security risks associated with background application behavior.
+<!-- DECISION-7B5408A4 -->
+## Decision: MCP-TEST: Why we use Repository pattern for DB access
+
+**Status**: Active  
+**Date**: 2026-05-25  
+**Severity**: Warning
+
+**Files**:
+- `**/*`
+
+### Context
+
+**Decision:** All database operations go through Repository classes. No raw queries in service layer.
 
 ---
 
@@ -1809,11 +1583,7 @@
 
 ### Context
 
-**Problem:** Stripe has been banned by the Indian government for processing payments, necessitating a replacement payment provider to maintain operations in the region.
-
 **Decision:** The team will migrate all Indian payment processing operations from Stripe to Paddle.
-
-**Rationale:** Stripe is no longer a viable or legal option for payment processing in India due to government-imposed bans, making a migration to a supported alternative like Paddle necessary for continuity.
 
 ---
 
@@ -1850,14 +1620,7 @@
 
 ### Context
 
-**Problem:** The existing deduplication logic allows cross-type comparison and uses suboptimal thresholds for same-type comparisons.
-
 **Decision:** Deduplication will now only occur between decisions of the same type. The threshold for same-type deduplication is lowered from 0.15 to 0.12.
-
-**Rationale:** Calibration analysis of 847 labeled examples indicates that cross-type deduplication is invalid and 0.12 is the optimal threshold for same-type matching to ensure accurate dedup behavior.
-
-**Alternatives Considered:**
-- **Allow cross-type deduplication**: It was determined that dedup should only fire when existing and incoming decisions have the same type to maintain data integrity.
 
 ---
 
@@ -1877,15 +1640,7 @@
 
 ### Context
 
-**Problem:** Near-identical decisions are being incorrectly allowed through the deduplication process.
-
 **Decision:** The same-type deduplication filter will be strictly scoped to the analyzer pipeline for duplicate storage prevention. The knowledge graph edge detection will operate independently, allowing cross-type similarity calculations with its own distinct thresholds.
-
-**Rationale:** Deduplication and relationship discovery serve different business purposes; deduplication requires strict same-type identity, while the knowledge graph relies on cross-type relationships to function correctly. Separating their logic allows for fine-tuned thresholds and prevents unintended side effects.
-
-**Alternatives Considered:**
-- **Lowering the similarity threshold (e.g., to 0.18)**: The current threshold is intentionally strict to avoid false positives and maintain a high bar for what constitutes a duplicate decision.
-- **Apply same-type filter globally to the similarity service**: It prevents the knowledge graph from detecting legitimate cross-type relationships.
 
 ---
 
@@ -1922,14 +1677,7 @@
 
 ### Context
 
-**Problem:** Slack workspaces were hitting a SlackIntegrationNotFoundError because users were installing the bot but failing to complete the dashboard OAuth flow.
-
 **Decision:** Implement a mechanism to DM the onboarding link to the workspace admin immediately upon app installation (app_installed event) rather than waiting for message events.
-
-**Rationale:** Direct messaging the onboarding link ensures users complete the dashboard setup process, preventing the creation of 'ghost companies' and avoiding errors when the recorder tries to process events for an uninitialized workspace.
-
-**Alternatives Considered:**
-- **Handle team_join event**: The team_join event triggers for new users joining a workspace, not for the initial app installation, making it unsuitable for driving workspace-level onboarding.
 
 ---
 
@@ -1977,14 +1725,7 @@
 
 ### Context
 
-**Problem:** Uncertainty regarding whether the rejection of IVFFlat to HNSW migration applied to the index technology choice or the migration process itself.
-
 **Decision:** All new vector indexes must be created using the HNSW algorithm. Existing IVFFlat indexes (specifically in the llm_cache table) are to be migrated to HNSW in Sprint 16.
-
-**Rationale:** HNSW is the current architectural standard for vector indexing. The previous rejection of the migration to HNSW was due to operational risks in production, not a lack of performance or technical suitability of HNSW.
-
-**Alternatives Considered:**
-- **IVFFlat**: The team has standardized on HNSW for new indexes to maintain architectural consistency, despite potential performance profiles for specific query patterns.
 
 ---
 
@@ -2021,11 +1762,7 @@
 
 ### Context
 
-**Problem:** Need to ensure consistency and type safety across new backend development and prevent API interoperability issues.
-
 **Decision:** Adopt TypeScript as the mandatory language for all new backend services and enforce a strict convention where all API endpoints must return camelCase JSON.
-
-**Rationale:** TypeScript provides necessary type safety to reduce runtime errors in backend services, and a consistent camelCase JSON format ensures predictability for frontend consumption and API consistency.
 
 ---
 
@@ -2064,15 +1801,7 @@
 
 ### Context
 
-**Problem:** Slack integrations fail in production when a workspace installs the bot but does not complete the dashboard OAuth process, resulting in a SlackIntegrationNotFoundError.
-
 **Decision:** Implement a redirect to the dashboard onboarding flow immediately after the Slack OAuth callback is successfully completed to ensure the integration record is created.
-
-**Rationale:** Directing users to the onboarding flow upon OAuth completion captures the integration state before the bot begins receiving event messages, preventing orphaned bot installations without corresponding database records.
-
-**Alternatives Considered:**
-- **DM the user the onboarding link when the bot joins**: The team determined that handling the event on the OAuth callback side is more reliable and ensures the flow is completed immediately after the installation.
-- **Use team_join event to trigger onboarding**: The team identified that team_join events are specific to individual users joining a workspace and are not suitable for the initial workspace-level integration onboarding.
 
 ---
 
@@ -2111,14 +1840,7 @@
 
 ### Context
 
-**Problem:** Review notifications for hard conflicts are currently limited to Slack-sourced decisions, causing GitHub-sourced conflicts to remain stuck in pending_review without alerting owners.
-
 **Decision:** Route all hard conflict notifications through the centralized NotificationService using a CONTRADICTS_REVIEW template, replacing the localized implementation in InteractionHandler.
-
-**Rationale:** Routing through the NotificationService ensures consistent notification delivery regardless of the input channel (Slack or GitHub PRs), eliminating the inconsistency where GitHub-sourced conflicts currently lack alert logic.
-
-**Alternatives Considered:**
-- **Implement an equivalent postContradictReviewDm method in the github-notification-queue worker**: This would result in fragmented notification logic across multiple services, increasing maintenance overhead and the likelihood of future inconsistencies.
 
 ---
 
@@ -2156,11 +1878,7 @@
 
 ### Context
 
-**Problem:** How to define a new MCP session for token savings calculations in the presence of variable agent speeds.
-
 **Decision:** Define a new MCP session as any gap of 30 minutes or more between tool calls on mcp_logs per API key.
-
-**Rationale:** The 30-minute window serves as a known, intentional approximation to define session boundaries for cost calculation, acknowledging that very slow agents may trigger multiple sessions.
 
 ---
 
@@ -2193,14 +1911,7 @@
 
 ### Context
 
-**Problem:** Determine the optimal distance metric for embedding similarity search in pgvector to maximize recall.
-
 **Decision:** We have standardized on cosine distance (using the <=> operator in pgvector) for all similarity search operations.
-
-**Rationale:** Cosine distance provides significantly better recall (12% improvement) on normalized text embeddings compared to L2 distance. Furthermore, L2 distance is overly sensitive to embedding magnitude, making it less reliable for our specific use case.
-
-**Alternatives Considered:**
-- **L2 distance**: It is sensitive to embedding magnitude and demonstrated poorer recall compared to cosine distance for our data.
 
 ---
 
@@ -2237,14 +1948,7 @@
 
 ### Context
 
-**Problem:** How to accurately measure semantic similarity of text embeddings for deduplication search using pgvector HNSW?
-
 **Decision:** We decided to use cosine distance for semantic similarity search of text embeddings with pgvector HNSW for deduplication.
-
-**Rationale:** Cosine distance is invariant to vector magnitude, meaning it only considers the direction of vectors. This property is precisely what is desired for semantic similarity of text embeddings, as it allows for accurate comparison of semantic meaning regardless of variations in embedding vector norms. L2 (Euclidean) distance, on the other hand, would incorrectly penalize vectors with different magnitudes, even if they share the same semantic direction.
-
-**Alternatives Considered:**
-- **L2 (Euclidean) distance**: L2 distance penalizes vectors with different norms (magnitudes) even if they point in the same semantic direction, which is not suitable for accurately measuring semantic similarity of text embeddings.
 
 ---
 
@@ -2282,15 +1986,7 @@
 
 ### Context
 
-**Problem:** Current context-linker linkThreshold of 0.30 causes false positives due to generic entity matching on common tokens like 'redis', but manual changes to the threshold risk dropping true links.
-
 **Decision:** The team will refrain from manually adjusting DEFAULT_FUSION_PARAMS.linkThreshold and instead utilize the existing precision/recall harness in packages/fusion-eval to empirically evaluate changes before deployment.
-
-**Rationale:** Blindly changing global thresholds can negatively impact system accuracy. Validating threshold adjustments through the dedicated fusion-eval harness ensures that changes to the linkage logic do not reduce recall for valid links.
-
-**Alternatives Considered:**
-- **Add 'redis' to the stopword list**: Stopwords in the context-linker are restricted to title tokens and do not influence the entity extraction path.
-- **Blindly lower linkThreshold to 0.32**: Risk of unintended side effects and reduction in true positive linkage performance without empirical validation.
 
 ---
 
@@ -2328,14 +2024,7 @@
 
 ### Context
 
-**Problem:** The team needs a high-throughput storage solution for analytics event ingestion, but is restricted to PostgreSQL and Redis for general data storage.
-
 **Decision:** MongoDB is strictly prohibited for use in core pipeline services (including the core decision pipeline, authentication, and the context store). These services must exclusively use PostgreSQL 16 and Redis. Any deviation requires a formal ADR.
-
-**Rationale:** To maintain architectural integrity and prevent fragmentation in the core tech stack. Previous attempts to introduce MongoDB for event queues nearly caused instability, highlighting the need for a hard, enforceable constraint.
-
-**Alternatives Considered:**
-- **PostgreSQL partitioned tables**: The team expressed concern that it may struggle with the required write throughput of 50k events per second.
 
 ---
 
@@ -2352,8 +2041,6 @@
 ### Context
 
 **Decision:** The team will use iPhones to perform mobile calls.
-
-**Rationale:** The team aligned on a single mobile device platform for communication consistency.
 
 ---
 
@@ -2390,11 +2077,4 @@
 
 ### Context
 
-**Problem:** Tailwind utility classes are too complex and messy for the hover states required by the new navigation component.
-
 **Decision:** Use standard SCSS in a separate navbar.scss file for the new navigation component.
-
-**Rationale:** Complex hover state requirements for the navigation component lead to unmanageable code when using Tailwind utility classes.
-
-**Alternatives Considered:**
-- **Tailwind utility classes**: The resulting code is too messy and complex for the required hover states.

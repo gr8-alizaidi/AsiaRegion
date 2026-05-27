@@ -1,7 +1,7 @@
 # Unmapped Context
 
 2 active context units in **testing phase 1** are not yet assigned to a topic.
-Fetch any unit's full body via MCP. Run `pnpm topics:assign` to classify these.
+Fetch any unit's full body via MCP. Review and assign these from the Unmapped Review Queue in the Decispher dashboard.
 
 | Title | Type | Severity | MCP fetch |
 |-------|------|----------|-----------|

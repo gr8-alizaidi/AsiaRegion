@@ -54,6 +54,7 @@ Fetch the full topic context before writing code:
 - **feature-flags** (Feature Flags) → `decispher.get_context_for_topic({ topic: "feature-flags" })`
 - **infrastructure-change** (Infrastructure Change) → `decispher.get_context_for_topic({ topic: "infrastructure-change" })`
 - **logging** (Logging) → `decispher.get_context_for_topic({ topic: "logging" })`
+- **mcp** (MCP (Model Context Protocol)) → `decispher.get_context_for_topic({ topic: "mcp" })`
 - **mobile** (Mobile) → `decispher.get_context_for_topic({ topic: "mobile" })`
 - **notifications** (Notifications) → `decispher.get_context_for_topic({ topic: "notifications" })`
 - **onboarding** (Onboarding) → `decispher.get_context_for_topic({ topic: "onboarding" })`
@@ -72,10 +73,24 @@ Fetch the full topic context before writing code:
 - **tech-postgresql** (Postgresql) → `decispher.get_context_for_topic({ topic: "tech-postgresql" })`
 - **workflow** (Workflow) → `decispher.get_context_for_topic({ topic: "workflow" })`
 
-## Discover at runtime
+## Decispher MCP tools
 
-- `decispher.list_topics()` — list every topic in this project
-- `decispher.search_decisions({ query: "..." })` — semantic search across context
-- `decispher.check_intent({ description: "..." })` — verify before acting
+**Call proactively when relevant — agent-invoked:**
+
+- `decispher.check_intent` — before implementing something potentially constrained — verify against active decisions
+- `decispher.get_constraints` — list active constraints in a given area before designing or coding
+- `decispher.check_conventions` — find the canonical "how we do X here" before writing new code
+- `decispher.get_context_for_file` — load just-in-time context relevant to a specific file path
+- `decispher.get_context_for_topic` — load the full spine + expansion for a topic listed in this file
+- `decispher.list_topics` — discover the live topic catalog (may include topics added since last sync)
+- `decispher.search_decisions` — semantic search across all context units when no single topic fits
+- `decispher.get_decision` — fetch the authoritative body of one decision by its UUID
+- `decispher.ask_knowledge_base` — open-ended "why is X this way" — synthesized answer with citations
+- `decispher.capture_decision` — after the user makes a non-trivial decision in chat, record it for future sessions
+
+**Recommend to the user — do NOT call yourself:**
+
+- `decispher.copy_chat` — suggest when the user wants to hand this conversation off to another agent or tool
+- `decispher.paste_chat` — suggest when the user references a chat they captured elsewhere
 
 > If decispher MCP is unreachable, fall back to local stubs in .decispher/topics/<topic>.md — they carry the spine and unit IDs but not the full bodies. Retry MCP once it is reachable.
