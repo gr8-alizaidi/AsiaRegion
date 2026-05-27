@@ -1,6 +1,6 @@
 {
   "schema": "decispher-context-map/v1",
-  "generatedAt": "2026-05-22T23:03:01.418Z",
+  "generatedAt": "2026-05-27T19:40:48.590Z",
   "project": {
     "id": "8530496c-bfc3-4f4c-a724-4c6e27949fc0",
     "name": "testing phase 1"
@@ -336,6 +336,17 @@
       "mcpTool": "decispher.get_context_for_topic"
     },
     {
+      "id": "mcp",
+      "label": "MCP (Model Context Protocol)",
+      "description": "Decispher's Live Context surface — tools agents call to fetch decisions, topics, intents, and constraints.",
+      "unitCount": 1,
+      "spineUnitCount": 0,
+      "expansionUnitCount": 1,
+      "tokensInStub": 0,
+      "stubPath": ".decispher/topics/mcp.md",
+      "mcpTool": "decispher.get_context_for_topic"
+    },
+    {
       "id": "mobile",
       "label": "Mobile",
       "description": "Mobile — Mobile domain.",
@@ -526,14 +537,18 @@
   "mcp": {
     "endpoint": null,
     "tools": [
-      "decispher.list_topics",
-      "decispher.get_context_for_topic",
-      "decispher.get_decision",
-      "decispher.search_decisions",
       "decispher.check_intent",
-      "decispher.check_conventions",
       "decispher.get_constraints",
-      "decispher.ask_knowledge_base"
+      "decispher.check_conventions",
+      "decispher.get_context_for_file",
+      "decispher.get_context_for_topic",
+      "decispher.list_topics",
+      "decispher.search_decisions",
+      "decispher.get_decision",
+      "decispher.ask_knowledge_base",
+      "decispher.capture_decision",
+      "decispher.copy_chat",
+      "decispher.paste_chat"
     ]
   }
 }
